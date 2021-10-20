@@ -10,4 +10,3 @@ A Simple MIPS CPU for TJU Computer Architecture Course
 - utils：我们在编写过程中使用的工具, 现在有以下工具：
   - assembler：使用 Python 编写的跨平台的汇编器
   - disassembler：使用 Python 编写的跨平台的反汇编器
-- vivado：vivado 工程目录，仿真时需要导入工程文件和 ip 核
