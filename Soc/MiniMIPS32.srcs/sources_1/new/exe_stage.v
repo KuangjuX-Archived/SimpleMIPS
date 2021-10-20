@@ -36,7 +36,13 @@ module exe_starge (
     
     wire [`REG_BUS       ]      logicres;       // 保存逻辑运算的结果
     wire [`REG_BUS       ]      shiftres;       // 保存移位运算结果
-    
+    wire [`REG_BUS       ]      moveres;        // 保存移动操作的结果
+    wire [`REG_BUS       ]      hi_t;           // 保存Hi寄存器的最新值
+    wire [`REG_BUS       ]      lo_t;           // 保存Lo寄存器的最新值
+    wire [`REG_BUS       ]      arithres;       // 保存算术操作的结果
+    wire [`REG_BUS       ]      memres;         // 保存访存操作地址
+    wire [`DOUBLE_REG_BUS]      mulres;         // 保存乘法指令的结果 
+
     
     // 根据内部操作码aluop进行逻辑运算
     assign logicres = (exe_aluop_i == `MINIMIPS32_AND )  ? (exe_src1_i & exe_src2_i) : `ZERO_WORD;
