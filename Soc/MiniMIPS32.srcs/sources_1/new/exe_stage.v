@@ -45,12 +45,47 @@ module exe_starge (
 
     
     // 根据内部操作码aluop进行逻辑运算
-    assign logicres = (exe_aluop_i == `MINIMIPS32_AND )  ? (exe_src1_i & exe_src2_i) : `ZERO_WORD;
+    assign logicres = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD:
+                      (exe_aluop_i == `MINIMIPS32_AND) ? (exe_src1_i & exe_src2_i):
+                      (exe_aluop_i == `MINIMIPS32_ORI) ? (exe_src1_i | exe_src2_i):
+                      (exe_aluop_i == `MINIMIPS32_LUI) ? exe_src2_i : `ZERO_WORD;
 
-    assign exe_wa_o   = exe_wa_i;
-    assign exe_wreg_o = exe_wreg_i;
+    // 根据内部操作码aluop进行移位操作
+    assign shiftres = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD:
+                      (exe_aluop_i == `MINIMIPS32_SLL) ? (exe_src2_i << exe_src1_i) : `ZERO_WORD;
+    
+    // 根据内部操作数aluop进行数据移动，得到最新的HI、LO寄存器的值
+    assign hi_t = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD: hi_i;
+    assign lo_t = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD: lo_i;
+    assign moveres = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD:
+                     (exe_aluop_i == `MINIMIPS32_MFHI) ? hi_t:
+                     (exe_aluop_i == `MINIMIPS32_MFLO) ? lo_t: `ZERO_WORD;
+
+    // 根据内部操作码aluop进行算术运算
+    assign arithres = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD:
+                      (exe_aluop_i == `MINIMIPS32_ADD) ? (exe_src1_i + exe_src2_i):
+                      (exe_aluop_i == `MINIMIPS32_LB) ? (exe_src1_i + exe_src2_i):
+                      (exe_aluop_i == `MINIMIPS32_LW) ? (exe_src1_i + exe_src2_i):
+                      (exe_aluop_i == `MINIMIPS32_SB) ? (exe_src1_i + exe_src2_i):
+                      (exe_aluop_i == `MINIMIPS32_SW) ? (exe_src1_i + exe_src2_i):
+                      (exe_aluop_i == `MINIMIPS32_ADDIU) ? (exe_src1_i + exe_src2_i):
+                      (exe_aluop_i == `MINIMIPS32_SUBU) ? (exe_src1_i + (~exe_src2_i) + 1):
+                      (exe_aluop_i == `MINIMIPS32_SLT) ? (($signed(exe_src1_i) < $signed(exe_src2_i)) ? 32'b1: 32'b0):
+                      (exe_aluop_i == `MINIMIPS32_SLTIU) ? ((exe_src1_i < exe_src2_i) ? 32'b1: 32'b0) : `ZERO_WORD;
+
+    // 根据内部操作码aluop进行乘法操作，并保存送至下一阶段
+    assign mulres = ($signed(exe_src1_i) * $signed(exe_src2_i));
+    assign exe_hilo_o = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD:
+                        (exe_aluop_i == `MINIMIPS32_MULT) ? mulres: `ZERO_WORD;
+
+    assign exe_wa_o   = (cpu_rst_n == `RST_ENABLE) ? 5'b0: exe_wa_i;
+    assign exe_wreg_o = (cpu_rst_n == `RST_ENABLE) ? 1'b0: exe_wreg_i;
     
     // 根据操作类型alutype确定执行阶段最终的运算结果（既可能是待写入目的寄存器的数据，也可能是访问数据存储器的地址）
-    assign exe_wd_o = (exe_alutype_i == `LOGIC    ) ? logicres  : `ZERO_WORD;
+    assign exe_wd_o = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD:
+                      (exe_alutype_i == `LOGIC ) ? logicres:
+                      (exe_alutype_i == `SHIFT ) ? shiftres:
+                      (exe_alutype_i == `MOVE ) ? moveres:
+                      (exe_alutype_i == `ARITH ) ? arithres: `ZERO_WORD;
 
 endmodule
