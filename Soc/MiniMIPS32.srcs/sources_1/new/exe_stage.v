@@ -1,6 +1,6 @@
 `include "defines.v"
 
-module exe_starge (
+module exe_stage (
     input  wire cpu_rst_n,
     // 从译码阶段获得的信息
     input  wire [`ALUTYPE_BUS	] 	exe_alutype_i,
@@ -31,8 +31,8 @@ module exe_starge (
     // 直接传到下一阶段
     assign exe_aluop_o = (cpu_rst_n == `RST_ENABLE)?8'b0:exe_aluop_i;
     assign exe_mreg_o = (cpu_rst_n == `RST_ENABLE)?1'b0:exe_mreg_i;
-    assign exe_din_o = (cpu_rst_n == `RST_ENABLE)?32`b0:exe_din_i;
-    assign exe_whilo_o = (cpu_rst_n == `RST_ENABLE)?1`b0:exe_whilo_i;
+    assign exe_din_o = (cpu_rst_n == `RST_ENABLE)?32'b0:exe_din_i;
+    assign exe_whilo_o = (cpu_rst_n == `RST_ENABLE)?1'b0:exe_whilo_i;
     
     wire [`REG_BUS       ]      logicres;       // 保存逻辑运算的结果
     wire [`REG_BUS       ]      shiftres;       // 保存移位运算结果

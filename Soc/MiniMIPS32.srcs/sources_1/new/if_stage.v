@@ -10,7 +10,9 @@ module if_stage (
     );
     
     wire [`INST_ADDR_BUS] pc_next; 
+    
     assign pc_next = pc + 4;                  // 计算下一条指令的地址
+    
     always @(posedge cpu_clk_50M) begin
 		if (cpu_rst_n == `RST_ENABLE) begin
 			ice <= `CHIP_DISABLE;		      // 复位的时候指令存储器禁用  
@@ -29,5 +31,5 @@ module if_stage (
     
     // TODO：指令存储器的访问地址没有根据其所处范围进行进行固定地址映射，需要修改!!!
     assign iaddr = (ice == `CHIP_DISABLE) ? `PC_INIT : pc;    // 获得访问指令存储器的地址
-
+    
 endmodule

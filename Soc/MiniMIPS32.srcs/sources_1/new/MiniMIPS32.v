@@ -27,13 +27,17 @@ module MiniMIPS32(
     wire [`ALUTYPE_BUS   ] id_alutype_o;
     wire [`REG_BUS 	     ] id_src1_o;
     wire [`REG_BUS 	     ] id_src2_o;
-    wire 				   id_wreg_o;
+    wire [`DATA_BUS      ] id_din_o;
+    wire 				    id_wreg_o;
+    wire                   id_whilo_o;
+    wire                   id_mreg_o;
     wire [`REG_ADDR_BUS  ] id_wa_o;
     wire [`ALUOP_BUS     ] exe_aluop_i;
     wire [`ALUTYPE_BUS   ] exe_alutype_i;
     wire [`REG_BUS 	     ] exe_src1_i;
     wire [`REG_BUS 	     ] exe_src2_i;
     wire 				   exe_wreg_i;
+    
     wire [`REG_ADDR_BUS  ] exe_wa_i;
 
 
@@ -74,7 +78,8 @@ module MiniMIPS32(
         .ra1(ra1), .ra2(ra2), 
         .id_aluop_o(id_aluop_o), .id_alutype_o(id_alutype_o),
         .id_src1_o(id_src1_o), .id_src2_o(id_src2_o),
-        .id_wa_o(id_wa_o), .id_wreg_o(id_wreg_o)
+        .id_wa_o(id_wa_o), .id_wreg_o(id_wreg_o),.id_whilo_o(id_whilo_o),
+        .id_mreg_o(id_mreg_o), .id_din_o(id_din_o)
     );
     
     regfile regfile0(.cpu_clk_50M(cpu_clk_50M), .cpu_rst_n(cpu_rst_n),
@@ -86,7 +91,8 @@ module MiniMIPS32(
     idexe_reg idexe_reg0(.cpu_clk_50M(cpu_clk_50M), .cpu_rst_n(cpu_rst_n), 
         .id_alutype(id_alutype_o), .id_aluop(id_aluop_o),
         .id_src1(id_src1_o), .id_src2(id_src2_o),
-        .id_wa(id_wa_o), .id_wreg(id_wreg_o),
+        .id_wa(id_wa_o), .id_wreg(id_wreg_o),.id_whilo(id_whilo_o),
+        .id_mreg(id_mreg_o), .id_din(id_din_o),
         .exe_alutype(exe_alutype_i), .exe_aluop(exe_aluop_i),
         .exe_src1(exe_src1_i), .exe_src2(exe_src2_i), 
         .exe_wa(exe_wa_i), .exe_wreg(exe_wreg_i)

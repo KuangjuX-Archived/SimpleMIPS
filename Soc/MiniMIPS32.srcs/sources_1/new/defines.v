@@ -3,6 +3,8 @@
 /*------------------- 全局参数 -------------------*/
 `define RST_ENABLE      1'b0                // 复位信号有效  RST_ENABLE
 `define RST_DISABLE     1'b1                // 复位信号无效
+`define ZERO_BYTE       8'h00               // 8位的数值0
+`define ZERO_HWORD      16'h0000            // 16位的数值0
 `define ZERO_WORD       32'h00000000        // 32位的数值0
 `define ZERO_DWORD      64'b0               // 64位的数值0
 `define WRITE_ENABLE    1'b1                // 使能写
@@ -29,6 +31,12 @@
 /*------------------- 指令字参数 -------------------*/
 `define INST_ADDR_BUS   31: 0               // 指令的地址宽度
 `define INST_BUS        31: 0               // 指令的数据宽度
+
+/*------------------- 数据字参数 -------------------*/
+`define DATA_ADDR_BUS   31: 0               // 数据的地址宽度
+`define DATA_BUS        31: 0               // 数据的数据宽度
+`define DATA_WE_BUS      3: 0               // 数据的写使能宽度
+`define BYTE_BUS         7: 0               // 一个字节的宽度
 
 // 操作类型alutype
 `define NOP             3'b000
