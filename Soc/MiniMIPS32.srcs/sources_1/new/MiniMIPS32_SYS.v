@@ -10,15 +10,20 @@ module MiniMIPS32_SYS(
     wire [`INST_ADDR_BUS] iaddr;
     wire                  ice;
     wire [`INST_BUS     ] inst;
+    wire                  dce;
+    wire [`INST_ADDR_BUS] daddr;
+    wire [`BSEL_BUS     ] we;
+    wire [`INST_BUS     ] din;
+    wire [`INST_BUS     ] dout;
 
     clkdiv clocking
    (
     // Clock out ports
     .cpu_clk(cpu_clk_50M),     // output cpu_clk
-   // Clock in ports
+    // Clock in ports
     .clk_in1_p(sys_clk_200M_p),    // input clk_in1_p
     .clk_in1_n(sys_clk_200M_n)     // input clk_in1_n
-    );    
+  );    
     
     inst_rom inst_rom0 (
       .clka(cpu_clk_50M),    // input wire clka
@@ -32,7 +37,12 @@ module MiniMIPS32_SYS(
         .cpu_rst_n(sys_rst_n),
         .iaddr(iaddr),
         .ice(ice),
-        .inst(inst)
+        .inst(inst),
+        .dce(dce),
+        .daddr(daddr),
+        .we(we),
+        .din(din),
+        .dm(dout)
     );
 
 endmodule

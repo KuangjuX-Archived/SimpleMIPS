@@ -1,9 +1,10 @@
 // Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2019.2 (win64) Build 2708876 Wed Nov  6 21:40:23 MST 2019
-// Date        : Mon Oct 11 14:39:52 2021
+// Date        : Mon Oct 11 14:39:51 2021
 // Host        : LAPTOP-BEASOA6F running 64-bit major release  (build 9200)
-// Command     : write_verilog -force -mode funcsim d:/MiniMIPS32/MiniMIPS32.srcs/sources_1/ip/clkdiv/clkdiv_sim_netlist.v
+// Command     : write_verilog -force -mode funcsim -rename_top clkdiv -prefix
+//               clkdiv_ clkdiv_sim_netlist.v
 // Design      : clkdiv
 // Purpose     : This verilog netlist is a functional simulation representation of the design and should not be modified
 //               or synthesized. This netlist cannot be used for SDF annotated simulation.
@@ -30,7 +31,6 @@ module clkdiv
         .cpu_clk(cpu_clk));
 endmodule
 
-(* ORIG_REF_NAME = "clkdiv_clk_wiz" *) 
 module clkdiv_clkdiv_clk_wiz
    (cpu_clk,
     clk_in1_p,

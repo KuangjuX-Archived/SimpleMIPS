@@ -1,6 +1,6 @@
 `include "defines.v"
 
-module exe_starge (
+module exe_stage (
     input  wire cpu_rst_n,
     // 从译码阶段获得的信息
     input  wire [`ALUTYPE_BUS	] 	exe_alutype_i,
@@ -24,7 +24,7 @@ module exe_starge (
     output wire [`REG_BUS 		] 	exe_wd_o,
     output wire                     exe_mreg_o,
     output wire [`REG_BUS]          exe_din_o,
-    output wire                     exe_whilo,
+    output wire                     exe_whilo_o,
     output wire [`DOUBLE_REG_BUS]   exe_hilo_o
     );
 

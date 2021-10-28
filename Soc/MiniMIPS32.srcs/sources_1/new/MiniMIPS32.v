@@ -14,7 +14,7 @@ module MiniMIPS32(
     output wire [`INST_ADDR_BUS] daddr,
     output wire [`BSEL_BUS ]     we,
     output wire [`INST_BUS ]     din,
-    input  wire [`INST_BUS ]     dmu
+    input  wire [`INST_BUS ]     dm
     );
 
     // 连接取指阶段与取指/译码阶段寄存器的信号
@@ -210,7 +210,7 @@ module MiniMIPS32(
         .exe_wa(exe_wa_o), 
         .exe_wreg(exe_wreg_o), 
         .exe_wd(exe_wd_o),
-        .exe_mreg_o(exe_mreg_o), 
+        .exe_mreg(exe_mreg_o), 
         .exe_din(exe_din_o),
         .exe_whilo(exe_whilo_o), 
         .exe_hilo(exe_hilo_o),
@@ -263,8 +263,7 @@ module MiniMIPS32(
         .wb_wreg(wb_wreg_i), 
         .wb_dreg(wb_dreg_i),
         .wb_mreg(wb_mreg_i), 
-        .wb_wreg(wb_wreg_i), 
-        .wb_dreg(wb_dreg_i),
+        .wb_dre(wb_dre_i),
         .wb_whilo(wb_whilo_i), 
         .wb_hilo(wb_hilo_i)
     );
@@ -292,7 +291,7 @@ module MiniMIPS32(
         .cpu_clk_50M(cpu_clk_50M), 
         .cpu_rst_n(cpu_rst_n),
         .we(wb_whilo_o),
-        .hi_i(wb_whilo_o[63:32]), 
+        .hi_i(wb_hilo_o[63:32]), 
         .lo_i(wb_hilo_o[31:0]),
         .hi_o(exe_hi_i), 
         .lo_o(exe_lo_i)

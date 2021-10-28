@@ -32,7 +32,7 @@ module hilo(
 
     // ¶Á¶Ë¿Ú
     output reg[`REG_BUS] hi_o,
-    output reg[`REG_BUS] lo_o,
+    output reg[`REG_BUS] lo_o
     );
     
     always @(posedge cpu_clk_50M) begin
