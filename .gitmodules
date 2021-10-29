@@ -1,3 +1,6 @@
 [submodule "TEMU"]
 	path = TEMU
 	url = git@github.com:KuangjuX/TEMU.git
+[submodule "testbench/cpu-testcase"]
+	path = testbench/cpu-testcase
+	url = git@github.com:KuangjuX/cpu-testcase.git
