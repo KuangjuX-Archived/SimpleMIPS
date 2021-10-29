@@ -24,7 +24,7 @@ module id_stage(
     output wire [`REG_BUS      ]    id_src1_o,
     output wire [`REG_BUS      ]    id_src2_o,
     output wire [`DATA_BUS     ]    id_din_o,
-    output wire [`REG_BUS      ]    id_retaddr_o,
+    //output wire [`REG_BUS      ]    id_retaddr_o,
       
     // 送至读通用寄存器堆端口的使能和地址
     output wire                     rreg1,
