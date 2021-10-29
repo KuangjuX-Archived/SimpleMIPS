@@ -45,4 +45,13 @@ module MiniMIPS32_SYS(
         .dm(dout)
     );
 
+    data_ram data_ram0(
+      .clka(cpu_clk_50M),
+      .ena(dce),
+      .wea(we),
+      .addra(daddr[12:2]),
+      .dina(din),
+      .douta(dout)
+    );
+
 endmodule
