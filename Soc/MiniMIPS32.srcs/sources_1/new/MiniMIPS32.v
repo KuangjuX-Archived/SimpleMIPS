@@ -176,7 +176,10 @@ module MiniMIPS32(
         .exe_src1(exe_src1_i), 
         .exe_src2(exe_src2_i), 
         .exe_wa(exe_wa_i), 
-        .exe_wreg(exe_wreg_i)
+        .exe_wreg(exe_wreg_i),
+        .exe_whilo(exe_whilo_i),
+        .exe_mreg(exe_mreg_i),
+        .exe_din(exe_din_i)
     );
     
     // Àý»¯Ö´ÐÐ½×¶ÎÄ£¿é
