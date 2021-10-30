@@ -69,4 +69,6 @@
 !*.bmm
 !*.xmp
 
+*.xpr
+
 # End of https://www.gitignore.io/api/vivado

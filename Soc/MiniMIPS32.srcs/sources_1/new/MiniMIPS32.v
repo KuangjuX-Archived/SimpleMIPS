@@ -123,6 +123,7 @@ module MiniMIPS32(
 
     // Àı»¯ÒëÂë½×¶ÎÄ£¿é
     id_stage id_stage0(
+        .cpu_rst_n(cpu_rst_n),
         .id_pc_i(id_pc_i), 
         .id_inst_i(inst),
         .rd1(rd1), 
