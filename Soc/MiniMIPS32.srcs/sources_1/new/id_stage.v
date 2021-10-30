@@ -72,7 +72,8 @@ module id_stage(
     /*-------------------- 第二级译码逻辑：生成具体控制信号 --------------------*/
     wire inst_alu_reg   = (inst_add | inst_subu | inst_and | inst_slt);
     wire inst_alu_imm   = (inst_addiu | inst_ori | inst_sltiu | inst_lui);
-    wire inst_imm_sign  = (inst_ori);
+    // wire inst_imm_sign  = (inst_ori);
+    wire inst_imm_sign = 1'b0;
     wire inst_mf        = (inst_mfhi | inst_mflo);
     wire inst_shift     = (inst_sll);
     wire inst_lmem      = (inst_lb | inst_lw);
@@ -86,8 +87,8 @@ module id_stage(
     wire upper  = (inst_lui);
 
     wire [`REG_BUS] imm_ext = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD :
-                               (upper) ? imm << 16 :
-                               (sext) ? { { 16 {imm[15]} }, imm} : {`ZERO_HWORD, imm};
+                               (upper == `UPPER_ENABLE) ? (imm << 16) :
+                               (sext == `SIGNED_EXT) ? { { 16{imm[15]} }, imm} : {{16{1'b0}}, imm};
                               
     // 操作类型alutype
     assign id_alutype_o[2] = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : inst_shift;
@@ -123,20 +124,19 @@ module id_stage(
 
     // 获得待写入目的寄存器的地址（rt或rd）
     assign id_wa_o      = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD :
-                          (rtsel) ? rt : rd;
+                          (rtsel == `RT_ENABLE) ? rt : rd;
 
     // 获得源操作数1。如果shift信号有效，则源操作数1为移位位数；否则为从读通用寄存器堆端口1获得的数据
     assign id_src1_o = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD :
-                       (inst_shift) ? sa :
+                       (inst_shift) ? {27'b0, sa} :
                        (rreg1 == `READ_ENABLE   ) ? rd1 : `ZERO_WORD;
 
     // 获得源操作数2。如果immsel信号有效，则源操作数1为立即数；否则为从读通用寄存器堆端口2获得的数据
     assign id_src2_o = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD :
-                       (immsel) ? imm_ext :
+                       (immsel == `IMM_ENABLE) ? imm_ext :
                        (rreg2 == `READ_ENABLE   ) ? rd2 : `ZERO_WORD;
 
-    assign id_din_o = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD :
-                      (inst_smem) ? rd2 : `ZERO_WORD;
+    assign id_din_o = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD: rd2;
                       
     
 endmodule
