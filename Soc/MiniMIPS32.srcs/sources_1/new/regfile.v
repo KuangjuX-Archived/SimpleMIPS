@@ -71,6 +71,11 @@ module regfile(
 			rd1 <= `ZERO_WORD;
 		else if (ra1 == `REG_NOP)
 			rd1 <= `ZERO_WORD;
+		// 判断对于读端口1是否存在译码-写回相关
+		// 如果译码阶段要读取的寄存器和要写回的寄存器是相同寄存器
+		// 则将写回内容定向前推
+		else if ((re1 == `READ_ENABLE) && (we == `WRITE_ENABLE) && (wa == ra1))
+			rd1 <= wd;
 		else if (re1 == `READ_ENABLE)
 			rd1 <= regs[ra1];
 		else
@@ -84,6 +89,9 @@ module regfile(
 			rd2 <= `ZERO_WORD;
 		else if (ra2 == `REG_NOP)
 			rd2 <= `ZERO_WORD;
+		// 同上，判断对于读端口2是否存在译码-写回相关
+		else if ((re2 == `READ_ENABLE) && (we == `WRITE_ENABLE) && (wa == ra2))
+			rd2 <= wd;
 		else if (re2 == `READ_ENABLE)
 			rd2 <= regs[ra2];
 		else

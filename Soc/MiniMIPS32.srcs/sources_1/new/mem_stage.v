@@ -26,13 +26,18 @@ module mem_stage (
     output wire                         dce,
     output wire[`INST_ADDR_BUS  ]       daddr,
     output wire[`BSEL_BUS       ]       we,
-    output wire[`REG_BUS        ]       din
+    output wire[`REG_BUS        ]       din,
+
+    // 用于定向前推
+    output wire                         mem2id_wreg_o,
+    output wire [`REG_ADDR_BUS]         mem2id_wa_o,
+    output wire [`REG_BUS]              mem2id_wd_o 
     );
 
     // 如果当前不是访存指令，则只需要把从执行阶段获得的信息直接输出
     assign mem_wa_o     = (cpu_rst_n == `RST_ENABLE) ? 5'b0 : mem_wa_i;
     assign mem_wreg_o   = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : mem_wreg_i;
-    assign mem_dreg_o   = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : mem_wd_i;
+    assign mem_dreg_o   = (cpu_rst_n == `RST_ENABLE) ? 32'b0 : mem_wd_i;
     assign mem_whilo_o  = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : mem_whilo_i;
     assign mem_hilo_o   = (cpu_rst_n == `RST_ENABLE) ? 64'b0: mem_hilo_i;
     assign mem_mreg_o   = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : mem_mreg_i;
@@ -79,5 +84,10 @@ module mem_stage (
                  (we == 4'b0100     ) ? din_byte :
                  (we == 4'b0010     ) ? din_byte :
                  (we == 4'b0001     ) ? din_byte : `ZERO_WORD;
+
+    // 定向前推
+    assign mem2id_wreg_o = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD: mem_wreg_o;
+    assign mem2id_wa_o = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD: mem_wa_o;
+    assign mem2id_wd_o = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD: mem_dreg_o;
                                  
 endmodule

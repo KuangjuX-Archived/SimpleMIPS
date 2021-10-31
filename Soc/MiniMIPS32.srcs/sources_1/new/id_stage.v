@@ -11,6 +11,16 @@ module id_stage(
     // 从通用寄存器堆读出的数据 
     input  wire [`REG_BUS      ]    rd1,
     input  wire [`REG_BUS      ]    rd2,
+
+    // 从执行阶段获得的写回信号，用于做定向前推
+    input wire                 exe2id_wreg_i,
+    input wire [`REG_ADDR_BUS] exe2id_wa_i,
+    input wire [`INST_BUS]     exe2id_wd_i,
+
+    // 从访存阶段获得的写回信号，用于做定向前推
+    input wire                 mem2id_wreg_i,
+    input wire [`REG_ADDR_BUS] mem2id_wa_i,
+    input wire [`INST_BUS]     mem2id_wd_i,
       
     // 送至执行阶段的译码信息
     output wire [`ALUTYPE_BUS  ]    id_alutype_o,
@@ -32,6 +42,18 @@ module id_stage(
     output wire                     rreg2,
     output wire [`REG_ADDR_BUS ]    ra2
     );
+
+    // 产生源操作数选择信号（源操作数可能来自执行与访存阶段，定向前推） 
+    wire [1: 0] fwrd1 = (cpu_rst_n == `RST_ENABLE) ? 2'b00:
+                        (exe2id_wreg_i == `WRITE_ENABLE && exe2id_wa_i == ra1 && rreg1 == `READ_ENABLE) ? 2'b01:
+                        (mem2id_wreg_i == `WRITE_ENABLE && mem2id_wa_i == ra1 && rreg1 == `READ_ENABLE) ? 2'b10:
+                        (rreg1 == `READ_ENABLE) ? 2'b11: 2'b00;
+
+    wire [1: 0] fwrd2 = (cpu_rst_n == `RST_ENABLE) ? 2'b00:
+                        (exe2id_wreg_i == `WRITE_ENABLE && exe2id_wa_i == ra2 && rreg2 == `READ_ENABLE) ? 2'b01:
+                        (mem2id_wreg_i == `WRITE_ENABLE && mem2id_wa_i == ra2 && rreg2 == `READ_ENABLE) ? 2'b10:
+                        (rreg1 == `READ_ENABLE) ? 2'b11: 2'b00;
+
     
     // 根据小端模式组织指令字
     wire [`INST_BUS] id_inst = {id_inst_i[7:0], id_inst_i[15:8], id_inst_i[23:16], id_inst_i[31:24]};
@@ -127,16 +149,27 @@ module id_stage(
                           (rtsel == `RT_ENABLE) ? rt : rd;
 
     // 获得源操作数1。如果shift信号有效，则源操作数1为移位位数；否则为从读通用寄存器堆端口1获得的数据
+    // 源操作数1也可能来自执行阶段前推的数据或者访存阶段前推的数据
     assign id_src1_o = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD :
                        (inst_shift) ? {27'b0, sa} :
-                       (rreg1 == `READ_ENABLE   ) ? rd1 : `ZERO_WORD;
+                       (fwrd1 == 2'b01) ? exe2id_wd_i :
+                       (fwrd2 == 2'b10) ? mem2id_wd_i :
+                       (fwrd2 == 2'b11) ? rd1: `ZERO_WORD;
 
     // 获得源操作数2。如果immsel信号有效，则源操作数1为立即数；否则为从读通用寄存器堆端口2获得的数据
+    // 源操作数2也可能来自于执行阶段前推的数据或者访存阶段前推的数据
     assign id_src2_o = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD :
                        (immsel == `IMM_ENABLE) ? imm_ext :
-                       (rreg2 == `READ_ENABLE   ) ? rd2 : `ZERO_WORD;
+                       (fwrd2 == 2'b01) ? exe2id_wd_i :
+                       (fwrd2 == 2'b10) ? mem2id_wd_i :
+                       (fwrd2 == 2'b11) ? rd2 : `ZERO_WORD;
 
-    assign id_din_o = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD: rd2;
+    // 获得访存阶段要存入数据存储器的数据，可能来自执行阶段前推的数据，也可能来自访存阶段前推的数据，
+    // 也可能来自通用寄存器的读端口2
+    assign id_din_o = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD :
+                      (fwrd2 == 2'b01) ? exe2id_wd_i :
+                      (fwrd2 == 2'b10) ? mem2id_wd_i :
+                      (fwrd2 == 2'b11) ? rd2 : `ZERO_WORD;
                       
     
 endmodule

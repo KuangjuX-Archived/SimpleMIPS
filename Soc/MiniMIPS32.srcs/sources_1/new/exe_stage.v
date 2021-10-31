@@ -17,6 +17,14 @@ module exe_stage (
     input  wire [`REG_BUS       ]   hi_i,
     input  wire [`REG_BUS       ]   lo_i,
 
+    // 从访存阶段获得的 Hi, Lo 寄存器的值
+    input wire                      mem2exe_whilo,
+    input wire [`DOUBLE_REG_BUS]    mem2exe_hilo,
+    
+    // 从写回阶段获得的 Hi, Lo 寄存器的值
+    input wire                      wb2exe_whilo,
+    input wire [`DOUBLE_REG_BUS]    wb2exe_hilo,
+
     // 送至执行阶段的信息
     output wire [`ALUOP_BUS	    ] 	exe_aluop_o,
     output wire [`REG_ADDR_BUS 	] 	exe_wa_o,
@@ -25,7 +33,12 @@ module exe_stage (
     output wire                     exe_mreg_o,
     output wire [`REG_BUS]          exe_din_o,
     output wire                     exe_whilo_o,
-    output wire [`DOUBLE_REG_BUS]   exe_hilo_o
+    output wire [`DOUBLE_REG_BUS]   exe_hilo_o,
+
+    // 用于定向前推
+    output wire [`REG_BUS       ]   exe2id_wd_o,
+    output wire [`REG_ADDR_BUS  ]   exe2id_wa_o,
+    output wire                     exe2id_wreg_o
     );
 
     // 直接传到下一阶段
@@ -55,8 +68,14 @@ module exe_stage (
                       (exe_aluop_i == `MINIMIPS32_SLL) ? (exe_src2_i << exe_src1_i) : `ZERO_WORD;
     
     // 根据内部操作数aluop进行数据移动，得到最新的HI、LO寄存器的值
-    assign hi_t = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD: hi_i;
-    assign lo_t = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD: lo_i;
+    assign hi_t = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD: 
+                  (mem2exe_whilo == `WRITE_ENABLE) ? mem2exe_hilo[63: 32] :
+                  (wb2exe_whilo == `WRITE_ENABLE) ? wb2exe_hilo[63: 32] : hi_i; 
+
+    assign lo_t = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD: 
+                (mem2exe_whilo == `WRITE_ENABLE) ? mem2exe_hilo[31: 0] :
+                (wb2exe_whilo == `WRITE_ENABLE) ? wb2exe_hilo[31: 0] : lo_i;
+
     assign moveres = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD:
                      (exe_aluop_i == `MINIMIPS32_MFHI) ? hi_t:
                      (exe_aluop_i == `MINIMIPS32_MFLO) ? lo_t: `ZERO_WORD;
@@ -87,5 +106,11 @@ module exe_stage (
                       (exe_alutype_i == `SHIFT ) ? shiftres:
                       (exe_alutype_i == `MOVE ) ? moveres:
                       (exe_alutype_i == `ARITH ) ? arithres: `ZERO_WORD;
+
+    // 定向前推操作
+    // 这里直接将执行阶段的结果赋值
+    assign exe2id_wreg_o = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD: exe_wreg_o;
+    assign exe2id_wa_o = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD: exe_wa_o;
+    assign exe2id_wd_o = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD: exe_wd_o;
 
 endmodule
