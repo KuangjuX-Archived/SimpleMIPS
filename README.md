@@ -21,6 +21,8 @@ A Simple MIPS CPU for TJU Computer Architecture Course
 
 ### R-type
 - [x] AND
+- [x] LW
+- [x] SW  
 
 ### J-type
 
