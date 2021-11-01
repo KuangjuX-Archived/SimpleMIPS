@@ -15,6 +15,7 @@ A Simple MIPS CPU for TJU Computer Architecture Course
 ## 测试通过的指令
 ### I-type
 - [x] LUI
+- [x] ADDI 
 
 ### R-type
 

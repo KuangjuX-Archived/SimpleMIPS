@@ -294,7 +294,7 @@ module MiniMIPS32(
         // 输出给译码阶段的数据
         .mem2id_wreg_o(mem2id_wreg),
         .mem2id_wa_o(mem2id_wa),
-        .mem2id_wd(mem2id_wd),
+        .mem2id_wd_o(mem2id_wd),
         // 输出给执行阶段的数据
         .mem2exe_whilo_o(mem2exe_whilo),
         .mem2exe_hilo_o(mem2exe_hilo)

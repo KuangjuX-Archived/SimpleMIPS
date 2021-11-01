@@ -35,8 +35,8 @@ module mem_stage (
     output wire [`REG_BUS]              mem2id_wd_o,
 
     // 送回执行阶段的信号量
-    output wire                         mem2exe_whilo,
-    output wire [`DOUBLE_REG_BUS]       mem2exe_hilo 
+    output wire                         mem2exe_whilo_o,
+    output wire [`DOUBLE_REG_BUS]       mem2exe_hilo_o 
     );
 
     // 如果当前不是访存指令，则只需要把从执行阶段获得的信息直接输出
@@ -97,7 +97,7 @@ module mem_stage (
     assign mem2id_wd_o = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD: mem_wd_i;
 
     // 定向前推至执行阶段的信号量
-    assign mem2exe_whilo = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD: mem_whilo_i;
-    assign mem2exe_hilo = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD: mem_hilo_i;
+    assign mem2exe_whilo_o = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD: mem_whilo_i;
+    assign mem2exe_hilo_o = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD: mem_hilo_i;
                                  
 endmodule
