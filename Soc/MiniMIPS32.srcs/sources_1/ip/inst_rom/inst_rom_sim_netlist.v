@@ -1,10 +1,10 @@
 // Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2019.2 (win64) Build 2708876 Wed Nov  6 21:40:23 MST 2019
-// Date        : Fri Oct 29 19:10:30 2021
+// Date        : Mon Nov  1 19:39:28 2021
 // Host        : DESKTOP-HJ97TPV running 64-bit major release  (build 9200)
-// Command     : write_verilog -force -mode funcsim -rename_top inst_rom -prefix
-//               inst_rom_ inst_rom_sim_netlist.v
+// Command     : write_verilog -force -mode funcsim
+//               F:/KuangjuX/MIPSCPU/Soc/MiniMIPS32.srcs/sources_1/ip/inst_rom/inst_rom_sim_netlist.v
 // Design      : inst_rom
 // Purpose     : This verilog netlist is a functional simulation representation of the design and should not be modified
 //               or synthesized. This netlist cannot be used for SDF annotated simulation.
@@ -191,6 +191,7 @@ module inst_rom
         .web(1'b0));
 endmodule
 
+(* ORIG_REF_NAME = "blk_mem_gen_generic_cstr" *) 
 module inst_rom_blk_mem_gen_generic_cstr
    (douta,
     clka,
@@ -218,6 +219,7 @@ module inst_rom_blk_mem_gen_generic_cstr
         .ena(ena));
 endmodule
 
+(* ORIG_REF_NAME = "blk_mem_gen_prim_width" *) 
 module inst_rom_blk_mem_gen_prim_width
    (douta,
     clka,
@@ -263,6 +265,7 @@ module inst_rom_blk_mem_gen_prim_width__parameterized0
         .ena(ena));
 endmodule
 
+(* ORIG_REF_NAME = "blk_mem_gen_prim_wrapper_init" *) 
 module inst_rom_blk_mem_gen_prim_wrapper_init
    (douta,
     clka,
@@ -294,7 +297,7 @@ module inst_rom_blk_mem_gen_prim_wrapper_init
     .DOB_REG(0),
     .EN_ECC_READ("FALSE"),
     .EN_ECC_WRITE("FALSE"),
-    .INITP_00(256'h0000000000000000000000000000000000000000000000000000000000810004),
+    .INITP_00(256'h00000000000000000000000000000000000000000001D00A7E809F2087680170),
     .INITP_01(256'h0000000000000000000000000000000000000000000000000000000000000000),
     .INITP_02(256'h0000000000000000000000000000000000000000000000000000000000000000),
     .INITP_03(256'h0000000000000000000000000000000000000000000000000000000000000000),
@@ -310,9 +313,9 @@ module inst_rom_blk_mem_gen_prim_wrapper_init
     .INITP_0D(256'h0000000000000000000000000000000000000000000000000000000000000000),
     .INITP_0E(256'h0000000000000000000000000000000000000000000000000000000000000000),
     .INITP_0F(256'h0000000000000000000000000000000000000000000000000000000000000000),
-    .INIT_00(256'h0000004A00000916A936893C882184348435843C000009160924082104240424),
-    .INIT_01(256'h0000000000000000000000000000000000000000000000000000000000000000),
-    .INIT_02(256'h0000000000000000000000000000000000000000000000000000000000000000),
+    .INIT_00(256'h2936893C04011435843C0435843C000009162936093C04011435043C8435043C),
+    .INIT_01(256'h04011435043C0435043C00000916A936893C04019435843C8435843C00000916),
+    .INIT_02(256'h00000000004A000009162936093C04011435043C8435843C000009162936093C),
     .INIT_03(256'h0000000000000000000000000000000000000000000000000000000000000000),
     .INIT_04(256'h0000000000000000000000000000000000000000000000000000000000000000),
     .INIT_05(256'h0000000000000000000000000000000000000000000000000000000000000000),
@@ -552,9 +555,9 @@ module inst_rom_blk_mem_gen_prim_wrapper_init__parameterized0
     .INITP_0D(256'h0000000000000000000000000000000000000000000000000000000000000000),
     .INITP_0E(256'h0000000000000000000000000000000000000000000000000000000000000000),
     .INITP_0F(256'h0000000000000000000000000000000000000000000000000000000000000000),
-    .INIT_00(256'h1F4000000000010002672840226E226E60392840000005000140010001000040),
-    .INIT_01(256'h0000000000000000000000000000000000000000000000000000000000000000),
-    .INIT_02(256'h0000000000000000000000000000000000000000000000000000000000000000),
+    .INIT_00(256'h1822442212201C334F7A382E5426000013000821001212200A3100320D254A57),
+    .INIT_01(256'h1220072C3B197404347300000A007002000012207B3352027006017400000E40),
+    .INIT_02(256'h00001F400000000001000014004512204034265D301E19470000054004043011),
     .INIT_03(256'h0000000000000000000000000000000000000000000000000000000000000000),
     .INIT_04(256'h0000000000000000000000000000000000000000000000000000000000000000),
     .INIT_05(256'h0000000000000000000000000000000000000000000000000000000000000000),
@@ -742,6 +745,7 @@ module inst_rom_blk_mem_gen_prim_wrapper_init__parameterized0
         .WEBWE({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}));
 endmodule
 
+(* ORIG_REF_NAME = "blk_mem_gen_top" *) 
 module inst_rom_blk_mem_gen_top
    (douta,
     clka,
@@ -789,7 +793,7 @@ endmodule
 (* C_WEA_WIDTH = "1" *) (* C_WEB_WIDTH = "1" *) (* C_WRITE_DEPTH_A = "2048" *) 
 (* C_WRITE_DEPTH_B = "2048" *) (* C_WRITE_MODE_A = "WRITE_FIRST" *) (* C_WRITE_MODE_B = "WRITE_FIRST" *) 
 (* C_WRITE_WIDTH_A = "32" *) (* C_WRITE_WIDTH_B = "32" *) (* C_XDEVICEFAMILY = "kintex7" *) 
-(* downgradeipidentifiedwarnings = "yes" *) 
+(* ORIG_REF_NAME = "blk_mem_gen_v8_4_4" *) (* downgradeipidentifiedwarnings = "yes" *) 
 module inst_rom_blk_mem_gen_v8_4_4
    (clka,
     rsta,
@@ -1043,6 +1047,7 @@ module inst_rom_blk_mem_gen_v8_4_4
         .ena(ena));
 endmodule
 
+(* ORIG_REF_NAME = "blk_mem_gen_v8_4_4_synth" *) 
 module inst_rom_blk_mem_gen_v8_4_4_synth
    (douta,
     clka,

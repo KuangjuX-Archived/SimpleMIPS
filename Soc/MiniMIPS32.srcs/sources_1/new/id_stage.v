@@ -153,8 +153,8 @@ module id_stage(
     assign id_src1_o = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD :
                        (inst_shift) ? {27'b0, sa} :
                        (fwrd1 == 2'b01) ? exe2id_wd_i :
-                       (fwrd2 == 2'b10) ? mem2id_wd_i :
-                       (fwrd2 == 2'b11) ? rd1: `ZERO_WORD;
+                       (fwrd1 == 2'b10) ? mem2id_wd_i :
+                       (fwrd1 == 2'b11) ? rd1: `ZERO_WORD;
 
     // 获得源操作数2。如果immsel信号有效，则源操作数1为立即数；否则为从读通用寄存器堆端口2获得的数据
     // 源操作数2也可能来自于执行阶段前推的数据或者访存阶段前推的数据
