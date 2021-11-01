@@ -17,6 +17,7 @@ A Simple MIPS CPU for TJU Computer Architecture Course
 - [x] LUI
 - [x] ADDI 
 - [x] ORI 
+- [x] ADDIU 
 
 ### R-type
 - [x] AND
