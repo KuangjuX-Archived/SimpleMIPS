@@ -19,7 +19,11 @@ module wb_stage(
 	output wire                   wb_wreg_o,
     output wire [`WORD_BUS      ] wb_wd_o,
     output wire                   wb_whilo_o,
-    output wire [`DOUBLE_REG_BUS] wb_hilo_o
+    output wire [`DOUBLE_REG_BUS] wb_hilo_o,
+
+    // 定向前推送回执行阶段的数据
+    output wire                   wb2exe_whilo_o,
+    output wire [`DOUBLE_REG_BUS] wb2exe_hilo_o 
     );
     
     // 传至通用寄存器堆和HILO寄存器的信号
@@ -39,5 +43,10 @@ module wb_stage(
     // 根据存储器到寄存器使能信号mreg，选择最终待写入通用寄存器的数据
     assign wb_wd_o = (cpu_rst_n == `RST_ENABLE ) ? `ZERO_WORD : 
                      (wb_mreg_i == `MREG_ENABLE) ? data : wb_dreg_i;
+
+    // 定向前推
+    // 传输给执行阶段的数据
+    assign wb2exe_whilo_o = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD: wb_whilo_i;
+    assign wb2exe_hilo_o = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD: wb_hilo_i;
     
 endmodule

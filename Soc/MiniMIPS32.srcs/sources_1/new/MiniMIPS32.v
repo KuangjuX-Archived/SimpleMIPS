@@ -222,6 +222,13 @@ module MiniMIPS32(
         .hi_i(exe_hi_i), 
         .lo_i(exe_lo_i), 
         .exe_whilo_i(exe_whilo_i),
+        // 定向前推输入
+        // 从访存阶段获取的 HILO 寄存器的值
+        .mem2exe_whilo_i(mem2exe_whilo),
+        .mem2exe_hilo_i(mem2exe_hilo),
+        // 从写回阶段获取的 HILO 寄存器的值
+        .wb2exe_whilo_i(wb2exe_whilo),
+        .wb2exe_hilo_i(wb2exe_hilo),
         // 输出值
         .exe_aluop_o(exe_aluop_o),
         .exe_wa_o(exe_wa_o), 
@@ -284,9 +291,13 @@ module MiniMIPS32(
         .we(we), 
         .din(din),
         // 定向前推输出
+        // 输出给译码阶段的数据
         .mem2id_wreg_o(mem2id_wreg),
         .mem2id_wa_o(mem2id_wa),
-        .mem2id_wd(mem2id_wd)
+        .mem2id_wd(mem2id_wd),
+        // 输出给执行阶段的数据
+        .mem2exe_whilo_o(mem2exe_whilo),
+        .mem2exe_hilo_o(mem2exe_hilo)
     );
     	
     // 例化访存/写回寄存器模块
@@ -311,6 +322,7 @@ module MiniMIPS32(
 
     // 例化写回阶段模块
     wb_stage wb_stage0(
+        // 输入值
         .cpu_rst_n(cpu_rst_n),
         .wb_mreg_i(wb_mreg_i), 
         .wb_dre_i(wb_dre_i),
@@ -320,11 +332,16 @@ module MiniMIPS32(
         .wb_whilo_i(wb_whilo_i), 
         .wb_hilo_i(wb_hilo_i),
         .dm(dm),
+        // 输出值
         .wb_wa_o(wb_wa_o), 
         .wb_wreg_o(wb_wreg_o), 
         .wb_wd_o(wb_wd_o),
         .wb_whilo_o(wb_whilo_o), 
-        .wb_hilo_o(wb_hilo_o)
+        .wb_hilo_o(wb_hilo_o),
+        // 定向前推输出
+        // 输出给执行阶段的值
+        .wb2exe_whilo_o(wb2exe_whilo),
+        .wb2exe_hilo_o(wb2exe_hilo)
     );
 
     // 例化HILO寄存器模块
