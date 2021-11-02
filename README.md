@@ -47,10 +47,10 @@ A Simple MIPS CPU for TJU Computer Architecture Course
 - [ ] DIVU
 - [ ] JALR
 - [ ] JR
-- [ ] MFHI
-- [ ] MFLO
-- [ ] MTHI
-- [ ] MTLO 
+- [x] MFHI
+- [x] MFLO
+- [x] MTHI
+- [x] MTLO 
 - [ ] MULT
 - [ ] MULTU
 - [ ] NOR

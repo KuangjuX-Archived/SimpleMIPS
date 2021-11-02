@@ -78,7 +78,10 @@ module exe_stage (
 
     assign moveres = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD:
                      (exe_aluop_i == `MINIMIPS32_MFHI) ? hi_t:
-                     (exe_aluop_i == `MINIMIPS32_MFLO) ? lo_t: `ZERO_WORD;
+                     (exe_aluop_i == `MINIMIPS32_MFLO) ? lo_t: 
+                     (exe_aluop_i == `MINIMIPS32_MTHI) ? exe_src1_i:
+                     (exe_aluop_i == `MINIMIPS32_MTLO) ? exe_src1_i:
+                     `ZERO_WORD;
 
     // 根据内部操作码aluop进行算术运算
     assign arithres = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD:
@@ -90,12 +93,16 @@ module exe_stage (
                       (exe_aluop_i == `MINIMIPS32_ADDIU) ? (exe_src1_i + exe_src2_i):
                       (exe_aluop_i == `MINIMIPS32_SUBU) ? (exe_src1_i + (~exe_src2_i) + 1):
                       (exe_aluop_i == `MINIMIPS32_SLT) ? (($signed(exe_src1_i) < $signed(exe_src2_i)) ? 32'b1: 32'b0):
-                      (exe_aluop_i == `MINIMIPS32_SLTIU) ? ((exe_src1_i < exe_src2_i) ? 32'b1: 32'b0) : `ZERO_WORD;
+                      (exe_aluop_i == `MINIMIPS32_SLTIU) ? ((exe_src1_i < exe_src2_i) ? 32'b1: 32'b0) : 
+                      `ZERO_WORD;
 
     // 根据内部操作码aluop进行乘法操作，并保存送至下一阶段
     assign mulres = ($signed(exe_src1_i) * $signed(exe_src2_i));
     assign exe_hilo_o = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD:
-                        (exe_aluop_i == `MINIMIPS32_MULT) ? mulres: `ZERO_WORD;
+                        (exe_aluop_i == `MINIMIPS32_MULT) ? mulres: 
+                        (exe_aluop_i == `MINIMIPS32_MTHI) ? { moveres, {32{1'b0}} }:
+                        (exe_aluop_i == `MINIMIPS32_MTLO) ? { {32{1'b0}}, moveres }:
+                        `ZERO_WORD;
 
     assign exe_wa_o   = (cpu_rst_n == `RST_ENABLE) ? 5'b0: exe_wa_i;
     assign exe_wreg_o = (cpu_rst_n == `RST_ENABLE) ? 1'b0: exe_wreg_i;

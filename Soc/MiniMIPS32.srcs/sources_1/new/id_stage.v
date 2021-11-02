@@ -79,8 +79,8 @@ module id_stage(
     wire inst_mult  = inst_reg&~func[5]& func[4]& func[3]&~func[2]&~func[1]&~func[0];
     wire inst_mfhi  = inst_reg&~func[5]& func[4]&~func[3]&~func[2]&~func[1]&~func[0];
     wire inst_mflo  = inst_reg&~func[5]& func[4]&~func[3]&~func[2]& func[1]&~func[0];
-    // wire inst_mthi  = ;
-    // wire inst_mtlo  = ;
+    wire inst_mthi  = inst_reg&~func[5]& func[4]&~func[3]&~func[2]&~func[1]& func[0];
+    wire inst_mtlo  = inst_reg&~func[5]& func[4]&~func[3]&~func[2]& func[1]& func[0];
     wire inst_sll   = inst_reg&~func[5]&~func[4]&~func[3]&~func[2]&~func[1]&~func[0];
     wire inst_addiu = inst_imm&~op[5]&~op[4]& op[3]&~op[2]&~op[1]& op[0];
     wire inst_ori   = inst_imm&~op[5]&~op[4]& op[3]& op[2]&~op[1]& op[0];
@@ -124,22 +124,54 @@ module id_stage(
     assign id_aluop_o[7]   = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (inst_lb | inst_lw | inst_sb | inst_sw);
     assign id_aluop_o[6]   = 1'b0;
     assign id_aluop_o[5]   = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (inst_slt | inst_sltiu);
-    assign id_aluop_o[4]   = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (inst_add | inst_subu | inst_and |inst_mult | inst_sll | inst_addiu | inst_ori | inst_lb | inst_lw | inst_sb | inst_sw);
-    assign id_aluop_o[3]   = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (inst_add | inst_subu | inst_and |inst_mfhi | inst_mflo |inst_addiu | inst_ori | inst_sb | inst_sw);
-    assign id_aluop_o[2]   = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (inst_and | inst_slt | inst_mult | inst_mfhi | inst_mflo | inst_ori | inst_sltiu | inst_lui);
-    assign id_aluop_o[1]   = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (inst_subu |inst_slt | inst_sltiu | inst_lw | inst_sw);
-    assign id_aluop_o[0]   = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (inst_subu |inst_mflo |inst_sll |inst_addiu |inst_ori |inst_sltiu |inst_lui);
+    assign id_aluop_o[4]   = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (
+        inst_add | inst_subu | inst_and | inst_mult 
+        | inst_sll | inst_addiu | inst_ori | inst_lb 
+        | inst_lw | inst_sb | inst_sw
+    );
+    assign id_aluop_o[3]   = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (
+        inst_add | inst_subu | inst_and | inst_mfhi | 
+        inst_mflo | inst_mthi | inst_mtlo | inst_addiu 
+        | inst_ori | inst_sb | inst_sw
+    );
+    assign id_aluop_o[2]   = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (
+        inst_and | inst_slt | inst_mult | inst_mfhi 
+        | inst_mflo | inst_mthi | inst_mtlo | inst_ori 
+        | inst_sltiu | inst_lui
+    );
+    assign id_aluop_o[1]   = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (
+        inst_subu | inst_slt | inst_mthi | inst_mtlo 
+        | inst_sltiu | inst_lw | inst_sw
+    );
+    assign id_aluop_o[0]   = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (
+        inst_subu | inst_mflo  | inst_mtlo | inst_sll 
+        | inst_addiu | inst_ori | inst_sltiu | inst_lui
+    );
 
     // 是否用内存得到的数据写寄存器
     assign id_mreg_o       = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : inst_lmem;
+
     // 写HILO寄存器使能信号
-    assign id_whilo_o      = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : inst_mult;
+    assign id_whilo_o      = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (
+        inst_mult | inst_mthi | inst_mtlo
+    );
+
     // 写通用寄存器使能信号
-    assign id_wreg_o       = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (inst_alu_reg | inst_alu_imm | inst_mf | inst_shift | inst_lmem);
+    assign id_wreg_o       = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (
+        inst_alu_reg | inst_alu_imm | inst_mf | inst_shift 
+        | inst_lmem
+    );
+
     // 读通用寄存器堆端口1使能信号
-    assign rreg1 = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (inst_alu_reg | inst_alu_imm | inst_mult | inst_lmem | inst_smem) & ~inst_lui;
+    assign rreg1 = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (
+        inst_alu_reg | inst_alu_imm | inst_mult | inst_lmem 
+        | inst_smem | inst_mthi | inst_mtlo
+    ) & ~inst_lui;
+
     // 读通用寄存器堆读端口2使能信号
-    assign rreg2 = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (inst_alu_reg | inst_mult | inst_shift | inst_smem);
+    assign rreg2 = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (
+        inst_alu_reg | inst_mult | inst_shift | inst_smem
+    );
     /*------------------------------------------------------------------------------*/
 
     // 读通用寄存器堆端口1的地址为rs字段，读端口2的地址为rt字段
