@@ -119,6 +119,7 @@ module id_stage(
     wire inst_imm_sign = 1'b0;
 
     wire inst_mf        = (inst_mfhi | inst_mflo);
+    // 移位使能信号
     wire inst_shift     = (inst_sll | inst_sllv);
     // // 加载指令(符号扩展)
     // wire inst_lmem_s    = (inst_lb | inst_lw);
@@ -140,13 +141,13 @@ module id_stage(
         inst_sb | inst_sw
     );
 
-    // 是否选择rt寄存器
+    // 目的寄存器选择信号
     wire rtsel  = (
         inst_alu_imm | 
         inst_lb | inst_lbu | inst_lw | inst_sb |
         inst_sw
     );
-    // 是否选择imm
+    // 立即数使能信号
     wire immsel = (
         inst_alu_imm |
         inst_lb | inst_lbu | inst_lw | inst_sb |
@@ -158,7 +159,7 @@ module id_stage(
         inst_imm_sign |
         inst_lb | inst_lw | inst_sb | inst_sw
     );
-    // 是否进行左移
+    // 加载高半字使能信号
     wire upper  = (inst_lui);
 
     wire [`REG_BUS] imm_ext = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD :
@@ -205,7 +206,7 @@ module id_stage(
         inst_andi | inst_nor | inst_xori
     );
 
-    // 是否用内存得到的数据写寄存器
+    // 存储器到寄存器使能信号
     assign id_mreg_o       = (cpu_rst_n == `RST_ENABLE) ? 1'b0:
                              (inst_lb | inst_lbu | inst_lw); 
 
