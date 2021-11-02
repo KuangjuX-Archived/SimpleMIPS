@@ -71,6 +71,7 @@
 `define MINIMIPS32_ADDU            8'h1E
 `define MINIMIPS32_SLT             8'h26
 `define MINIMIPS32_SLTIU           8'h27
+`define MINIMIPS32_SLTI            8'h28
 
 `define MINIMIPS32_SLLV            8'h30
 `define MINIMIPS32_SRAV            8'h31

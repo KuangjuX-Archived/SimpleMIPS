@@ -100,13 +100,16 @@ module exe_stage (
                       (exe_aluop_i == `MINIMIPS32_ADD) ? (exe_src1_i + exe_src2_i):
                       (exe_aluop_i == `MINIMIPS32_ADDU) ? (exe_src1_i + exe_src2_i):
                       (exe_aluop_i == `MINIMIPS32_LB) ? (exe_src1_i + exe_src2_i):
+                      (exe_aluop_i == `MINIMIPS32_LH) ? (exe_src1_i + exe_src2_i):
                       (exe_aluop_i == `MINIMIPS32_LW) ? (exe_src1_i + exe_src2_i):
                       (exe_aluop_i == `MINIMIPS32_SB) ? (exe_src1_i + exe_src2_i):
+                      (exe_aluop_i == `MINIMIPS32_SH) ? (exe_src1_i + exe_src2_i):
                       (exe_aluop_i == `MINIMIPS32_SW) ? (exe_src1_i + exe_src2_i):
                       (exe_aluop_i == `MINIMIPS32_ADDIU) ? (exe_src1_i + exe_src2_i):
                       (exe_aluop_i == `MINIMIPS32_SUBU) ? (exe_src1_i + (~exe_src2_i) + 1):
                       (exe_aluop_i == `MINIMIPS32_SUB) ? (exe_src1_i + (~exe_src2_i) + 1):
                       (exe_aluop_i == `MINIMIPS32_SLT) ? (($signed(exe_src1_i) < $signed(exe_src2_i)) ? 32'b1: 32'b0):
+                      (exe_aluop_i == `MINIMIPS32_SLTI) ? (($signed(exe_src1_i) < $signed(exe_src2_i)) ? 32'b1: 32'b0):
                       (exe_aluop_i == `MINIMIPS32_SLTIU) ? ((exe_src1_i < exe_src2_i) ? 32'b1: 32'b0) : 
                       `ZERO_WORD;
 

@@ -25,17 +25,19 @@ A Simple MIPS CPU for TJU Computer Architecture Course
 - [ ] BNE
 - [x] LB
 - [x] LBU
-- [ ] LH
-- [ ] LHU
+- [x] LH
+- [x] LHU
 - [x] LUI
 - [x] ORI 
 - [x] LW
 - [x] SB
-- [ ] SLTI
-- [ ] SLTIU
-- [ ] SH
+- [x] SLTI
+- [x] SLTIU
+- [x] SH
 - [x] SW  
 - [x] XORI
+
+
 
 ### R-type
 - [x] ADD
