@@ -23,14 +23,14 @@ A Simple MIPS CPU for TJU Computer Architecture Course
 - [ ] BLEZ
 - [ ] BLTZ
 - [ ] BNE
-- [ ] LB
+- [x] LB
 - [ ] LBU
 - [ ] LH
 - [ ] LHU
 - [x] LUI
 - [x] ORI 
 - [x] LW
-- [ ] SB
+- [x] SB
 - [ ] SLTI
 - [ ] SLTIU
 - [ ] SH
