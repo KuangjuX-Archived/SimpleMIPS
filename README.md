@@ -16,7 +16,7 @@ A Simple MIPS CPU for TJU Computer Architecture Course
 ### I-type
 - [x] ADDI 
 - [x] ADDIU
-- [ ] ANDI
+- [x] ANDI
 - [ ] BEQ
 - [ ] BGEZ
 - [ ] BGTZ
@@ -35,7 +35,7 @@ A Simple MIPS CPU for TJU Computer Architecture Course
 - [ ] SLTIU
 - [ ] SH
 - [x] SW  
-- [ ] XORI
+- [x] XORI
 
 ### R-type
 - [x] ADD
@@ -52,8 +52,8 @@ A Simple MIPS CPU for TJU Computer Architecture Course
 - [x] MTLO 
 - [x] MULT
 - [ ] MULTU
-- [ ] NOR
-- [ ] OR
+- [x] NOR
+- [x] OR
 - [x] SLL
 - [ ] SLLV
 - [x] SLT
@@ -65,11 +65,16 @@ A Simple MIPS CPU for TJU Computer Architecture Course
 - [ ] SUB
 - [x] SUBU
 - [ ] SYSCALL
-- [ ] XOR
+- [x] XOR
 
 ### J-type
 - [ ] J
 - [ ] JAL
+
+
+
+
+
 
 ## 测试通过的指令
 ### I-type
@@ -97,7 +102,7 @@ A Simple MIPS CPU for TJU Computer Architecture Course
 - [ ] XORI
 
 ### R-type
-- [ ] ADD
+- [x] ADD
 - [ ] ADDU
 - [x] AND
 - [ ] BREAK
