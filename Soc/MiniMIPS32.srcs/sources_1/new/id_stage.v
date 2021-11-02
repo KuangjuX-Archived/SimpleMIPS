@@ -84,6 +84,7 @@ module id_stage(
     wire inst_mthi  = inst_reg&~func[5]& func[4]&~func[3]&~func[2]&~func[1]& func[0];
     wire inst_mtlo  = inst_reg&~func[5]& func[4]&~func[3]&~func[2]& func[1]& func[0];
     wire inst_sll   = inst_reg&~func[5]&~func[4]&~func[3]&~func[2]&~func[1]&~func[0];
+    wire inst_or    = inst_reg& func[5]&~func[4]&~func[3]& func[2]&~func[1]& func[0];
 
     // I-type 指令
     wire inst_andi  = inst_imm&~op[5]&~op[4]& op[3]& op[2]&~op[1]&~op[0];
@@ -101,7 +102,8 @@ module id_stage(
     /*-------------------- 第二级译码逻辑：生成具体控制信号 --------------------*/
     // ALU R-type 指令
     wire inst_alu_reg   = (
-        inst_add | inst_subu | inst_and | inst_slt
+        inst_add | inst_subu | inst_and | inst_slt |
+        inst_or
     );
     // ALU I-type 指令
     wire inst_alu_imm   = (
@@ -119,7 +121,8 @@ module id_stage(
     wire inst_smem      = (inst_sb | inst_sw);
     // 逻辑运算指令
     wire inst_alu_logic = (
-        inst_andi | inst_and | inst_ori | inst_lui
+        inst_andi | inst_and | inst_ori | inst_or |
+        inst_lui 
     );
     // 数值运算指令
     wire inst_alu_arith = (
@@ -166,13 +169,13 @@ module id_stage(
         | inst_sltiu | inst_lui
     );
     assign id_aluop_o[1]   = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (
-        inst_subu | inst_slt | inst_mthi | inst_mtlo 
-        | inst_sltiu | inst_lw | inst_sw
+        inst_subu | inst_slt | inst_mthi | inst_mtlo |
+        inst_sltiu | inst_lw | inst_sw | inst_or
     );
     assign id_aluop_o[0]   = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (
-        inst_subu | inst_mflo  | inst_mtlo | inst_sll 
-        | inst_addiu | inst_ori | inst_sltiu | inst_lui
-        | inst_andi
+        inst_subu | inst_mflo  | inst_mtlo | inst_sll | 
+        inst_addiu | inst_ori | inst_sltiu | inst_lui |
+        inst_andi
     );
 
     // 是否用内存得到的数据写寄存器

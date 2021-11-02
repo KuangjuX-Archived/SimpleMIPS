@@ -97,7 +97,7 @@ A Simple MIPS CPU for TJU Computer Architecture Course
 - [ ] XORI
 
 ### R-type
-- [ ] ADD
+- [x] ADD
 - [ ] ADDU
 - [x] AND
 - [ ] BREAK
@@ -112,7 +112,7 @@ A Simple MIPS CPU for TJU Computer Architecture Course
 - [ ] MULT
 - [ ] MULTU
 - [ ] NOR
-- [ ] OR
+- [x] OR
 - [ ] SLL
 - [ ] SLLV
 - [x] SLT
