@@ -46,6 +46,7 @@
 `define SHIFT           3'b100
 
 // ÄÚ²¿²Ù×÷Âëaluop
+`define MINIMIPS32_ANDI            8'h01
 `define MINIMIPS32_LUI             8'h05
 `define MINIMIPS32_MFHI            8'h0C
 `define MINIMIPS32_MFLO            8'h0D

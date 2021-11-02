@@ -75,7 +75,7 @@ A Simple MIPS CPU for TJU Computer Architecture Course
 ### I-type
 - [x] ADDI 
 - [x] ADDIU
-- [ ] ANDI
+- [x] ANDI
 - [ ] BEQ
 - [ ] BGEZ
 - [ ] BGTZ

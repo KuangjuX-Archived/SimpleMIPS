@@ -59,9 +59,11 @@ module exe_stage (
     
     // 根据内部操作码aluop进行逻辑运算
     assign logicres = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD:
+                      (exe_aluop_i == `MINIMIPS32_ANDI) ? (exe_src1_i & exe_src2_i):
                       (exe_aluop_i == `MINIMIPS32_AND) ? (exe_src1_i & exe_src2_i):
                       (exe_aluop_i == `MINIMIPS32_ORI) ? (exe_src1_i | exe_src2_i):
-                      (exe_aluop_i == `MINIMIPS32_LUI) ? exe_src2_i : `ZERO_WORD;
+                      (exe_aluop_i == `MINIMIPS32_LUI) ? exe_src2_i : 
+                      `ZERO_WORD;
 
     // 根据内部操作码aluop进行移位操作
     assign shiftres = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD:
