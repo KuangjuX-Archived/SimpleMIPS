@@ -47,12 +47,10 @@ module mem_stage (
     assign mem_hilo_o   = (cpu_rst_n == `RST_ENABLE) ? 64'b0: mem_hilo_i;
     assign mem_mreg_o   = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : mem_mreg_i;
     
-    // 确定当前的访存指令 lb lh lw sb sh sw
+    // 确定当前的访存指令
     wire inst_lb = (mem_aluop_i == 8'h90);
-    wire inst_lh = (mem_aluop_i == 8'h91);
     wire inst_lw = (mem_aluop_i == 8'h92);
     wire inst_sb = (mem_aluop_i == 8'h98);
-    wire inst_sh = (mem_aluop_i == 8'h99);
     wire inst_sw = (mem_aluop_i == 8'h9A);
     
     // 获得数据存储器的访问地址
@@ -60,38 +58,33 @@ module mem_stage (
     
     // 获得数据存储器读字节使能信号
     assign dre[3] = (cpu_rst_n == `RST_ENABLE) ? 1'b0:
-                    ( (inst_lb & (daddr[1:0] == 2'b00) ) | inst_lw | (inst_lh & ( daddr[1:0] == 2'b00 | daddr[1:0] == 2'b11) ));
+                    ( (inst_lb & (daddr[1:0] == 2'b00) ) | inst_lw );
     assign dre[2] = (cpu_rst_n == `RST_ENABLE) ? 1'b0:
-                    ( (inst_lb & (daddr[1:0] == 2'b01) ) | inst_lw | (inst_lh & ( daddr[1:0] == 2'b00 | daddr[1:0] == 2'b01) ));
+                    ( (inst_lb & (daddr[1:0] == 2'b01) ) | inst_lw );
     assign dre[1] = (cpu_rst_n == `RST_ENABLE) ? 1'b0:
-                    ( (inst_lb & (daddr[1:0] == 2'b10) ) | inst_lw | (inst_lh & ( daddr[1:0] == 2'b01 | daddr[1:0] == 2'b10) ));
+                    ( (inst_lb & (daddr[1:0] == 2'b10) ) | inst_lw );
     assign dre[0] = (cpu_rst_n == `RST_ENABLE) ? 1'b0:
-                    ( (inst_lb & (daddr[1:0] == 2'b11) ) | inst_lw | (inst_lh & ( daddr[1:0] == 2'b10 | daddr[1:0] == 2'b11) ));
+                    ( (inst_lb & (daddr[1:0] == 2'b11) ) | inst_lw );
                     
     // 获得数据存储器使能信号
     assign dce = (cpu_rst_n == `RST_ENABLE) ? 1'b0:
-                 ( inst_lb | inst_lh | inst_lw | inst_sb | inst_sh | inst_sw );
+                 ( inst_lb | inst_lw | inst_sb | inst_sw );
                  
     // 获得数据存储器写字节使能信号
     assign we[3] = (cpu_rst_n == `RST_ENABLE) ? 1'b0:
-                    ( (inst_sb & (daddr[1:0] == 2'b00) ) | inst_sw | (inst_sh & (daddr[1:0] == 2'b11 | daddr[1:0] == 2'b00 )));
+                    ( (inst_sb & (daddr[1:0] == 2'b00) ) | inst_sw );
     assign we[2] = (cpu_rst_n == `RST_ENABLE) ? 1'b0:
-                    ( (inst_sb & (daddr[1:0] == 2'b01) ) | inst_sw | (inst_sh & (daddr[1:0] == 2'b00 | daddr[1:0] == 2'b01 )));
+                    ( (inst_sb & (daddr[1:0] == 2'b01) ) | inst_sw );
     assign we[1] = (cpu_rst_n == `RST_ENABLE) ? 1'b0:
-                    ( (inst_sb & (daddr[1:0] == 2'b10) ) | inst_sw | (inst_sh & (daddr[1:0] == 2'b01 | daddr[1:0] == 2'b10 )));
+                    ( (inst_sb & (daddr[1:0] == 2'b10) ) | inst_sw );
     assign we[0] = (cpu_rst_n == `RST_ENABLE) ? 1'b0:
-                    ( (inst_sb & (daddr[1:0] == 2'b11) ) | inst_sw | (inst_sh & (daddr[1:0] == 2'b10 | daddr[1:0] == 2'b11 )));
+                    ( (inst_sb & (daddr[1:0] == 2'b11) ) | inst_sw );
     
     // 确定待写入数据存储器的数据
     wire [`WORD_BUS] din_reverse = {mem_din_i[7:0], mem_din_i[15:8], mem_din_i[23:16], mem_din_i[31:24]};
-    wire [`WORD_BUS] din_halfword = {mem_din_i[7:0], mem_din_i[15:8],mem_din_i[7:0], mem_din_i[15:8]};
     wire [`WORD_BUS] din_byte = {mem_din_i[7:0], mem_din_i[7:0], mem_din_i[7:0], mem_din_i[7:0]};
     assign din = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD :
                  (we == 4'b1111     ) ? din_reverse :
-                 (we == 4'b1100     ) ? din_halfword:
-                 (we == 4'b0110     ) ? din_halfword:
-                 (we == 4'b0011     ) ? din_halfword:
-                 (we == 4'b1001     ) ? din_halfword:
                  (we == 4'b1000     ) ? din_byte :
                  (we == 4'b0100     ) ? din_byte :
                  (we == 4'b0010     ) ? din_byte :

@@ -39,7 +39,7 @@ A Simple MIPS CPU for TJU Computer Architecture Course
 
 ### R-type
 - [x] ADD
-- [ ] ADDU
+- [x] ADDU
 - [x] AND
 - [ ] BREAK
 - [ ] DIV
@@ -51,18 +51,18 @@ A Simple MIPS CPU for TJU Computer Architecture Course
 - [x] MTHI
 - [x] MTLO 
 - [x] MULT
-- [ ] MULTU
+- [x] MULTU
 - [x] NOR
 - [x] OR
 - [x] SLL
 - [x] SLLV
 - [x] SLT
 - [x] SLTU
-- [ ] SRA
-- [ ] SRAV
-- [ ] SRL
-- [ ] SRLV
-- [ ] SUB
+- [x] SRA
+- [x] SRAV
+- [x] SRL
+- [x] SRLV
+- [x] SUB
 - [x] SUBU
 - [ ] SYSCALL
 - [x] XOR
