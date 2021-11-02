@@ -24,7 +24,7 @@ A Simple MIPS CPU for TJU Computer Architecture Course
 - [ ] BLTZ
 - [ ] BNE
 - [x] LB
-- [ ] LBU
+- [x] LBU
 - [ ] LH
 - [ ] LHU
 - [x] LUI
