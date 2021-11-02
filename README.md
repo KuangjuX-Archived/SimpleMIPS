@@ -12,6 +12,65 @@ A Simple MIPS CPU for TJU Computer Architecture Course
   - assembler：使用 Python 编写的跨平台的汇编器
   - disassembler：使用 Python 编写的跨平台的反汇编器
 
+## 实现的指令
+### I-type
+- [x] ADDI 
+- [x] ADDIU
+- [ ] ANDI
+- [ ] BEQ
+- [ ] BGEZ
+- [ ] BGTZ
+- [ ] BLEZ
+- [ ] BLTZ
+- [ ] BNE
+- [x] LB
+- [ ] LBU
+- [ ] LH
+- [ ] LHU
+- [x] LUI
+- [x] ORI 
+- [x] LW
+- [x] SB
+- [ ] SLTI
+- [ ] SLTIU
+- [ ] SH
+- [x] SW  
+- [ ] XORI
+
+### R-type
+- [x] ADD
+- [ ] ADDU
+- [x] AND
+- [ ] BREAK
+- [ ] DIV
+- [ ] DIVU
+- [ ] JALR
+- [ ] JR
+- [x] MFHI
+- [x] MFLO
+- [x] MTHI
+- [x] MTLO 
+- [x] MULT
+- [ ] MULTU
+- [ ] NOR
+- [ ] OR
+- [x] SLL
+- [ ] SLLV
+- [x] SLT
+- [x] SLTU
+- [ ] SRA
+- [ ] SRAV
+- [ ] SRL
+- [ ] SRLV
+- [ ] SUB
+- [x] SUBU
+- [ ] SYSCALL
+- [ ] XOR
+
+### J-type
+- [ ] J
+- [ ] JAL
+
 ## 测试通过的指令
 ### I-type
 - [x] ADDI 
@@ -70,8 +129,6 @@ A Simple MIPS CPU for TJU Computer Architecture Course
 ### J-type
 - [ ] J
 - [ ] JAL
-
-### 自陷指令
 
 ## TODO
 - [ ] 将译码阶段的一些部分进行封装
