@@ -48,7 +48,10 @@
 // ÄÚ²¿²Ù×÷Âëaluop
 `define MINIMIPS32_ANDI            8'h01
 `define MINIMIPS32_OR              8'h02
+`define MINIMIPS32_NOR             8'h03
 `define MINIMIPS32_LUI             8'h05
+`define MINIMIPS32_XOR             8'h06
+`define MINIMIPS32_XORI            8'h07
 `define MINIMIPS32_MFHI            8'h0C
 `define MINIMIPS32_MFLO            8'h0D
 `define MINIMIPS32_MTHI            8'h0E
