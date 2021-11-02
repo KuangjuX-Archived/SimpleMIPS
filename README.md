@@ -14,17 +14,63 @@ A Simple MIPS CPU for TJU Computer Architecture Course
 
 ## 测试通过的指令
 ### I-type
-- [x] LUI
 - [x] ADDI 
+- [ ] ADDIU
+- [ ] ANDI
+- [ ] BEQ
+- [ ] BGEZ
+- [ ] BGTZ
+- [ ] BLEZ
+- [ ] BLTZ
+- [ ] BNE
+- [ ] LB
+- [ ] LBU
+- [ ] LH
+- [ ] LHU
+- [x] LUI
+- [ ] LW
 - [x] ORI 
-- [x] ADDIU 
+- [x] LW
+- [ ] SB
+- [ ] SLTI
+- [ ] SLTIU
+- [ ] SH
+- [x] SW  
+- [ ] XORI
 
 ### R-type
+- [ ] ADD
+- [ ] ADDU
 - [x] AND
-- [x] LW
-- [x] SW  
+- [ ] BREAK
+- [ ] DIV
+- [ ] DIVU
+- [ ] JALR
+- [ ] JR
+- [ ] MFHI
+- [ ] MFLO
+- [ ] MTHI
+- [ ] MTLO 
+- [ ] MULT
+- [ ] MULTU
+- [ ] NOR
+- [ ] OR
+- [ ] SLL
+- [ ] SLLV
+- [ ] SLT
+- [ ] SLTU
+- [ ] SRA
+- [ ] SRAV
+- [ ] SRL
+- [ ] SRLV
+- [ ] SUB
+- [ ] SUBU
+- [ ] SYSCALL
+- [ ] XOR
 
 ### J-type
+- [ ] J
+- [ ] JAL
 
 ### 自陷指令
 
