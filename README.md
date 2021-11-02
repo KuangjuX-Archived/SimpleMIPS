@@ -15,7 +15,7 @@ A Simple MIPS CPU for TJU Computer Architecture Course
 ## 测试通过的指令
 ### I-type
 - [x] ADDI 
-- [ ] ADDIU
+- [x] ADDIU
 - [ ] ANDI
 - [ ] BEQ
 - [ ] BGEZ
@@ -28,7 +28,6 @@ A Simple MIPS CPU for TJU Computer Architecture Course
 - [ ] LH
 - [ ] LHU
 - [x] LUI
-- [ ] LW
 - [x] ORI 
 - [x] LW
 - [ ] SB
