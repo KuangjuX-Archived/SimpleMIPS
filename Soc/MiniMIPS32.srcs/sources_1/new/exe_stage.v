@@ -71,7 +71,9 @@ module exe_stage (
 
     // 根据内部操作码aluop进行移位操作
     assign shiftres = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD:
-                      (exe_aluop_i == `MINIMIPS32_SLL) ? (exe_src2_i << exe_src1_i) : `ZERO_WORD;
+                      (exe_aluop_i == `MINIMIPS32_SLL) ? (exe_src2_i << exe_src1_i):
+                      (exe_aluop_i == `MINIMIPS32_SLLV) ? (exe_src2_i << exe_src1_i):
+                      `ZERO_WORD;
     
     // 根据内部操作数aluop进行数据移动，得到最新的HI、LO寄存器的值
     assign hi_t = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD: 

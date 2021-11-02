@@ -55,7 +55,7 @@ A Simple MIPS CPU for TJU Computer Architecture Course
 - [x] NOR
 - [x] OR
 - [x] SLL
-- [ ] SLLV
+- [x] SLLV
 - [x] SLT
 - [x] SLTU
 - [ ] SRA

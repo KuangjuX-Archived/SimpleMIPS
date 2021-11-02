@@ -46,6 +46,7 @@
 `define SHIFT           3'b100
 
 // ÄÚ²¿²Ù×÷Âëaluop
+
 `define MINIMIPS32_ANDI            8'h01
 `define MINIMIPS32_OR              8'h02
 `define MINIMIPS32_NOR             8'h03
@@ -65,6 +66,13 @@
 `define MINIMIPS32_ORI             8'h1D
 `define MINIMIPS32_SLT             8'h26
 `define MINIMIPS32_SLTIU           8'h27
+
+`define MINIMIPS32_SLLV            8'h30
+`define MINIMIPS32_SRAV            8'h31
+`define MINIMIPS32_SRA             8'h32
+`define MINIMIPS32_SRLV            8'h33
+`define MINIMIPS32_SRL             8'h34
+
 `define MINIMIPS32_LB              8'h90
 `define MINIMIPS32_LBU             8'h91
 `define MINIMIPS32_LW              8'h92
