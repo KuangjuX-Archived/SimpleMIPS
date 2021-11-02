@@ -76,7 +76,10 @@
 `define MINIMIPS32_LB              8'h90
 `define MINIMIPS32_LBU             8'h91
 `define MINIMIPS32_LW              8'h92
+`define MINIMIPS32_LH              8'h93
+`define MINIMIPS32_LHU             8'h94
 `define MINIMIPS32_SB              8'h98
+`define MINIMIPS32_SH              8'h99 
 `define MINIMIPS32_SW              8'h9A
 
 /*------------------- 通用寄存器堆参数 -------------------*/

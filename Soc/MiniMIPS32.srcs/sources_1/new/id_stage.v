@@ -100,6 +100,7 @@ module id_stage(
     wire inst_sb    = inst_imm& op[5]&~op[4]& op[3]&~op[2]&~op[1]&~op[0];
     wire inst_sw    = inst_imm& op[5]&~op[4]& op[3]&~op[2]& op[1]& op[0];
     wire inst_xori  = inst_imm&~op[5]&~op[4]& op[3]& op[2]& op[1]&~op[0];
+    wire inst_lbu   = inst_imm& op[5]&~op[4]&~op[3]& op[2]&~op[1]&~op[0];
    
     /*------------------------------------------------------------------------------*/
 
@@ -118,11 +119,15 @@ module id_stage(
     wire inst_imm_sign = 1'b0;
 
     wire inst_mf        = (inst_mfhi | inst_mflo);
-    wire inst_shift     = (inst_sll);
-    // 加载指令
-    wire inst_lmem      = (inst_lb | inst_lw);
-    // 存储指令
-    wire inst_smem      = (inst_sb | inst_sw);
+    wire inst_shift     = (inst_sll | inst_sllv);
+    // // 加载指令(符号扩展)
+    // wire inst_lmem_s    = (inst_lb | inst_lw);
+    // // 加载指令(非符号扩展)
+    // wire inst_lmem_u    = (inst_lbu);
+    // // 存储指令(符号扩展)
+    // wire inst_smem_s    = (inst_sb | inst_sw);
+    // // 存储指令(非符号扩展)
+    // wire inst_smem_u    = (1'b0);
     // 逻辑运算指令
     wire inst_alu_logic = (
         inst_andi | inst_and | inst_ori | inst_or |
@@ -131,15 +136,28 @@ module id_stage(
     // 数值运算指令
     wire inst_alu_arith = (
         inst_add | inst_subu | inst_slt | inst_addiu | 
-        inst_sltiu | inst_lmem | inst_smem
+        inst_sltiu | inst_lw | inst_lb  | inst_lbu |
+        inst_sb | inst_sw
     );
 
     // 是否选择rt寄存器
-    wire rtsel  = (inst_alu_imm | inst_lmem | inst_smem);
+    wire rtsel  = (
+        inst_alu_imm | 
+        inst_lb | inst_lbu | inst_lw | inst_sb |
+        inst_sw
+    );
     // 是否选择imm
-    wire immsel = (inst_alu_imm | inst_lmem | inst_smem);
+    wire immsel = (
+        inst_alu_imm |
+        inst_lb | inst_lbu | inst_lw | inst_sb |
+        inst_sw
+    );
+
     // 是否进行符号扩展信号
-    wire sext   = (inst_imm_sign | inst_lmem | inst_smem);
+    wire sext   = (
+        inst_imm_sign |
+        inst_lb | inst_lw | inst_sb | inst_sw
+    );
     // 是否进行左移
     wire upper  = (inst_lui);
 
@@ -154,13 +172,17 @@ module id_stage(
 
 
     // 内部操作码aluop
-    assign id_aluop_o[7]   = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (inst_lb | inst_lw | inst_sb | inst_sw);
+    assign id_aluop_o[7]   = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (
+        inst_lb | inst_lw | inst_sb | inst_sw |
+        inst_lbu
+    );
     assign id_aluop_o[6]   = 1'b0;
     assign id_aluop_o[5]   = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (inst_slt | inst_sltiu | inst_sllv);
     assign id_aluop_o[4]   = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (
         inst_add | inst_subu | inst_and | inst_mult |
         inst_sll | inst_addiu | inst_ori | inst_lb |
-        inst_lw | inst_sb | inst_sw | inst_sllv
+        inst_lw | inst_sb | inst_sw | inst_sllv |
+        inst_lbu
     );
     assign id_aluop_o[3]   = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (
         inst_add | inst_subu | inst_and | inst_mfhi | 
@@ -184,7 +206,8 @@ module id_stage(
     );
 
     // 是否用内存得到的数据写寄存器
-    assign id_mreg_o       = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : inst_lmem;
+    assign id_mreg_o       = (cpu_rst_n == `RST_ENABLE) ? 1'b0:
+                             (inst_lb | inst_lbu | inst_lw); 
 
     // 写HILO寄存器使能信号
     assign id_whilo_o      = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (
@@ -193,19 +216,21 @@ module id_stage(
 
     // 写通用寄存器使能信号
     assign id_wreg_o       = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (
-        inst_alu_reg | inst_alu_imm | inst_mf | inst_shift 
-        | inst_lmem
+        inst_alu_reg | inst_alu_imm | inst_mf | inst_shift |
+        inst_lb | inst_lbu | inst_sw
     );
 
     // 读通用寄存器堆端口1使能信号
     assign rreg1 = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (
-        inst_alu_reg | inst_alu_imm | inst_mult | inst_lmem 
-        | inst_smem | inst_mthi | inst_mtlo
+        inst_alu_reg | inst_alu_imm | inst_mult | inst_mthi | 
+        inst_mtlo | inst_lb | inst_lbu | inst_lw |
+        inst_sb | inst_sw
     ) & ~inst_lui;
 
     // 读通用寄存器堆读端口2使能信号
     assign rreg2 = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (
-        inst_alu_reg | inst_mult | inst_shift | inst_smem
+        inst_alu_reg | inst_mult | inst_shift | inst_sb |
+        inst_sw
     );
     /*------------------------------------------------------------------------------*/
 
