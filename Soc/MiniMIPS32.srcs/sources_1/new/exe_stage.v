@@ -75,8 +75,8 @@ module exe_stage (
                       (exe_aluop_i == `MINIMIPS32_SLLV) ? (exe_src2_i << exe_src1_i):
                       (exe_aluop_i == `MINIMIPS32_SRL) ? (exe_src2_i >> exe_src1_i):
                       (exe_aluop_i == `MINIMIPS32_SRLV) ? (exe_src2_i >> exe_src1_i):
-                      (exe_aluop_i == `MINIMIPS32_SRA) ? $signed($signed(exe_src2_i) >> exe_src1_i):
-                      (exe_aluop_i == `MINIMIPS32_SRAV) ? $signed($signed(exe_src2_i) >> exe_src1_i):
+                      (exe_aluop_i == `MINIMIPS32_SRA) ? $signed($signed(exe_src2_i) >>> exe_src1_i):
+                      (exe_aluop_i == `MINIMIPS32_SRAV) ? $signed($signed(exe_src2_i) >>> exe_src1_i):
                       `ZERO_WORD;
     
     // 根据内部操作数aluop进行数据移动，得到最新的HI、LO寄存器的值

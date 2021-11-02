@@ -120,7 +120,7 @@ A Simple MIPS CPU for TJU Computer Architecture Course
 - [ ] MULTU
 - [ ] NOR
 - [ ] OR
-- [ ] SLL
+- [x] SLL
 - [ ] SLLV
 - [x] SLT
 - [ ] SLTU
