@@ -110,7 +110,7 @@ module exe_stage (
                       (exe_aluop_i == `MINIMIPS32_SUB) ? (exe_src1_i + (~exe_src2_i) + 1):
                       (exe_aluop_i == `MINIMIPS32_SLT) ? (($signed(exe_src1_i) < $signed(exe_src2_i)) ? 32'b1: 32'b0):
                       (exe_aluop_i == `MINIMIPS32_SLTI) ? (($signed(exe_src1_i) < $signed(exe_src2_i)) ? 32'b1: 32'b0):
-                      (exe_aluop_i == `MINIMIPS32_SLTIU) ? ((exe_src1_i < exe_src2_i) ? 32'b1: 32'b0) : 
+                      (exe_aluop_i == `MINIMIPS32_SLTIU) ? (($unsigned(exe_src1_i) < $unsigned(exe_src2_i)) ? 32'b1: 32'b0) : 
                       `ZERO_WORD;
 
     // 根据内部操作码aluop进行乘法操作，并保存送至下一阶段

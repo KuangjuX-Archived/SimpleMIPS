@@ -129,7 +129,7 @@ module id_stage(
         inst_andi | inst_xori | inst_slti
     );
     // 立即数符号扩展指令
-    wire inst_imm_sign = (inst_lmem_s | inst_smem);
+    wire inst_imm_sign = (inst_lmem_s | inst_smem | inst_alu_imm);
 
     wire inst_mf        = (inst_mfhi | inst_mflo);
     // 移位使能信号
@@ -151,10 +151,9 @@ module id_stage(
     );
     // 数值运算指令
     wire inst_alu_arith = (
+        inst_lmem_s | inst_lmem_u | inst_smem |
         inst_add | inst_subu | inst_slt | inst_addiu | 
-        inst_sltiu | inst_lw | inst_lb  | inst_lbu |
-        inst_sb | inst_sw | inst_sub | inst_addu |
-        inst_slti
+        inst_sltiu | inst_sub | inst_addu | inst_slti
     );
 
     // 目的寄存器选择信号

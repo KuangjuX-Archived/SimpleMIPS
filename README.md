@@ -83,7 +83,7 @@ A Simple MIPS CPU for TJU Computer Architecture Course
 ### I-type
 - [x] ADDI 
 - [x] ADDIU
-- [ ] ANDI
+- [x] ANDI
 - [ ] BEQ
 - [ ] BGEZ
 - [ ] BGTZ
@@ -98,15 +98,15 @@ A Simple MIPS CPU for TJU Computer Architecture Course
 - [x] ORI 
 - [x] LW
 - [x] SB
-- [ ] SLTI
-- [ ] SLTIU
+- [x] SLTI
+- [x] SLTIU
 - [ ] SH
 - [x] SW  
 - [ ] XORI
 
 ### R-type
 - [x] ADD
-- [ ] ADDU
+- [x] ADDU
 - [x] AND
 - [ ] BREAK
 - [ ] DIV
@@ -129,8 +129,8 @@ A Simple MIPS CPU for TJU Computer Architecture Course
 - [ ] SRAV
 - [ ] SRL
 - [ ] SRLV
-- [ ] SUB
-- [ ] SUBU
+- [x] SUB
+- [x] SUBU
 - [ ] SYSCALL
 - [ ] XOR
 
