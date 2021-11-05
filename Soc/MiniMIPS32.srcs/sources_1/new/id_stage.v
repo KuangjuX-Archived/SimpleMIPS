@@ -4,6 +4,7 @@ module id_stage(
     input  wire                    cpu_rst_n,
     // 从取指阶段获得的PC值
     input  wire [`INST_ADDR_BUS]    id_pc_i,
+    input  wire [`INST_ADDR_BUS]    id_pc_plus_4_i,
 
     // 从指令存储器读出的指令字
     input  wire [`INST_BUS     ]    id_inst_i,
@@ -40,7 +41,13 @@ module id_stage(
     output wire                     rreg1,
     output wire [`REG_ADDR_BUS ]    ra1,
     output wire                     rreg2,
-    output wire [`REG_ADDR_BUS ]    ra2
+    output wire [`REG_ADDR_BUS ]    ra2,
+
+    output wire [`INST_ADDR_BUS]    jump_addr_1_o,
+    output wire [`INST_ADDR_BUS]    jump_addr_2_o,
+    output wire [`INST_ADDR_BUS]    jump_addr_3_o,
+    output wire [`JTSEL_BUS]        jtsel_o,
+    output wire [`INST_ADDR_BUS]    ret_addr_o
     );
 
     // 产生源操作数选择信号（源操作数可能来自执行与访存阶段，定向前推） 
@@ -112,6 +119,14 @@ module id_stage(
     wire inst_lh    = inst_imm& op[5]&~op[4]&~op[3]&~op[2]&~op[1]& op[0];
     wire inst_lhu   = inst_imm& op[5]&~op[4]&~op[3]& op[2]&~op[1]& op[0];
     wire inst_sh    = inst_imm& op[5]&~op[4]& op[3]&~op[2]&~op[1]& op[0];
+
+    // 跳转指令生成
+    wire inst_j     = ~op[5]&~op[4]&~op[3]&~op[2]& op[1]&~op[0];
+    wire inst_jal   = ~op[5]&~op[4]&~op[3]&~op[2]& op[1]& op[0];
+    wire inst_jr    = inst_reg&~func[5]&~func[4]& func[3]&~func[2]&~func[1]&~func[0];
+    wire inst_beq   = ~op[5]&~op[4]&~op[3]& op[2]&~op[1]&~op[0];
+    wire inst_bne   = ~op[5]&~op[4]&~op[3]& op[2]&~op[1]& op[0];
+
    
     /*------------------------------------------------------------------------------*/
 
@@ -174,11 +189,20 @@ module id_stage(
     wire [`REG_BUS] imm_ext = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD :
                                (upper == `UPPER_ENABLE) ? (imm << 16) :
                                (sext == `SIGNED_EXT) ? { { 16{imm[15]} }, imm} : {{16{1'b0}}, imm};
+
+    // 生成相等使能信号
+    wire equ = (cpu_rst_n == `RST_ENABLE) ? 1'b0:
+               (inst_beq) ? (id_src1_o == id_src2_o):
+               (inst_bne) ? (id_src1_o == id_src2_o):
+               1'b0;
+
+    // 是否为跳转指令
+    wire inst_j_type = (inst_j | inst_jal | inst_jr | inst_bne | inst_beq);
                               
     // 操作类型alutype
-    assign id_alutype_o[2] = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : inst_shift;
+    assign id_alutype_o[2] = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (inst_shift | inst_j_type); 
     assign id_alutype_o[1] = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (inst_alu_logic | inst_mf);
-    assign id_alutype_o[0] = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (inst_alu_arith | inst_mf);
+    assign id_alutype_o[0] = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (inst_alu_arith | inst_mf | inst_j_type);
 
 
     // 内部操作码aluop
@@ -186,7 +210,10 @@ module id_stage(
         inst_lb | inst_lw | inst_sb | inst_sw |
         inst_lbu | inst_lh | inst_lhu | inst_sh
     );
-    assign id_aluop_o[6]   = 1'b0;
+    assign id_aluop_o[6]   = (
+        inst_j | inst_jr | inst_jal | inst_beq |
+        inst_bne
+    );
     assign id_aluop_o[5]   = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (
         inst_slt | inst_sltiu | inst_sllv | inst_sra |
         inst_srav | inst_srlv | inst_srl | inst_slti
@@ -209,19 +236,22 @@ module id_stage(
         inst_and | inst_slt | inst_mult | inst_mfhi |
         inst_mflo | inst_mthi | inst_mtlo | inst_ori |
         inst_sltiu | inst_lui | inst_xor | inst_xori |
-        inst_multu | inst_addu | inst_srl | inst_lhu
+        inst_multu | inst_addu | inst_srl | inst_lhu |
+        inst_bne
     );
     assign id_aluop_o[1]   = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (
         inst_subu | inst_slt | inst_mthi | inst_mtlo |
         inst_sltiu | inst_lw | inst_sw | inst_or | inst_nor |
         inst_xor | inst_xori | inst_sub | inst_addu |
-        inst_sra | inst_srlv | inst_lh
+        inst_sra | inst_srlv | inst_lh | inst_jal |
+        inst_beq
     );
     assign id_aluop_o[0]   = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (
         inst_subu | inst_mflo  | inst_mtlo | inst_sll | 
         inst_addiu | inst_ori | inst_sltiu | inst_lui |
         inst_andi | inst_nor | inst_xori | inst_multu |
-        inst_srav | inst_srlv | inst_lh | inst_sh
+        inst_srav | inst_srlv | inst_lh | inst_sh |
+        inst_jr | inst_beq
     );
 
     // 存储器到寄存器使能信号
@@ -236,21 +266,30 @@ module id_stage(
     // 写通用寄存器使能信号
     assign id_wreg_o       = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (
         inst_alu_reg | inst_alu_imm | inst_mf | inst_shift |
-        inst_lmem_u | inst_lmem_s
+        inst_lmem_u | inst_lmem_s | inst_jal
     );
 
     // 读通用寄存器堆端口1使能信号
     assign rreg1 = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (
         inst_alu_reg | inst_alu_imm | inst_lmem_s | inst_lmem_u |
         inst_smem | inst_mult | inst_mthi | inst_mtlo | 
-        inst_sb | inst_sw | inst_multu
+        inst_sb | inst_sw | inst_multu | inst_jr |
+        inst_beq | inst_bne
     ) & ~inst_lui;
 
     // 读通用寄存器堆读端口2使能信号
     assign rreg2 = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (
         inst_alu_reg | inst_mult | inst_shift | inst_smem |
-        inst_multu
+        inst_multu | inst_beq | inst_bne
     );
+
+    // 生成子程序调用使能信号
+    wire jal = inst_jal;
+
+    // 生成转移地址选择信号
+    assign jtsel_o[1] = inst_jr | inst_beq & equ | inst_bne & equ;
+    assign jtsel_o[0] = inst_j | inst_jal | inst_beq & equ | inst_bne & equ;
+
     /*------------------------------------------------------------------------------*/
 
     // 读通用寄存器堆端口1的地址为rs字段，读端口2的地址为rt字段
@@ -259,7 +298,9 @@ module id_stage(
 
     // 获得待写入目的寄存器的地址（rt或rd）
     assign id_wa_o      = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD :
-                          (rtsel == `RT_ENABLE) ? rt : rd;
+                          (rtsel == `RT_ENABLE) ? rt: 
+                          (jal == `TRUE_V) ? 5'b11111:
+                          rd;
 
     // 获得源操作数1。如果shift信号有效，则源操作数1为移位位数；否则为从读通用寄存器堆端口1获得的数据
     // 源操作数1也可能来自执行阶段前推的数据或者访存阶段前推的数据
@@ -284,5 +325,18 @@ module id_stage(
                       (fwrd2 == 2'b10) ? mem2id_wd_i :
                       (fwrd2 == 2'b11) ? rd2 : `ZERO_WORD;
                       
+    // 生成计算转移地址所需信号
+    wire [`INST_ADDR_BUS] pc_plus_8 = id_pc_plus_4_i + 4;
+    wire [`JUMP_BUS] instr_index = id_inst[25 : 0];
+    wire [`INST_ADDR_BUS] imm_jump = {{14{imm[15]}}, imm, 2'b0};
+
+    // 获得转移地址
+    assign jump_addr_1_o = {id_pc_plus_4_i[31 : 28], instr_index, 2'b00};
+    assign jump_addr_2_o = id_pc_plus_4_i + imm_jump;
+    assign jump_addr_3_o = id_src1_o;
+
+    // 生成子程序调用的返回地址
+    assign ret_addr_o = pc_plus_8;
+
     
 endmodule

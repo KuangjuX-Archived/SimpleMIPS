@@ -3,15 +3,29 @@
 module if_stage (
     input 	wire 					cpu_clk_50M,
     input 	wire 					cpu_rst_n,
+    input   wire [`INST_ADDR_BUS]   jump_addr_1_i,
+    input   wire [`INST_ADDR_BUS]   jump_addr_2_i,
+    input   wire [`INST_ADDR_BUS]   jump_addr_3_i,
+    input   wire [`JTSEL_BUS]       jtsel_i,
     
     output  reg                     ice,
     output 	reg  [`INST_ADDR_BUS] 	pc,
-    output 	wire [`INST_ADDR_BUS]	iaddr
+    output 	wire [`INST_ADDR_BUS]	iaddr,
+    output  wire [`INST_ADDR_BUS]   pc_plus_4_o
     );
+
+    // 获得 PC+4, 提供给译码阶段，用于产生转移地址
+    assign  pc_plus_4_o = (cpu_rst_n == `RST_ENABLE) ? `PC_INIT: pc + 4;
     
     wire [`INST_ADDR_BUS] pc_next; 
-    
-    assign pc_next = pc + 4;                  // 计算下一条指令的地址
+
+    // 计算下一条指令的地址
+    assign pc_next = (jtsel_i == 2'b00) ? pc_plus_4_o:
+                     (jtsel_i == 2'b01) ? jump_addr_1_i:    // J, JAR 转移地址
+                     (jtsel_i == 2'b10) ? jump_addr_2_i:    // JR 转移地址
+                     (jtsel_i == 2'b11) ? jump_addr_3_i:    // BEQ, BNE 转移地址
+                     `PC_INIT;
+
     
     always @(posedge cpu_clk_50M) begin
 		if (cpu_rst_n == `RST_ENABLE) begin

@@ -18,12 +18,12 @@ A Simple MIPS CPU for TJU Computer Architecture Course
 - [x] ADDI 
 - [x] ADDIU
 - [x] ANDI
-- [ ] BEQ
+- [x] BEQ
 - [ ] BGEZ
 - [ ] BGTZ
 - [ ] BLEZ
 - [ ] BLTZ
-- [ ] BNE
+- [x] BNE
 - [x] LB
 - [x] LBU
 - [x] LH
@@ -47,8 +47,8 @@ A Simple MIPS CPU for TJU Computer Architecture Course
 - [ ] BREAK
 - [ ] DIV
 - [ ] DIVU
-- [ ] JALR
-- [ ] JR
+- [x] JALR
+- [x] JR
 - [x] MFHI
 - [x] MFLO
 - [x] MTHI
@@ -71,8 +71,8 @@ A Simple MIPS CPU for TJU Computer Architecture Course
 - [x] XOR
 
 ### J-type
-- [ ] J
-- [ ] JAL
+- [x] J
+- [x] JAL
 
 
 

@@ -121,13 +121,29 @@ module MiniMIPS32(
     wire                   wb2exe_whilo;
     wire [`DOUBLE_REG_BUS] wb2exe_hilo;
 
+    wire [`INST_ADDR_BUS] if_pc_plus_4;
+    wire [`INST_ADDR_BUS] id_pc_plus_4;
+    wire [`INST_ADDR_BUS] jump_addr_1;
+    wire [`INST_ADDR_BUS] jump_addr_2;
+    wire [`INST_ADDR_BUS] jump_addr_3;
+    wire [`JTSEL_BUS]     jtsel;
+
+    wire [`INST_ADDR_BUS]    id_ret_addr;
+    wire [`INST_ADDR_BUS]    exe_ret_addr;
+
     // 例化取指阶段模块
     if_stage if_stage0(
         .cpu_clk_50M(cpu_clk_50M), 
         .cpu_rst_n(cpu_rst_n),
+        .jump_addr_1_i(jump_addr_1),
+        .jump_addr_2_i(jump_addr_2),
+        .jump_addr_3_i(jump_addr_3),
+        .jtsel_bus_i(jtsel),
+
         .pc(pc), 
         .ice(ice), 
-        .iaddr(iaddr)
+        .iaddr(iaddr),
+        .pc_plus_4_o(if_pc_plus_4)
     );
     
     // 例化取指/译码寄存器模块
@@ -135,7 +151,10 @@ module MiniMIPS32(
         .cpu_clk_50M(cpu_clk_50M), 
         .cpu_rst_n(cpu_rst_n),
         .if_pc(pc), 
-        .id_pc(id_pc_i)
+        .if_pc_plus_4_i(if_pc_plus_4),
+
+        .id_pc(id_pc_i),
+        .id_pc_plus_4_o(id_pc_plus_4)
     );
 
     // 例化译码阶段模块
@@ -143,6 +162,7 @@ module MiniMIPS32(
         // 输入值
         .cpu_rst_n(cpu_rst_n),
         .id_pc_i(id_pc_i), 
+        .id_pc_plus_4_i(id_pc_plus_4),
         .id_inst_i(inst),
         .rd1(rd1), 
         .rd2(rd2),
@@ -165,7 +185,12 @@ module MiniMIPS32(
         .id_wreg_o(id_wreg_o),
         .id_whilo_o(id_whilo_o),
         .id_mreg_o(id_mreg_o), 
-        .id_din_o(id_din_o)
+        .id_din_o(id_din_o),
+        .jump_addr_1_o(jump_addr_1),
+        .jump_addr_2_o(jump_addr_2),
+        .jump_addr_3_o(jump_addr_3),
+        .jtsel_o(jtsel),
+        .ret_addr_o(id_ret_addr)
     );
     
     // 例化通用寄存器堆模块
@@ -196,6 +221,8 @@ module MiniMIPS32(
         .id_whilo(id_whilo_o),
         .id_mreg(id_mreg_o), 
         .id_din(id_din_o),
+        .id_ret_addr_i(id_ret_addr),
+
         .exe_alutype(exe_alutype_i), 
         .exe_aluop(exe_aluop_i),
         .exe_src1(exe_src1_i), 
@@ -204,7 +231,8 @@ module MiniMIPS32(
         .exe_wreg(exe_wreg_i),
         .exe_whilo(exe_whilo_i),
         .exe_mreg(exe_mreg_i),
-        .exe_din(exe_din_i)
+        .exe_din(exe_din_i),
+        .exe_ret_addr_o(exe_ret_addr)
     );
     
     // 例化执行阶段模块
@@ -229,6 +257,8 @@ module MiniMIPS32(
         // 从写回阶段获取的 HILO 寄存器的值
         .wb2exe_whilo_i(wb2exe_whilo),
         .wb2exe_hilo_i(wb2exe_hilo),
+
+        .ret_addr_i(exe_ret_addr),
         // 输出值
         .exe_aluop_o(exe_aluop_o),
         .exe_wa_o(exe_wa_o), 

@@ -14,6 +14,7 @@ module idexe_reg (
     input  wire                   id_wreg,
     input  wire                   id_whilo,
     input  wire                   id_mreg,
+    input  wire [`REG_BUS      ]  id_ret_addr_i,
     
     // 送至执行阶段的信息
     output reg  [`ALUTYPE_BUS  ]  exe_alutype,
@@ -24,7 +25,8 @@ module idexe_reg (
     output reg                    exe_wreg,
     output reg                    exe_whilo,
     output reg                    exe_mreg,
-    output reg [`REG_BUS       ]  exe_din       
+    output reg [`REG_BUS       ]  exe_din,
+    output reg [`REG_BUS       ]  exe_ret_addr_o       
     );
 
     always @(posedge cpu_clk_50M) begin
@@ -39,6 +41,7 @@ module idexe_reg (
             exe_whilo          <= `WRITE_DISABLE;
             exe_mreg           <= `FALSE_V;
             exe_din            <= `ZERO_WORD;
+            exe_ret_addr_o     <= `ZERO_WORD;
         end
         // 将来自译码阶段的信息寄存并送至执行阶段
         else begin
@@ -51,6 +54,7 @@ module idexe_reg (
             exe_whilo          <= id_whilo;
             exe_mreg           <= id_mreg;
             exe_din            <= id_din;
+            exe_ret_addr_o     <= id_ret_addr_i;
         end
     end
 

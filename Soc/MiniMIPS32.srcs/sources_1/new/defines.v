@@ -28,6 +28,9 @@
 `define BSEL_BUS        3 : 0               // 数据存储器字节选择信号宽度
 `define PC_INIT         32'hBFC00000        // PC初始值
 
+`define JUMP_BUS        25 : 0              // J型指令字中 instr_index 字段的宽度
+`define JTSEL_BUS       1 : 0               // 转移地址选择信号的宽度
+
 /*------------------- 指令字参数 -------------------*/
 `define INST_ADDR_BUS   31: 0               // 指令的地址宽度
 `define INST_BUS        31: 0               // 指令的数据宽度
@@ -44,6 +47,7 @@
 `define LOGIC           3'b010
 `define MOVE            3'b011
 `define SHIFT           3'b100
+`define JUMP            3'b101
 
 // 内部操作码aluop
 
@@ -78,6 +82,12 @@
 `define MINIMIPS32_SRA             8'h32
 `define MINIMIPS32_SRLV            8'h33
 `define MINIMIPS32_SRL             8'h34
+
+`define MINIMIPS_J                 8'h40
+`define MINIMIPS_JR                8'h41
+`define MINIMIPS_JAL               8'h42
+`define MINIMIPS_BEQ               8'h43
+`define MINIMIPS_BNE               8'h44
 
 `define MINIMIPS32_LB              8'h90
 `define MINIMIPS32_LBU             8'h91
