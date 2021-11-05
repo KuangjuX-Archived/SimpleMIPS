@@ -150,12 +150,14 @@ module exe_stage (
     assign divisor2 = temp_op2 * 2;
     assign divisor3 = temp_op2 * 3;
     
+    assign div_temp0 = {1'b000, dividend[63:32]} - {1'b000, `ZERO_WORD};
     assign div_temp1 = {1'b000, dividend[63:32]} - {1'b0, divisor1};
     assign div_temp2 = {1'b000, dividend[63:32]} - {1'b0, divisor2};
     assign div_temp3 = {1'b000, dividend[63:32]} - {1'b0, divisor3};
     
     assign div_temp = (div_temp3[34] == 1'b0) ? div_temp3 :
-                      (div_temp2[34] == 1'b0) ? div_temp2 : div_temp1;
+                      (div_temp2[34] == 1'b0) ? div_temp2 : 
+                      div_temp1;
                       
     assign mul_cnt = (div_temp3[34] == 1'b0) ? 2'b11 :
                      (div_temp2[34] == 1'b0) ? 2'b10 : 2'b01;
