@@ -91,16 +91,16 @@ A Simple MIPS CPU for TJU Computer Architecture Course
 - [ ] BLTZ
 - [ ] BNE
 - [x] LB
-- [ ] LBU
-- [ ] LH
-- [ ] LHU
+- [x] LBU
+- [x] LH
+- [x] LHU
 - [x] LUI
 - [x] ORI 
 - [x] LW
 - [x] SB
 - [x] SLTI
 - [x] SLTIU
-- [ ] SH
+- [x] SH
 - [x] SW  
 - [ ] XORI
 

@@ -1,10 +1,9 @@
 -- Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2019.2 (win64) Build 2708876 Wed Nov  6 21:40:23 MST 2019
--- Date        : Mon Oct 11 14:39:51 2021
+-- Date        : Mon Oct 11 14:39:52 2021
 -- Host        : LAPTOP-BEASOA6F running 64-bit major release  (build 9200)
--- Command     : write_vhdl -force -mode synth_stub -rename_top clkdiv -prefix
---               clkdiv_ clkdiv_stub.vhdl
+-- Command     : write_vhdl -force -mode synth_stub d:/MiniMIPS32/MiniMIPS32.srcs/sources_1/ip/clkdiv/clkdiv_stub.vhdl
 -- Design      : clkdiv
 -- Purpose     : Stub declaration of top-level module interface
 -- Device      : xc7k325tffg900-2
