@@ -102,7 +102,7 @@ A Simple MIPS CPU for TJU Computer Architecture Course
 - [x] SLTIU
 - [x] SH
 - [x] SW  
-- [ ] XORI
+- [x] XORI
 
 ### R-type
 - [x] ADD
@@ -119,20 +119,20 @@ A Simple MIPS CPU for TJU Computer Architecture Course
 - [x] MTLO 
 - [x] MULT
 - [x] MULTU
-- [ ] NOR
-- [ ] OR
+- [x] NOR
+- [x] OR
 - [x] SLL
-- [ ] SLLV
+- [x] SLLV
 - [x] SLT
-- [ ] SLTU
-- [ ] SRA
-- [ ] SRAV
-- [ ] SRL
-- [ ] SRLV
+- [x] SLTU
+- [x] SRA
+- [x] SRAV
+- [x] SRL
+- [x] SRLV
 - [x] SUB
 - [x] SUBU
 - [ ] SYSCALL
-- [ ] XOR
+- [x] XOR
 
 ### J-type
 - [ ] J
