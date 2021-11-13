@@ -8,7 +8,6 @@ A Simple MIPS CPU for TJU Computer Architecture Course
 - Cache: Cache的实现
 - TEMU：Mips32 仿真器，使用 git submoudle 进行管理
 - testbench：基准测试程序
-- vavado: 工程文件，运行时需要导入源代码
 - utils：我们在编写过程中使用的工具, 现在有以下工具：
   - assembler：使用 Python 编写的跨平台的汇编器
   - disassembler：使用 Python 编写的跨平台的反汇编器
