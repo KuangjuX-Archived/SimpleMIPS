@@ -4,6 +4,8 @@ A Simple MIPS CPU for TJU Computer Architecture Course
 ## 工程目录
 - report： 报告目录
 - Soc：CPU 核心工程文件，五级流水、分支预测
+- Soc_Sram: soc_sram_lite 的平台代码
+- Soc_AXI: soc_axi 的平台代码
 - AXI: AXI 总线接口
 - Cache: Cache的实现
 - TEMU：Mips32 仿真器，使用 git submoudle 进行管理
