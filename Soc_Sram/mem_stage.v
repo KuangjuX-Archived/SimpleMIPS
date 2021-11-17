@@ -28,6 +28,7 @@ module mem_stage (
     input  wire [`WORD_BUS      ]       cp0_cause,
     
     // 送至写回阶段的信息
+    output wire [`INST_ADDR_BUS ]       mem_pc_o,        
     output wire [`ALUOP_BUS     ]       mem_aluop_o,
     output wire [`REG_ADDR_BUS  ]       mem_wa_o,
     output wire                         mem_wreg_o,
@@ -63,6 +64,8 @@ module mem_stage (
     wire [`REG_BUS] din_word;
     wire [`REG_BUS] din_half;
     wire [`REG_BUS] din_byte;
+
+    assign mem_pc_o = (cpu_rst_n == `RST_ENABLE) ? `PC_INIT: mem_pc_i;
     
     // 如果当前不是访存指令，则只需要把从执行阶段获得的信息直接输出
     assign mem_aluop_o   = (cpu_rst_n == `RST_ENABLE) ? 8'b0  : mem_aluop_i;

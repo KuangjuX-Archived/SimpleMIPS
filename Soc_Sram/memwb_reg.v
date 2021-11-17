@@ -10,8 +10,8 @@ module memwb_reg (
 	input  wire                     mem_wreg,
 	input  wire                     mem_whilo,
 	input  wire                     mem_mreg,
-	input  wire [`REG_BUS       ] 	 mem_dreg,
-	input  wire [`DOUBLE_REG_BUS] 	 mem_dhilo,
+	input  wire [`REG_BUS       ] 	mem_dreg,
+	input  wire [`DOUBLE_REG_BUS] 	mem_dhilo,
 	input wire  [`DATA_WE_BUS   ]   mem_dre,
 	
 	input  wire                   mem_cp0_we,
@@ -19,6 +19,8 @@ module memwb_reg (
     input  wire [`REG_BUS       ] mem_cp0_wdata,
     
     input  wire					  flush,
+
+	input  wire [`INST_ADDR_BUS ] mem_pc,
 
 	// 送至写回阶段的信息 
 	output reg  [`ALUOP_BUS     ]   wb_aluop,
@@ -32,7 +34,9 @@ module memwb_reg (
 	
 	output reg                    wb_cp0_we,
     output reg  [`REG_ADDR_BUS  ] wb_cp0_waddr,
-    output reg  [`REG_BUS       ] wb_cp0_wdata
+    output reg  [`REG_BUS       ] wb_cp0_wdata,
+
+	output reg  [`INST_ADDR_BUS ] wb_pc
     );
 
     always @(posedge cpu_clk_50M) begin
@@ -49,6 +53,7 @@ module memwb_reg (
 			wb_cp0_we     <= `FALSE_V;
             wb_cp0_waddr  <= `ZERO_WORD;
             wb_cp0_wdata  <= `ZERO_WORD;
+			wb_pc         <= `PC_INIT;
 		end
 		// 将来自访存阶段的信息寄存并送至写回阶段
 		else begin
@@ -63,6 +68,7 @@ module memwb_reg (
 			wb_cp0_we     <= mem_cp0_we;
             wb_cp0_waddr  <= mem_cp0_waddr;
             wb_cp0_wdata  <= mem_cp0_wdata;
+			wb_pc         <= mem_pc;
 		end
 	end
 

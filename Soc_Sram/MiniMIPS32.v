@@ -125,6 +125,8 @@ module MiniMIPS32(
     wire                   mem_cp0_we_o;
     wire [`REG_ADDR_BUS  ] mem_cp0_waddr_o;
     wire [`REG_BUS       ] mem_cp0_wdata_o;
+    wire [`INST_ADDR_BUS ] mem_pc_o;
+
     wire 				   wb_wreg_i;
     wire 				   wb_whilo_i;
     wire                   wb_mreg_i;
@@ -136,6 +138,7 @@ module MiniMIPS32(
     wire                   wb_cp0_we_i;
     wire [`REG_ADDR_BUS  ] wb_cp0_waddr_i;
     wire [`REG_BUS       ] wb_cp0_wdata_i;
+    wire [`INST_ADDR_BUS ] wb_pc_i;
 
     wire 				   wb_wreg_o;
     wire 				   wb_whilo_o;
@@ -143,6 +146,7 @@ module MiniMIPS32(
     wire [`REG_BUS       ] wb_wd_o;
     wire [`REG_BUS       ] wb_dhi_o;
     wire [`REG_BUS       ] wb_dlo_o;
+    wire [`INST_ADDR_BUS ] wb_pc_o;
     
     wire [`STALL_BUS     ] stall;
     wire                   exe2id_mreg;
@@ -285,7 +289,7 @@ module MiniMIPS32(
         .mem_mreg_i(mem_mreg_i), .mem_din_i(mem_din_i),
         .mem_aluop_o(mem_aluop_o), .mem_wa_o(mem_wa_o), .mem_wreg_o(mem_wreg_o), .mem_dreg_o(mem_dreg_o),
         .mem_whilo_o(mem_whilo_o), .mem_dhilo_o(mem_dhilo_o),
-        .mem_mreg_o(mem_mreg_o),
+        .mem_mreg_o(mem_mreg_o), .mem_pc_o(mem_pc_o),
         .daddr(daddr), .dce(dce), .we(we), .din(din), .dre(mem_dre_o),
         .mem2id_wreg(mem2id_wreg), .mem2id_wa(mem2id_wa), .mem2id_wd(mem2id_wd),
         .mem2exe_whilo(mem2exe_whilo), .mem2exe_hilo(mem2exe_hilo),
@@ -311,7 +315,7 @@ module MiniMIPS32(
         .wb_mreg(wb_mreg_i), .wb_dre(wb_dre_i),
         .wb_cp0_we(wb_cp0_we_i), .wb_cp0_waddr(wb_cp0_waddr_i),
         .wb_cp0_wdata(wb_cp0_wdata_i),
-        .flush(flush)
+        .flush(flush), .mem_pc(mem_pc_o), .wb_pc(wb_pc_i)
     );
 
     wb_stage wb_stage0(.cpu_rst_n(cpu_rst_n),
@@ -325,10 +329,11 @@ module MiniMIPS32(
         .cp0_we_i(wb_cp0_we_i), .cp0_waddr_i(wb_cp0_waddr_i),
         .cp0_wdata_i(wb_cp0_wdata_i),
         .cp0_we_o(cp0_we), .cp0_waddr_o(waddr),
-        .cp0_wdata_o(wdata)
+        .cp0_wdata_o(wdata), .wb_pc_i(wb_pc_i), .wb_pc_o(wb_pc_o)
     );
 
     // 用来做 debug 的信号
+    assign debug_wb_pc = wb_pc_o;
     assign debug_wb_rf_wen = wb_wreg_o;
     assign debug_wb_rf_wnum = wb_wa_o;
     assign debug_wb_rf_wdata = wb_wd_o;
