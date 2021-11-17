@@ -331,12 +331,6 @@ module MiniMIPS32(
         .cp0_we_o(cp0_we), .cp0_waddr_o(waddr),
         .cp0_wdata_o(wdata), .wb_pc_i(wb_pc_i), .wb_pc_o(wb_pc_o)
     );
-
-    // 用来做 debug 的信号
-    assign debug_wb_pc = wb_pc_o;
-    assign debug_wb_rf_wen = wb_wreg_o;
-    assign debug_wb_rf_wnum = wb_wa_o;
-    assign debug_wb_rf_wdata = wb_wd_o;
     
     cp0_reg cp0_reg0(.cpu_clk_50M(cpu_clk_50M), .cpu_rst_n(cpu_rst_n), 
         .we(cp0_we), 
@@ -356,6 +350,12 @@ module MiniMIPS32(
         .status_o(status_o), 
         .cause_o(cause_o)
     );
+
+    // 用来做 debug 的信号
+    assign debug_wb_pc = wb_pc_o;
+    assign debug_wb_rf_wen = {{4{wb_wreg_o}}};
+    assign debug_wb_rf_wnum = wb_wa_o;
+    assign debug_wb_rf_wdata = wb_wd_o;
 
 
 endmodule
