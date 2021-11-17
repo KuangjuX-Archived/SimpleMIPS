@@ -1,2 +1,4 @@
 vivado/*
 run_vivado/*
+soc_sram_func/*
+soc_axi_func/*
