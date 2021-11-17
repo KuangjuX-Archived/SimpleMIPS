@@ -16,7 +16,7 @@ module MiniMIPS32(
 
     input wire  [5:0] int,
 
-    output wire [31: 0] debug_wb_pc,
+    output  wire [31: 0] debug_wb_pc,
     output  wire [3 :0]  debug_wb_rf_wen,
     output  wire [4 :0]  debug_wb_rf_wnum,
     output  wire [31:0]  debug_wb_rf_wdata
@@ -54,10 +54,10 @@ module MiniMIPS32(
     
     wire [`ALUOP_BUS     ] id_aluop_o;
     wire [`ALUTYPE_BUS   ] id_alutype_o;
-    wire [`REG_BUS 	      ] id_src1_o;
-    wire [`REG_BUS 	      ] id_src2_o;
+    wire [`REG_BUS 	     ] id_src1_o;
+    wire [`REG_BUS 	     ] id_src2_o;
     wire [`DATA_BUS      ] id_din_o;
-    wire 				    id_wreg_o;
+    wire 				   id_wreg_o;
     wire                   id_whilo_o;
     wire                   id_mreg_o;
     wire [`REG_ADDR_BUS  ] id_wa_o;
@@ -73,8 +73,8 @@ module MiniMIPS32(
     wire [`REG_BUS 	     ] exe_src2_i;
     wire [`DATA_BUS      ] exe_din_i;
     wire 				   exe_wreg_i;
-    wire                  exe_whilo_i;
-    wire                  exe_mreg_i;
+    wire                   exe_whilo_i;
+    wire                   exe_mreg_i;
     wire [`REG_ADDR_BUS  ] exe_wa_i;
     wire [`REG_BUS       ] exe_retaddr_i;
     wire [`REG_BUS       ] exe_hi_i;
@@ -86,11 +86,11 @@ module MiniMIPS32(
     wire [`EXC_CODE_BUS  ] exe_exccode_i;
     
     wire [`ALUOP_BUS     ] exe_aluop_o;
-    wire 				    exe_wreg_o;
-    wire 				    exe_whilo_o;
+    wire 				   exe_wreg_o;
+    wire 				   exe_whilo_o;
     wire                   exe_mreg_o;
     wire [`REG_ADDR_BUS  ] exe_wa_o;
-    wire [`REG_BUS 	      ] exe_wd_o;
+    wire [`REG_BUS 	     ] exe_wd_o;
     wire [`DATA_BUS      ] exe_din_o;
     wire [`DOUBLE_REG_BUS] exe_hilo_o;
     wire                   exe_cp0_we_o;
@@ -100,11 +100,11 @@ module MiniMIPS32(
     wire                   exe_in_delay_o;
     wire [`EXC_CODE_BUS  ] exe_exccode_o;
     wire [`ALUOP_BUS     ] mem_aluop_i;
-    wire 				    mem_wreg_i;
-    wire 				    mem_whilo_i;
+    wire 				   mem_wreg_i;
+    wire 				   mem_whilo_i;
     wire                   mem_mreg_i;
     wire [`REG_ADDR_BUS  ] mem_wa_i;
-    wire [`REG_BUS 	      ] mem_wd_i;
+    wire [`REG_BUS 	     ] mem_wd_i;
     wire [`DATA_BUS      ] mem_din_i;
     wire [`DOUBLE_REG_BUS] mem_hilo_i;
     wire                   mem_cp0_we_i;
@@ -114,12 +114,12 @@ module MiniMIPS32(
     wire                   mem_in_delay_i;
     wire [`EXC_CODE_BUS  ] mem_exccode_i;
 
-    wire 				    mem_wreg_o;
-    wire 				    mem_whilo_o;
+    wire 				   mem_wreg_o;
+    wire 				   mem_whilo_o;
     wire                   mem_mreg_o;
     wire [`ALUOP_BUS     ] mem_aluop_o;
     wire [`REG_ADDR_BUS  ] mem_wa_o;
-    wire [`REG_BUS 	      ] mem_dreg_o;
+    wire [`REG_BUS 	     ] mem_dreg_o;
     wire [`DOUBLE_REG_BUS] mem_dhilo_o;
     wire [`DATA_WE_BUS   ] mem_dre_o;
     wire                   mem_cp0_we_o;
@@ -327,6 +327,11 @@ module MiniMIPS32(
         .cp0_we_o(cp0_we), .cp0_waddr_o(waddr),
         .cp0_wdata_o(wdata)
     );
+
+    // 用来做 debug 的信号
+    assign debug_wb_rf_wen = wb_wreg_o;
+    assign debug_wb_rf_wnum = wb_wa_o;
+    assign debug_wb_rf_wdata = wb_wd_o;
     
     cp0_reg cp0_reg0(.cpu_clk_50M(cpu_clk_50M), .cpu_rst_n(cpu_rst_n), 
         .we(cp0_we), 
@@ -346,5 +351,6 @@ module MiniMIPS32(
         .status_o(status_o), 
         .cause_o(cause_o)
     );
+
 
 endmodule
