@@ -30,15 +30,17 @@ module mycpu(
 
     assign data_sram_en = (resetn == 1'b0) ? 1'b0 : dce;
 
+    wire [31:0] inst_sram_addr_v, data_sram_addr_v;
+
     MiniMIPS32 MiniMIPS32_0(
         .cpu_clk_50M(clk),
         .cpu_rst_n(resetn),
 
-        .iaddr(inst_sram_addr), 
+        .iaddr(inst_sram_addr_v), 
         .ice(ice),
         .inst(inst_sram_rdata),
         .dce(dce),
-        .daddr(data_sram_addr),
+        .daddr(data_sram_addr_v),
         .we(data_sram_wen),
         .din(data_sram_wdata),
         .dm(data_sram_rdata),
@@ -49,6 +51,18 @@ module mycpu(
         .debug_wb_rf_wen(debug_wb_rf_wen),
         .debug_wb_rf_wnum(debug_wb_rf_wnum),
         .debug_wb_rf_wdata(debug_wb_rf_wdata)
+    );
+
+    // 指令存储器地址映射
+    mmu u0_mmu(
+        .addr_i(inst_sram_addr_v),
+        .addr_o(inst_sram_addr)
+    );
+
+    // 数据存储器地址映射
+    mmu u1_mmu(
+        .addr_i(data_sram_addr_v),
+        .addr_o(data_sram_addr)
     );
     
 endmodule

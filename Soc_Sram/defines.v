@@ -173,3 +173,11 @@
 
 `define NOFLUSH          1'b0
 `define FLUSH            1'b1
+
+// Õ‚…Ëµÿ÷∑
+`define LED_START       32'hBFAFF000
+`define LED_END         32'hBFAFF00F
+`define SEG7_START      32'hBFAFF010
+`define SEG7_END        32'hBFAFF01F
+`define SWITCH_START    32'hBFAFF020
+`define SWITCH_END      32'hBFAFF02F

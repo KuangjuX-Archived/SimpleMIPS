@@ -58,7 +58,9 @@ module mem_stage (
     output wire [`INST_ADDR_BUS ]       cp0_pc,
     output wire                         cp0_in_delay,
     output wire [`EXC_CODE_BUS  ]       cp0_exccode,
-    output wire [`REG_BUS       ]       cp0_badvaddr
+    output wire [`REG_BUS       ]       cp0_badvaddr,
+
+    output wire                         device
     );
     
     wire [`REG_BUS] din_word;
@@ -144,5 +146,9 @@ module mem_stage (
                           (mem_aluop_i == `MINIMIPS32_SW) ? din_word :
                           (mem_aluop_i == `MINIMIPS32_SH) ? din_half :
                           (mem_aluop_i == `MINIMIPS32_SB) ? din_byte : `ZERO_WORD;
+
+    assign device = (daddr >= `LED_START & daddr <= `LED_END) |
+                (daddr >= `SEG7_START & daddr <= `SEG7_END) |
+                (daddr >= `SWITCH_START & daddr <= `SWITCH_END);
 
 endmodule

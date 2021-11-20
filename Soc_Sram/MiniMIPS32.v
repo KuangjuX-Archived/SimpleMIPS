@@ -174,6 +174,9 @@ module MiniMIPS32(
     wire [`REG_BUS        ] status_o;
     wire [`REG_BUS        ] cause_o;
 
+    wire                    mem_device;
+    wire                    wb_device;
+
     if_stage if_stage0(.cpu_clk_50M(cpu_clk_50M), .cpu_rst_n(cpu_rst_n),
         .pc(pc), .ice(ice), .iaddr(iaddr),
         .jtsel(jtsel), .addr1(addr1), .addr2(addr2), .addr3(addr3),
@@ -301,7 +304,8 @@ module MiniMIPS32(
         .cp0_wdata_o(mem_cp0_wdata_o),
         .cp0_status(status_o), .cp0_cause(cause_o),
         .cp0_pc(pc_i), .cp0_in_delay(in_delay_i), .cp0_exccode(exccode_i), .cp0_badvaddr(badvaddr_i),
-        .wb2mem_cp0_we(cp0_we), .wb2mem_cp0_wa(waddr), .wb2mem_cp0_wd(wdata)
+        .wb2mem_cp0_we(cp0_we), .wb2mem_cp0_wa(waddr), .wb2mem_cp0_wd(wdata),
+        .device(mem_device)
     );
     	
     memwb_reg memwb_reg0(.cpu_clk_50M(cpu_clk_50M), .cpu_rst_n(cpu_rst_n),
@@ -315,7 +319,8 @@ module MiniMIPS32(
         .wb_mreg(wb_mreg_i), .wb_dre(wb_dre_i),
         .wb_cp0_we(wb_cp0_we_i), .wb_cp0_waddr(wb_cp0_waddr_i),
         .wb_cp0_wdata(wb_cp0_wdata_i),
-        .flush(flush), .mem_pc(mem_pc_o), .wb_pc(wb_pc_i)
+        .flush(flush), .mem_pc(mem_pc_o), .wb_pc(wb_pc_i),
+        .mem_device(mem_device), .wb_device(wb_device)
     );
 
     wb_stage wb_stage0(.cpu_rst_n(cpu_rst_n),
@@ -329,7 +334,8 @@ module MiniMIPS32(
         .cp0_we_i(wb_cp0_we_i), .cp0_waddr_i(wb_cp0_waddr_i),
         .cp0_wdata_i(wb_cp0_wdata_i),
         .cp0_we_o(cp0_we), .cp0_waddr_o(waddr),
-        .cp0_wdata_o(wdata), .wb_pc_i(wb_pc_i), .wb_pc_o(wb_pc_o)
+        .cp0_wdata_o(wdata), .wb_pc_i(wb_pc_i), .wb_pc_o(wb_pc_o),
+        .device(wb_device)
     );
     
     cp0_reg cp0_reg0(.cpu_clk_50M(cpu_clk_50M), .cpu_rst_n(cpu_rst_n), 
@@ -350,6 +356,7 @@ module MiniMIPS32(
         .status_o(status_o), 
         .cause_o(cause_o)
     );
+
 
     // 用来做 debug 的信号
     assign debug_wb_pc = wb_pc_o;

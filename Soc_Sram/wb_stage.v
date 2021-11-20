@@ -18,6 +18,8 @@ module wb_stage(
     input  wire [`REG_ADDR_BUS  ]   cp0_waddr_i,
     input  wire [`REG_BUS       ]   cp0_wdata_i,
 
+    input  wire                     device,
+
     // 写回目的寄存器的数据
     output wire [`REG_ADDR_BUS  ] wb_wa_o,
 	output wire                   wb_wreg_o,
@@ -49,8 +51,10 @@ module wb_stage(
     assign cp0_we_o     = (cpu_rst_n == `RST_ENABLE) ? 1'b0  : cp0_we_i;
     assign cp0_waddr_o  = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD  : cp0_waddr_i;
     assign cp0_wdata_o  = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD  : cp0_wdata_i;
+
     
     assign dmem         = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD :
+                          (wb_dre_i == 4'b1111 & device == 1'b1)? dm:
                           (wb_dre_i == 4'b1111) ? {dm[7:0], dm[15:8], dm[23:16], dm[31:24]} :
                           (wb_dre_i == 4'b1100 & wb_aluop_i == `MINIMIPS32_LH ) ? {{16{dm[23]}}, dm[23:16], dm[31:24]} :
                           (wb_dre_i == 4'b1100 & wb_aluop_i == `MINIMIPS32_LHU) ? { 16'b0,       dm[23:16], dm[31:24]} :
