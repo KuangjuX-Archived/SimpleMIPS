@@ -54,8 +54,8 @@ module wb_stage(
 
     
     assign dmem         = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD :
-                          (wb_dre_i == 4'b1111 & device == 1'b1)? dm:
-                          (wb_dre_i == 4'b1111) ? {dm[7:0], dm[15:8], dm[23:16], dm[31:24]} :
+                          (wb_dre_i == 4'b1111 & device )? dm:
+                          (wb_dre_i == 4'b1111 & !device) ? {dm[7:0], dm[15:8], dm[23:16], dm[31:24]} :
                           (wb_dre_i == 4'b1100 & wb_aluop_i == `MINIMIPS32_LH ) ? {{16{dm[23]}}, dm[23:16], dm[31:24]} :
                           (wb_dre_i == 4'b1100 & wb_aluop_i == `MINIMIPS32_LHU) ? { 16'b0,       dm[23:16], dm[31:24]} :
                           (wb_dre_i == 4'b0011 & wb_aluop_i == `MINIMIPS32_LH ) ? {{16{dm[ 7]}}, dm[ 7: 0], dm[15: 8]} :
