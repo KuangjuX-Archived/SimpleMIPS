@@ -62,7 +62,9 @@ module exe_stage (
     
     output wire [`INST_ADDR_BUS]   exe_pc_o,
     output wire                    exe_in_delay_o,
-    output wire [`EXC_CODE_BUS ]   exe_exccode_o
+    output wire [`EXC_CODE_BUS ]   exe_exccode_o,
+    output              branch_flag_actual,
+	output              pred_flag
     );
 
     // 直接传到下一阶段

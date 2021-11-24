@@ -4,6 +4,7 @@ module if_stage (
     input 	wire 					cpu_clk_50M,
     input 	wire 					cpu_rst_n,
     
+    input               branch_flag_i,
     input   wire [ 1: 0         ]  jtsel,
     input   wire [`REG_BUS      ]  addr1,
     input   wire [`REG_BUS      ]  addr2,
@@ -14,7 +15,7 @@ module if_stage (
     output  wire                   ice,
     output 	reg  [`INST_ADDR_BUS] 	pc,
     output 	wire [`INST_ADDR_BUS]	iaddr,
-    
+    output reg               branch_flag_o,
     input  wire                    flush,
     input  wire  [`INST_ADDR_BUS]  cp0_excaddr
     );

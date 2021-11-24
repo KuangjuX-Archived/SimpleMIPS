@@ -55,12 +55,12 @@ module id_stage(
     output wire [`REG_ADDR_BUS ]    cp0_addr,
     output wire [`INST_ADDR_BUS]    id_pc_o,
     output wire                     id_in_delay_o,
-    output wire                     next_delay_o,
+    //output wire                     next_delay_o,
     output wire [`EXC_CODE_BUS ]    id_exccode_o
     );
     
     assign id_pc_o       = (cpu_rst_n == `RST_ENABLE) ? `PC_INIT : id_pc_i;
-    assign id_in_delay_o = (cpu_rst_n == `RST_ENABLE) ? `FALSE_V : id_in_delay_i;
+    //assign id_in_delay_o = (cpu_rst_n == `RST_ENABLE) ? `FALSE_V : id_in_delay_i;
     
     // 根据小端模式组织指令字
     wire [`INST_BUS] id_inst = (flush_im == `FLUSH) ? `ZERO_WORD : {id_inst_i[7:0], id_inst_i[15:8], id_inst_i[23:16], id_inst_i[31:24]};

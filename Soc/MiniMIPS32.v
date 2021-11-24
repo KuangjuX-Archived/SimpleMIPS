@@ -58,7 +58,7 @@ module MiniMIPS32(
     wire [`REG_ADDR_BUS  ] id_cp0_addr_o;
     wire [`INST_ADDR_BUS ] id_pc_o;
     wire                   id_in_delay_o;
-    wire                   next_delay_i;
+    //wire                   next_delay_i;
     wire [`EXC_CODE_BUS  ] id_exccode_o;
     wire [`ALUOP_BUS     ] exe_aluop_i;
     wire [`ALUTYPE_BUS   ] exe_alutype_i;
@@ -75,7 +75,7 @@ module MiniMIPS32(
     wire [`REG_ADDR_BUS  ] exe_cp0_addr_i;
     wire [`INST_ADDR_BUS ] exe_pc_i;
     wire                   exe_in_delay_i;
-    wire                   next_delay_o;
+    //wire                   next_delay_o;
     wire [`EXC_CODE_BUS  ] exe_exccode_i;
     
     wire [`ALUOP_BUS     ] exe_aluop_o;
@@ -189,7 +189,7 @@ module MiniMIPS32(
         .exe2id_mreg(exe2id_mreg), .mem2id_mreg(mem2id_mreg), .stallreq_id(stallreq_id),
         .id_in_delay_i(next_delay_o), .flush_im(flush_im),
         .cp0_addr(id_cp0_addr_o), .id_pc_o(id_pc_o),
-        .id_in_delay_o(id_in_delay_o), .next_delay_o(next_delay_i),
+        .id_in_delay_o(id_in_delay_o), 
         .id_exccode_o(id_exccode_o)
     );
     

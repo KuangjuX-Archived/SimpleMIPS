@@ -1,0 +1,23 @@
+#-----------------------------------------------------------
+# Vivado v2019.2 (64-bit)
+# SW Build 2708876 on Wed Nov  6 21:40:23 MST 2019
+# IP Build 2700528 on Thu Nov  7 00:09:20 MST 2019
+# Start of session at: Sun Oct 24 15:20:03 2021
+# Process ID: 12404
+# Current directory: E:/MiniMIPS32/MIPSCPU/Soc/MiniMIPS32.runs/inst_rom_synth_1
+# Command line: vivado.exe -log inst_rom.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source inst_rom.tcl
+# Log file: E:/MiniMIPS32/MIPSCPU/Soc/MiniMIPS32.runs/inst_rom_synth_1/inst_rom.vds
+# Journal file: E:/MiniMIPS32/MIPSCPU/Soc/MiniMIPS32.runs/inst_rom_synth_1\vivado.jou
+#-----------------------------------------------------------
+source inst_rom.tcl -notrace
+Command: synth_design -top inst_rom -part xc7k325tffg900-2 -mode out_of_context
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xc7k325t'
+WARNING: [Common 17-348] Failed to get the license for feature 'Synthesis' and/or device 'xc7k325t'. Explanation: The license feature Synthesis could not be found.
+Resolution: Check the status of your licenses in the Vivado License Manager. For debug help search Xilinx Support for "Licensing FAQ". 
+0 Infos, 1 Warnings, 0 Critical Warnings and 1 Errors encountered.
+synth_design failed
+ERROR: [Common 17-345] A valid license was not found for feature 'Synthesis' and/or device 'xc7k325t'. Please run the Vivado License Manager for assistance in determining
+which features and devices are licensed for your system.
+Resolution: Check the status of your licenses in the Vivado License Manager. For debug help search Xilinx Support for "Licensing FAQ". If you are using a license server, verify that the license server is up and running a version of the xilinx daemon that is compatible with the version of Xilinx software that you are using. Please note that Vivado 2017.3 and later requires upgrading your license server tools to the Flex 11.14.1 tools. Please confirm with your license admin that the correct version of the license server tools are installed.
+INFO: [Common 17-206] Exiting Vivado at Sun Oct 24 15:20:11 2021...
