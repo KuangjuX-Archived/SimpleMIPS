@@ -1,5 +1,5 @@
 # MIPSCPU
-A Simple MIPS CPU for TJU Computer Architecture Course
+A Simple 5-stage pipeline MIPS CPU for TJU Computer Architecture Course.
 
 ## 工程目录
 - report: 实验报告
