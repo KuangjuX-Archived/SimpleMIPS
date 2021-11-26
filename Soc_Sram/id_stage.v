@@ -6,7 +6,7 @@ module id_stage(
     // ��ȡָ�׶λ�õ�PCֵ
     input  wire [`INST_ADDR_BUS]    id_pc_i,
 
-    // ��ָ��洢��������ָ����
+    // ��ָ��洢��������ָ����?
     input  wire [`INST_BUS     ]    id_inst_i,
 
     // ��ͨ�üĴ����Ѷ��������� 
@@ -75,7 +75,7 @@ module id_stage(
     wire [15:0] imm  = id_inst[15: 0]; 
     wire [25:0] instr_index = id_inst[25:0];
 
-    /*-------------------- ��һ�������߼���ȷ����ǰ��Ҫ�����ָ�� --------------------*/
+    /*-------------------- ��һ�������߼���ȷ����ǰ��Ҫ�����ָ��? --------------------*/
     wire inst_reg     = ~|op;
     wire inst_regimm  = ~op[5]&~op[4]&~op[3]&~op[2]&~op[1]& op[0];
     wire inst_add     = inst_reg& func[5]&~func[4]&~func[3]&~func[2]&~func[1]&~func[0];
@@ -137,7 +137,7 @@ module id_stage(
     wire inst_bgezal  = inst_regimm& rt[4]&~rt[3]&~rt[2]&~rt[1]& rt[0];
     /*------------------------------------------------------------------------------*/
 
-    /*-------------------- �ڶ��������߼������ɾ�������ź� --------------------*/
+    /*-------------------- �ڶ��������߼������ɾ�������ź�? --------------------*/
     wire inst_alu_reg   = (inst_add | inst_subu | inst_and | inst_slt | inst_addu | inst_sub | inst_sltu | inst_or | inst_xor | inst_nor);
     wire inst_alu_imm   = (inst_addiu | inst_ori | inst_sltiu | inst_lui | inst_addi | inst_slti | inst_andi | inst_xori);
     wire inst_imm_sign  = (inst_addiu | inst_sltiu | inst_addi | inst_slti);
@@ -183,7 +183,7 @@ module id_stage(
     assign id_aluop_o[1]   = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (           inst_subu |            inst_slt |                                                                        inst_sltiu                      | inst_lw           | inst_sw          | inst_jal                                 | inst_div | inst_syscall | inst_eret                                                 | inst_sub                                                  | inst_bgtz | inst_blez             | inst_bgezal | inst_bltzal | inst_xor | inst_nor                       | inst_xori | inst_srl | inst_sra             | inst_srlv | inst_srav | inst_mthi | inst_mtlo                     | inst_lbu            | inst_jalr | inst_divu            ); // 1
     assign id_aluop_o[0]   = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (           inst_subu |                                               inst_mflo | inst_sll | inst_addiu | inst_ori | inst_sltiu | inst_lui                                                             | inst_jr            | inst_bne                           | inst_eret             | inst_mtc0             | inst_addu | inst_sub             | inst_sltu | inst_multu | inst_bgez | inst_bgtz                         | inst_bgezal                          | inst_nor             | inst_or                        | inst_sra | inst_sllv             | inst_srav             | inst_mtlo | inst_lh | inst_sh | inst_lbu            | inst_jalr | inst_divu| inst_break); // 0
 
-    // �Ƿ����ڴ�õ�������д�Ĵ���
+    // �Ƿ����ڴ�õ�������д�Ĵ���?
     assign id_mreg_o       = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : inst_lmem;
     // дHILO�Ĵ���ʹ���ź�
     assign id_whilo_o      = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (inst_mult | inst_multu | inst_div | inst_divu | inst_mt);
@@ -210,14 +210,14 @@ module id_stage(
                           (jal) ? 5'b11111 :
                           (rtsel) ? rt : rd;
 
-    // ���Դ������1�����shift�ź���Ч����Դ������1Ϊ��λλ��������Ϊ�Ӷ�ͨ�üĴ����Ѷ˿�1��õ�����
+    // ���Դ������?1�����shift�ź���Ч����Դ������1Ϊ��λλ��������Ϊ�Ӷ�ͨ�üĴ����Ѷ˿�1��õ�����?
     assign id_src1_o = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD :
                        (inst_shift) ? sa :
                        (rreg1 == `READ_DISABLE) ? `ZERO_WORD :
                        (fwrd1[0] == 1'b1) ? exe2id_wd :
                        (fwrd1[1] == 1'b1) ? mem2id_wd : rd1;
 
-    // ���Դ������2�����immsel�ź���Ч����Դ������1Ϊ������������Ϊ�Ӷ�ͨ�üĴ����Ѷ˿�2��õ�����
+    // ���Դ������?2�����immsel�ź���Ч����Դ������1Ϊ������������Ϊ�Ӷ�ͨ�üĴ����Ѷ˿�2��õ�����?
     assign id_src2_o = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD :
                        (immsel) ? imm_ext :
                        (rreg2 == `READ_DISABLE) ? `ZERO_WORD :
