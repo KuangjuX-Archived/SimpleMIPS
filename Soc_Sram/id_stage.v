@@ -3,13 +3,13 @@
 module id_stage(
     input  wire                     cpu_rst_n,
     
-    // ´ÓÈ¡Ö¸½×¶Î»ñµÃµÄPCÖµ
+    // ï¿½ï¿½È¡Ö¸ï¿½×¶Î»ï¿½Ãµï¿½PCÖµ
     input  wire [`INST_ADDR_BUS]    id_pc_i,
 
-    // ´ÓÖ¸Áî´æ´¢Æ÷¶Á³öµÄÖ¸Áî×Ö
+    // ï¿½ï¿½Ö¸ï¿½ï¿½æ´¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½
     input  wire [`INST_BUS     ]    id_inst_i,
 
-    // ´ÓÍ¨ÓÃ¼Ä´æÆ÷¶Ñ¶Á³öµÄÊý¾Ý 
+    // ï¿½ï¿½Í¨ï¿½Ã¼Ä´ï¿½ï¿½ï¿½ï¿½Ñ¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
     input  wire [`REG_BUS      ]    rd1,
     input  wire [`REG_BUS      ]    rd2,
     
@@ -23,7 +23,7 @@ module id_stage(
     input wire                      exe2id_mreg,
     input wire                      mem2id_mreg,
       
-    // ËÍÖÁÖ´ÐÐ½×¶ÎµÄÒëÂëÐÅÏ¢
+    // ï¿½ï¿½ï¿½ï¿½Ö´ï¿½Ð½×¶Îµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
     output wire [`ALUTYPE_BUS  ]    id_alutype_o,
     output wire [`ALUOP_BUS    ]    id_aluop_o,
     output wire [`REG_ADDR_BUS ]    id_wa_o,
@@ -31,13 +31,13 @@ module id_stage(
     output wire                     id_whilo_o,
     output wire                     id_mreg_o,
 
-    // ËÍÖÁÖ´ÐÐ½×¶ÎµÄÔ´²Ù×÷Êý1¡¢Ô´²Ù×÷Êý2
+    // ï¿½ï¿½ï¿½ï¿½Ö´ï¿½Ð½×¶Îµï¿½Ô´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½1ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½2
     output wire [`REG_BUS      ]    id_src1_o,
     output wire [`REG_BUS      ]    id_src2_o,
     output wire [`DATA_BUS     ]    id_din_o,
     output wire [`REG_BUS      ]    id_retaddr_o,
       
-    // ËÍÖÁ¶ÁÍ¨ÓÃ¼Ä´æÆ÷¶Ñ¶Ë¿ÚµÄÊ¹ÄÜºÍµØÖ·
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¨ï¿½Ã¼Ä´ï¿½ï¿½ï¿½ï¿½Ñ¶Ë¿Úµï¿½Ê¹ï¿½ÜºÍµï¿½Ö·
     output wire                     rreg1,
     output wire [`REG_ADDR_BUS ]    ra1,
     output wire                     rreg2,
@@ -62,10 +62,10 @@ module id_stage(
     assign id_pc_o       = (cpu_rst_n == `RST_ENABLE) ? `PC_INIT : id_pc_i;
     assign id_in_delay_o = (cpu_rst_n == `RST_ENABLE) ? `FALSE_V : id_in_delay_i;
     
-    // ¸ù¾ÝÐ¡¶ËÄ£Ê½×éÖ¯Ö¸Áî×Ö
+    // ï¿½ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½Ä£Ê½ï¿½ï¿½Ö¯Ö¸ï¿½ï¿½ï¿½ï¿½
     wire [`INST_BUS] id_inst = (flush_im == `FLUSH) ? `ZERO_WORD : {id_inst_i[7:0], id_inst_i[15:8], id_inst_i[23:16], id_inst_i[31:24]};
 
-    // ÌáÈ¡Ö¸Áî×ÖÖÐ¸÷¸ö×Ö¶ÎµÄÐÅÏ¢
+    // ï¿½ï¿½È¡Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½Ð¸ï¿½ï¿½ï¿½ï¿½Ö¶Îµï¿½ï¿½ï¿½Ï¢
     wire [5 :0] op   = id_inst[31:26];
     wire [5 :0] func = id_inst[5 : 0];
     wire [4 :0] rd   = id_inst[15:11];
@@ -75,7 +75,7 @@ module id_stage(
     wire [15:0] imm  = id_inst[15: 0]; 
     wire [25:0] instr_index = id_inst[25:0];
 
-    /*-------------------- µÚÒ»¼¶ÒëÂëÂß¼­£ºÈ·¶¨µ±Ç°ÐèÒªÒëÂëµÄÖ¸Áî --------------------*/
+    /*-------------------- ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß¼ï¿½ï¿½ï¿½È·ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ --------------------*/
     wire inst_reg     = ~|op;
     wire inst_regimm  = ~op[5]&~op[4]&~op[3]&~op[2]&~op[1]& op[0];
     wire inst_add     = inst_reg& func[5]&~func[4]&~func[3]&~func[2]&~func[1]&~func[0];
@@ -88,6 +88,7 @@ module id_stage(
     wire inst_sll     = inst_reg&~func[5]&~func[4]&~func[3]&~func[2]&~func[1]&~func[0];
     wire inst_jr      = inst_reg&~func[5]&~func[4]& func[3]&~func[2]&~func[1]&~func[0];
     wire inst_div     = inst_reg&~func[5]& func[4]& func[3]&~func[2]& func[1]&~func[0];
+    wire inst_break   = inst_reg&~func[5]&~func[4]& func[3]& func[2]&~func[1]& func[0];
     wire inst_syscall = inst_reg&~func[5]&~func[4]& func[3]& func[2]&~func[1]&~func[0];
     wire inst_addu    = inst_reg& func[5]&~func[4]&~func[3]&~func[2]&~func[1]& func[0];
     wire inst_sub     = inst_reg& func[5]&~func[4]&~func[3]&~func[2]& func[1]&~func[0];
@@ -136,7 +137,7 @@ module id_stage(
     wire inst_bgezal  = inst_regimm& rt[4]&~rt[3]&~rt[2]&~rt[1]& rt[0];
     /*------------------------------------------------------------------------------*/
 
-    /*-------------------- µÚ¶þ¼¶ÒëÂëÂß¼­£ºÉú³É¾ßÌå¿ØÖÆÐÅºÅ --------------------*/
+    /*-------------------- ï¿½Ú¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Åºï¿½ --------------------*/
     wire inst_alu_reg   = (inst_add | inst_subu | inst_and | inst_slt | inst_addu | inst_sub | inst_sltu | inst_or | inst_xor | inst_nor);
     wire inst_alu_imm   = (inst_addiu | inst_ori | inst_sltiu | inst_lui | inst_addi | inst_slti | inst_andi | inst_xori);
     wire inst_imm_sign  = (inst_addiu | inst_sltiu | inst_addi | inst_slti);
@@ -167,56 +168,56 @@ module id_stage(
     wire [1:0] fwrd2;
     wire equ;
     
-    // ²Ù×÷ÀàÐÍalutype
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½alutype
     assign id_alutype_o[2] = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (inst_shift | inst_shiftv | inst_jump | inst_b | inst_syscall | inst_eret | inst_mtc0);
-    assign id_alutype_o[1] = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (inst_alu_logic | inst_mf | inst_syscall | inst_eret | inst_mfc0 | inst_mtc0);
+    assign id_alutype_o[1] = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (inst_alu_logic | inst_mf | inst_syscall | inst_eret | inst_mfc0 | inst_mtc0 | inst_break);
     assign id_alutype_o[0] = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (inst_alu_arith | inst_lmem | inst_smem | inst_mf | inst_jump | inst_b | inst_mfc0);
 
-    // ÄÚ²¿²Ù×÷Âëaluop
-    assign id_aluop_o[7]   = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (                                                                                                                                            inst_lb | inst_lw | inst_sb | inst_sw                                                                | inst_syscall | inst_eret | inst_mfc0 | inst_mtc0                                                                                                                                                                                                                                                                                               | inst_lh | inst_sh | inst_lbu | inst_lhu                        ); // 7
-    assign id_aluop_o[6]   = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (                                                                                                                                                                                                                                                                                                      inst_addi | inst_addu | inst_sub                                                                                                                                        | inst_andi | inst_or | inst_xori                       | inst_sllv | inst_srlv | inst_srav                                                                                          ); // 6                                                                                                                                                                                                                                                                                                                                     // 6
-    assign id_aluop_o[5]   = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (                                  inst_slt                                                                        | inst_sltiu                                                    | inst_j | inst_jal | inst_jr | inst_beq | inst_bne                                                                                                  | inst_slti | inst_sltu              | inst_bgez | inst_bgtz | inst_blez | inst_bltz | inst_bgezal | inst_bltzal                                                                                                                                                                                     | inst_jalr            ); // 5
-    assign id_aluop_o[4]   = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (inst_add | inst_subu | inst_and |            inst_mult |                         inst_sll | inst_addiu | inst_ori                         | inst_lb | inst_lw | inst_sb | inst_sw                               | inst_beq | inst_bne | inst_div                                                                                                               | inst_multu | inst_bgez | inst_bgtz | inst_blez | inst_bltz | inst_bgezal | inst_bltzal | inst_xor | inst_nor                                   | inst_srl | inst_sra                                                             | inst_lh | inst_sh | inst_lbu | inst_lhu             | inst_divu); // 4
-    assign id_aluop_o[3]   = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (inst_add | inst_subu | inst_and |                        inst_mfhi | inst_mflo |            inst_addiu | inst_ori                                             | inst_sb | inst_sw | inst_j | inst_jal | inst_jr                                                             | inst_mfc0 | inst_mtc0 | inst_addi | inst_addu | inst_sub | inst_slti | inst_sltu              | inst_bgez                                                                 | inst_xor | inst_nor | inst_andi | inst_or | inst_xori                                                           | inst_mthi | inst_mtlo           | inst_sh | inst_lbu | inst_lhu | inst_jalr            ); // 3
-    assign id_aluop_o[2]   = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (                       inst_and | inst_slt | inst_mult | inst_mfhi | inst_mflo |                         inst_ori | inst_sltiu | inst_lui                                         | inst_j | inst_jal | inst_jr                       | inst_div | inst_syscall | inst_eret | inst_mfc0 | inst_mtc0                                                            | inst_multu                                     | inst_bltz | inst_bgezal | inst_bltzal | inst_xor | inst_nor | inst_andi | inst_or | inst_xori                                                           | inst_mthi | inst_mtlo                                | inst_lhu | inst_jalr | inst_divu); // 2
-    assign id_aluop_o[1]   = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (           inst_subu |            inst_slt |                                                                        inst_sltiu                      | inst_lw           | inst_sw          | inst_jal                                 | inst_div | inst_syscall | inst_eret                                                 | inst_sub                                                  | inst_bgtz | inst_blez             | inst_bgezal | inst_bltzal | inst_xor | inst_nor                       | inst_xori | inst_srl | inst_sra             | inst_srlv | inst_srav | inst_mthi | inst_mtlo                     | inst_lbu            | inst_jalr | inst_divu); // 1
-    assign id_aluop_o[0]   = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (           inst_subu |                                               inst_mflo | inst_sll | inst_addiu | inst_ori | inst_sltiu | inst_lui                                                             | inst_jr            | inst_bne                           | inst_eret             | inst_mtc0             | inst_addu | inst_sub             | inst_sltu | inst_multu | inst_bgez | inst_bgtz                         | inst_bgezal                          | inst_nor             | inst_or                        | inst_sra | inst_sllv             | inst_srav             | inst_mtlo | inst_lh | inst_sh | inst_lbu            | inst_jalr | inst_divu); // 0
+    // ï¿½Ú²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½aluop
+    assign id_aluop_o[7]   = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (                                                                                                                                            inst_lb | inst_lw | inst_sb | inst_sw                                                                | inst_syscall | inst_eret | inst_mfc0 | inst_mtc0                                                                                                                                                                                                                                                                                               | inst_lh | inst_sh | inst_lbu | inst_lhu                        | inst_break); // 7
+    assign id_aluop_o[6]   = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (                                                                                                                                                                                                                                                                                                      inst_addi | inst_addu | inst_sub                                                                                                                                        | inst_andi | inst_or | inst_xori                       | inst_sllv | inst_srlv | inst_srav                                                                                                      ); // 6                                                                                                                                                                                                                                                                                                                                     // 6
+    assign id_aluop_o[5]   = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (                                  inst_slt                                                                        | inst_sltiu                                                    | inst_j | inst_jal | inst_jr | inst_beq | inst_bne                                                                                                  | inst_slti | inst_sltu              | inst_bgez | inst_bgtz | inst_blez | inst_bltz | inst_bgezal | inst_bltzal                                                                                                                                                                                     | inst_jalr                        ); // 5
+    assign id_aluop_o[4]   = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (inst_add | inst_subu | inst_and |            inst_mult |                         inst_sll | inst_addiu | inst_ori                         | inst_lb | inst_lw | inst_sb | inst_sw                               | inst_beq | inst_bne | inst_div                                                                                                               | inst_multu | inst_bgez | inst_bgtz | inst_blez | inst_bltz | inst_bgezal | inst_bltzal | inst_xor | inst_nor                                   | inst_srl | inst_sra                                                             | inst_lh | inst_sh | inst_lbu | inst_lhu             | inst_divu            ); // 4
+    assign id_aluop_o[3]   = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (inst_add | inst_subu | inst_and |                        inst_mfhi | inst_mflo |            inst_addiu | inst_ori                                             | inst_sb | inst_sw | inst_j | inst_jal | inst_jr                                                             | inst_mfc0 | inst_mtc0 | inst_addi | inst_addu | inst_sub | inst_slti | inst_sltu              | inst_bgez                                                                 | inst_xor | inst_nor | inst_andi | inst_or | inst_xori                                                           | inst_mthi | inst_mtlo           | inst_sh | inst_lbu | inst_lhu | inst_jalr                        ); // 3
+    assign id_aluop_o[2]   = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (                       inst_and | inst_slt | inst_mult | inst_mfhi | inst_mflo |                         inst_ori | inst_sltiu | inst_lui                                         | inst_j | inst_jal | inst_jr                       | inst_div | inst_syscall | inst_eret | inst_mfc0 | inst_mtc0                                                            | inst_multu                                     | inst_bltz | inst_bgezal | inst_bltzal | inst_xor | inst_nor | inst_andi | inst_or | inst_xori                                                           | inst_mthi | inst_mtlo                                | inst_lhu | inst_jalr | inst_divu| inst_break); // 2
+    assign id_aluop_o[1]   = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (           inst_subu |            inst_slt |                                                                        inst_sltiu                      | inst_lw           | inst_sw          | inst_jal                                 | inst_div | inst_syscall | inst_eret                                                 | inst_sub                                                  | inst_bgtz | inst_blez             | inst_bgezal | inst_bltzal | inst_xor | inst_nor                       | inst_xori | inst_srl | inst_sra             | inst_srlv | inst_srav | inst_mthi | inst_mtlo                     | inst_lbu            | inst_jalr | inst_divu            ); // 1
+    assign id_aluop_o[0]   = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (           inst_subu |                                               inst_mflo | inst_sll | inst_addiu | inst_ori | inst_sltiu | inst_lui                                                             | inst_jr            | inst_bne                           | inst_eret             | inst_mtc0             | inst_addu | inst_sub             | inst_sltu | inst_multu | inst_bgez | inst_bgtz                         | inst_bgezal                          | inst_nor             | inst_or                        | inst_sra | inst_sllv             | inst_srav             | inst_mtlo | inst_lh | inst_sh | inst_lbu            | inst_jalr | inst_divu| inst_break); // 0
 
-    // ÊÇ·ñÓÃÄÚ´æµÃµ½µÄÊý¾ÝÐ´¼Ä´æÆ÷
+    // ï¿½Ç·ï¿½ï¿½ï¿½ï¿½Ú´ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð´ï¿½Ä´ï¿½ï¿½ï¿½
     assign id_mreg_o       = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : inst_lmem;
-    // Ð´HILO¼Ä´æÆ÷Ê¹ÄÜÐÅºÅ
+    // Ð´HILOï¿½Ä´ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½ï¿½Åºï¿½
     assign id_whilo_o      = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (inst_mult | inst_multu | inst_div | inst_divu | inst_mt);
-    // Ð´Í¨ÓÃ¼Ä´æÆ÷Ê¹ÄÜÐÅºÅ
+    // Ð´Í¨ï¿½Ã¼Ä´ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½ï¿½Åºï¿½
     assign id_wreg_o       = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : jal ? `WRITE_ENABLE :
                              (inst_alu_reg | inst_alu_imm | inst_mf | inst_shift | inst_shiftv | inst_lmem | inst_mfc0 | inst_jalr);
-    // ¶ÁÍ¨ÓÃ¼Ä´æÆ÷¶Ñ¶Ë¿Ú1Ê¹ÄÜÐÅºÅ
+    // ï¿½ï¿½Í¨ï¿½Ã¼Ä´ï¿½ï¿½ï¿½ï¿½Ñ¶Ë¿ï¿½1Ê¹ï¿½ï¿½ï¿½Åºï¿½
     assign rreg1 = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (inst_alu_reg | inst_alu_imm | inst_mult | inst_multu | inst_div | inst_divu | inst_shiftv | inst_mt | inst_lmem | inst_smem | inst_jr | inst_b | inst_jalr) & ~inst_lui;
-    // ¶ÁÍ¨ÓÃ¼Ä´æÆ÷¶Ñ¶Á¶Ë¿Ú2Ê¹ÄÜÐÅºÅ
+    // ï¿½ï¿½Í¨ï¿½Ã¼Ä´ï¿½ï¿½ï¿½ï¿½Ñ¶ï¿½ï¿½Ë¿ï¿½2Ê¹ï¿½ï¿½ï¿½Åºï¿½
     assign rreg2 = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (inst_alu_reg | inst_mult | inst_multu | inst_div | inst_divu | inst_shift | inst_shiftv | inst_smem | inst_beq | inst_bne | inst_mtc0);
-    //Êý¾ÝÇ°ÍÆ¿ØÖÆÐÅºÅ
+    //ï¿½ï¿½ï¿½ï¿½Ç°ï¿½Æ¿ï¿½ï¿½ï¿½ï¿½Åºï¿½
     assign fwrd1[0] = (exe2id_wreg == `WRITE_ENABLE) & (exe2id_wa == rs);
     assign fwrd1[1] = (mem2id_wreg == `WRITE_ENABLE) & (mem2id_wa == rs);
     assign fwrd2[0] = (exe2id_wreg == `WRITE_ENABLE) & (exe2id_wa == rt);
     assign fwrd2[1] = (mem2id_wreg == `WRITE_ENABLE) & (mem2id_wa == rt);
     /*------------------------------------------------------------------------------*/
 
-    // ¶ÁÍ¨ÓÃ¼Ä´æÆ÷¶Ñ¶Ë¿Ú1µÄµØÖ·Îªrs×Ö¶Î£¬¶Á¶Ë¿Ú2µÄµØÖ·Îªrt×Ö¶Î
+    // ï¿½ï¿½Í¨ï¿½Ã¼Ä´ï¿½ï¿½ï¿½ï¿½Ñ¶Ë¿ï¿½1ï¿½Äµï¿½Ö·Îªrsï¿½Ö¶Î£ï¿½ï¿½ï¿½ï¿½Ë¿ï¿½2ï¿½Äµï¿½Ö·Îªrtï¿½Ö¶ï¿½
     assign ra1   = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD : rs;
     assign ra2   = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD : rt;
                                             
-    // »ñµÃ´ýÐ´ÈëÄ¿µÄ¼Ä´æÆ÷µÄµØÖ·£¨rt»òrd£©
+    // ï¿½ï¿½Ã´ï¿½Ð´ï¿½ï¿½Ä¿ï¿½Ä¼Ä´ï¿½ï¿½ï¿½ï¿½Äµï¿½Ö·ï¿½ï¿½rtï¿½ï¿½rdï¿½ï¿½
     assign id_wa_o      = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD :
                           (jal) ? 5'b11111 :
                           (rtsel) ? rt : rd;
 
-    // »ñµÃÔ´²Ù×÷Êý1¡£Èç¹ûshiftÐÅºÅÓÐÐ§£¬ÔòÔ´²Ù×÷Êý1ÎªÒÆÎ»Î»Êý£»·ñÔòÎª´Ó¶ÁÍ¨ÓÃ¼Ä´æÆ÷¶Ñ¶Ë¿Ú1»ñµÃµÄÊý¾Ý
+    // ï¿½ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½1ï¿½ï¿½ï¿½ï¿½ï¿½shiftï¿½Åºï¿½ï¿½ï¿½Ð§ï¿½ï¿½ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½1Îªï¿½ï¿½Î»Î»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½Ó¶ï¿½Í¨ï¿½Ã¼Ä´ï¿½ï¿½ï¿½ï¿½Ñ¶Ë¿ï¿½1ï¿½ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½
     assign id_src1_o = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD :
                        (inst_shift) ? sa :
                        (rreg1 == `READ_DISABLE) ? `ZERO_WORD :
                        (fwrd1[0] == 1'b1) ? exe2id_wd :
                        (fwrd1[1] == 1'b1) ? mem2id_wd : rd1;
 
-    // »ñµÃÔ´²Ù×÷Êý2¡£Èç¹ûimmselÐÅºÅÓÐÐ§£¬ÔòÔ´²Ù×÷Êý1ÎªÁ¢¼´Êý£»·ñÔòÎª´Ó¶ÁÍ¨ÓÃ¼Ä´æÆ÷¶Ñ¶Ë¿Ú2»ñµÃµÄÊý¾Ý
+    // ï¿½ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½2ï¿½ï¿½ï¿½ï¿½ï¿½immselï¿½Åºï¿½ï¿½ï¿½Ð§ï¿½ï¿½ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½1Îªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½Ó¶ï¿½Í¨ï¿½Ã¼Ä´ï¿½ï¿½ï¿½ï¿½Ñ¶Ë¿ï¿½2ï¿½ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½
     assign id_src2_o = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD :
                        (immsel) ? imm_ext :
                        (rreg2 == `READ_DISABLE) ? `ZERO_WORD :
@@ -256,6 +257,7 @@ module id_stage(
     assign id_exccode_o = (cpu_rst_n == `RST_ENABLE) ? `EXC_NONE :
                           (id_aluop_o == 8'h00) ? `EXC_RI :
                           (inst_syscall == `TRUE_V ) ? `EXC_SYS :
+                          (inst_break == `TRUE_V) ? `EXC_BREAK :
                           (inst_eret == `TRUE_V ) ? `EXC_ERET : `EXC_NONE;
                           
     assign cp0_addr = (cpu_rst_n == `RST_ENABLE) ? `REG_NOP : rd;

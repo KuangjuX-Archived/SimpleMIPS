@@ -282,11 +282,11 @@ module exe_stage (
      
     // 根据内部操作码aluop进行移位运算
     assign shiftres = (exe_aluop_i == `MINIMIPS32_SLL ) ? (exe_src2_i << exe_src1_i):
-                      (exe_aluop_i == `MINIMIPS32_SLLV) ? (exe_src2_i << exe_src1_i):
+                      (exe_aluop_i == `MINIMIPS32_SLLV) ? (exe_src2_i << exe_src1_i[4 : 0]):
                       (exe_aluop_i == `MINIMIPS32_SRL ) ? (exe_src2_i >> exe_src1_i) :
-                      (exe_aluop_i == `MINIMIPS32_SRLV) ? (exe_src2_i >> exe_src1_i) :
+                      (exe_aluop_i == `MINIMIPS32_SRLV) ? (exe_src2_i >> exe_src1_i[4 : 0]) :
                       (exe_aluop_i == `MINIMIPS32_SRA ) ? $signed($signed(exe_src2_i) >>> exe_src1_i) :
-                      (exe_aluop_i == `MINIMIPS32_SRAV) ? $signed($signed(exe_src2_i) >>> exe_src1_i) : `ZERO_WORD;
+                      (exe_aluop_i == `MINIMIPS32_SRAV) ? $signed($signed(exe_src2_i) >>> exe_src1_i[4 : 0]) : `ZERO_WORD;
 
     assign exe_wa_o   = (cpu_rst_n   == `RST_ENABLE ) ? 5'b0 	 : exe_wa_i;
     assign exe_wreg_o = (cpu_rst_n   == `RST_ENABLE ) ? 1'b0 	 : exe_wreg_i;

@@ -344,7 +344,7 @@ module MiniMIPS32(
         .raddr(raddr),
         .waddr(waddr), 
         .wdata(wdata), 
-        .int_i(int_i), 
+        .int_i(int), 
         .pc_i(pc_i),
         .in_delay_i(in_delay_i),
         .exccode_i(exccode_i), 

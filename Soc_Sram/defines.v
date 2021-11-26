@@ -105,6 +105,7 @@
 `define MINIMIPS32_OR              8'h4D
 `define MINIMIPS32_XORI            8'h4E
 
+`define MINIMIPS32_BREAK           8'h85
 `define MINIMIPS32_SYSCALL         8'h86
 `define MINIMIPS32_ERET            8'h87
 `define MINIMIPS32_MFC0            8'h8C
@@ -168,8 +169,8 @@
 `define EXC_OV              5'h0c           // 整数溢出异常的编码
 `define EXC_NONE            5'h10           // 无异常
 `define EXC_ERET            5'h11           // ERET异常的编码
-`define EXC_ADDR            32'h00000100    // 异常处理程序入口地址
-`define EXC_INT_ADDR        32'h00000040    // 中断异常处理程序入口地址
+`define EXC_ADDR            32'hBFC00380    // 异常处理程序入口地址
+`define EXC_INT_ADDR        32'hBFC00380    // 中断异常处理程序入口地址
 
 `define NOFLUSH          1'b0
 `define FLUSH            1'b1
