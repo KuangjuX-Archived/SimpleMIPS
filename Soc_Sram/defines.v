@@ -157,6 +157,9 @@
 `define CP0_STATUS       12
 `define CP0_CAUSE        13
 `define CP0_EPC          14
+`define CP0_COUNT        9
+`define CP0_COMPARE      11
+
 
 //异常处理参数
 `define EXC_CODE_BUS        4 : 0           // 异常类型编码宽度
