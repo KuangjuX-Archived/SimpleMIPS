@@ -50,10 +50,10 @@ int main(int argc, char* argv[])
 	fprintf(out, "memory_initialization_vector =\n");
 	while(!feof(in)) {
 	    if(fread(mem,1,4,in)!=4) {
-	        fprintf(out, "%02x%02x%02x%02x\n", mem[0], mem[1],	mem[2], mem[3]);
+	        fprintf(out, "%02x%02x%02x%02x\n", mem[3], mem[2], mem[1], mem[0]);
 		break;
 	     }
-	    fprintf(out, "%02x%02x%02x%02x\n", mem[0], mem[1], mem[2],mem[3]);
+	    fprintf(out, "%02x%02x%02x%02x\n", mem[3], mem[2], mem[1], mem[0]);
         }
 	fclose(in);
 	fclose(out);
@@ -65,10 +65,10 @@ int main(int argc, char* argv[])
 	fprintf(out, "memory_initialization_vector =\n");
 	while(!feof(in)) {
 	    if(fread(mem,1,4,in)!=4) {
-	        fprintf(out, "%02x%02x%02x%02x\n", mem[0], mem[1],	mem[2], mem[3]);
+	        fprintf(out, "%02x%02x%02x%02x\n", mem[3], mem[2], mem[1], mem[0]);
 		break;
 	     }
-	    fprintf(out, "%02x%02x%02x%02x\n", mem[0], mem[1], mem[2],mem[3]);
+	    fprintf(out, "%02x%02x%02x%02x\n", mem[3], mem[2], mem[1], mem[0]);
         }
 	fclose(in);
 	fclose(out);
