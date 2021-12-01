@@ -29,6 +29,8 @@ module cp0_reg(
 	reg [`REG_BUS] status;		// CP0的status寄存器
 	reg [`REG_BUS] cause;		// CP0的cause寄存器
 	reg [`REG_BUS] epc;			// CP0的epc寄存器
+	reg [`REG_BUS] count;		// CP0的count寄存器
+	reg [`REG_BUS] compare;		// CP0的compare寄存器
 
 	assign status_o = status;
 	assign cause_o = cause;
@@ -83,6 +85,8 @@ module cp0_reg(
             status 	      <= 32'h10000000;              // status[28]为1，表示使能CP0协处理器
             cause 	      <= {25'b0, `EXC_NONE, 2'b0};
             epc 		  <= `ZERO_WORD;
+			count 		  <= `ZERO_WORD;
+			compare 	  <= `ZERO_WORD;
 		end 
         else begin
 			cause[15:10] <= int_i;
@@ -94,6 +98,8 @@ module cp0_reg(
 						 	`CP0_STATUS:   status   <= wdata; 
 						 	`CP0_CAUSE:    cause    <= wdata;
                             `CP0_EPC:      epc      <= wdata;
+							`CP0_COUNT:    count    <= wdata;
+							`CP0_COMPARE:  compare  <= wdata;
 						endcase
 					end
 			    `EXC_ADEL: begin
@@ -118,6 +124,8 @@ module cp0_reg(
                     (raddr == `CP0_BADVADDR  ) ? badvaddr :
 				    (raddr == `CP0_STATUS    ) ? status :
 				    (raddr == `CP0_CAUSE     ) ? cause :
-				    (raddr == `CP0_EPC       ) ? epc : `ZERO_WORD;
+				    (raddr == `CP0_EPC       ) ? epc :
+					(raddr == `CP0_COUNT     ) ? count :
+					(raddr == `CP0_COMPARE   ) ? compare : `ZERO_WORD;
 
 endmodule

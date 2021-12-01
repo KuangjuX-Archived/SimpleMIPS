@@ -105,6 +105,7 @@
 `define MINIMIPS32_OR              8'h4D
 `define MINIMIPS32_XORI            8'h4E
 
+`define MINIMIPS32_BREAK           8'h85
 `define MINIMIPS32_SYSCALL         8'h86
 `define MINIMIPS32_ERET            8'h87
 `define MINIMIPS32_MFC0            8'h8C
@@ -156,6 +157,9 @@
 `define CP0_STATUS       12
 `define CP0_CAUSE        13
 `define CP0_EPC          14
+`define CP0_COUNT        9
+`define CP0_COMPARE      11
+
 
 //异常处理参数
 `define EXC_CODE_BUS        4 : 0           // 异常类型编码宽度
@@ -168,94 +172,16 @@
 `define EXC_OV              5'h0c           // 整数溢出异常的编码
 `define EXC_NONE            5'h10           // 无异常
 `define EXC_ERET            5'h11           // ERET异常的编码
-`define EXC_ADDR            32'h00000100    // 异常处理程序入口地址
-`define EXC_INT_ADDR        32'h00000040    // 中断异常处理程序入口地址
+`define EXC_ADDR            32'hBFC00380    // 异常处理程序入口地址
+`define EXC_INT_ADDR        32'hBFC00380    // 中断异常处理程序入口地址
 
 `define NOFLUSH          1'b0
 `define FLUSH            1'b1
 
-/*------------------- 分支预测参数 -------------------*/
-
-`define SIZE_OF_GHR 7:0
-`define SIZE_OF_BHT 255:0
-`define SIZE_OF_BHR 7:0
-`define SIZE_OF_BHT_ADDR 7:0
-`define SIZE_OF_PHT 255:0
-`define SIZE_OF_PHT_ADDR 7:0
-`define SIZE_OF_BP_FSM 1:0
-`define SIZE_OF_CPHT 255:0
-//`define SIZE_OF_CPHR 1:0
-`define SIZE_OF_RAS 255:0
-`define SIZE_OF_RASR 32:0
-`define SIZE_OF_BTB 511:0//255:0//63:0
-`define SIZE_OF_BTBR 46:0
-`define SIZE_OF_BTBTAG 11:0
-`define SIZE_OF_BTBINDEX 8:0
-`define SIZE_OF_TCACHE 255:0
-`define SIZE_OF_TCACHER 32:0
-`define SIZE_OF_TCACHE_ADDR 7:0
-`define SIZE_OF_PTA 32:0
-`define SIZE_OF_PC_HASH 7:0
-`define SIZE_OF_BRANCH_INFO 66:0 
-
-`define SIZE_OF_BUFFER 1:0 //待定，取决于流水线的设计
-`define SIZE_OF_BUF_ADDR
-
-`define SIZE_OF_BPBUFF 1:0
-
-`define SIZE_OF_CORR_PACK 87:0
-`define CRR_PRED_DIR 87
-`define CRR_PRED_TAR 86:55
-`define CRR_DIR0 54   //by pht0
-`define CRR_DIR1 53   //by pht1 
-`define CRR_BTBTAG   52:41
-`define CRR_BTBINDEX 40:32
-`define CRR_PHT0ADDR 31:24
-`define CRR_PHT1ADDR 23:16
-`define CRR_BHTADDR  15:8
-`define CRR_CPHTADDR 7:0
-
-`define BRANCH_INFO_PC 66:35
-`define BRANCH_INFO_DIR 34
-`define BRANCH_INFO_TAR 33:2
-`define BRANCH_INFO_TYP 1:0 
-
-`define BTB_TAG 45:34
-`define BTB_VALID 46
-`define BTB_TAR 33:2
-`define BTB_TYP 1:0
-`define BTB_ADDRBUFF_TAG 20:9
-`define BTB_ADDRBUFF_INDEX 8:0
-
-`define TCACHE_VALID 32
-`define TCACHE_TAR 31:0 
-
-`define METHOD_GH 1'b0
-`define METHOD_LH 1'b1
-
-`define RAS_COUNT 37:32
-`define RAS_VALID 32
-`define RAS_TAR 31:0
-
-`define PTA_DIR   32
-`define PTA_PADDR 31:0
-
-//FSM
-`define SNT 2'b00
-`define WNT 2'b01
-`define WT  2'b10
-`define ST  2'b11
-
-`define SP1 2'b00
-`define WP1 2'b01
-`define WP2 2'b10
-`define SP2 2'b11
-
-
-//branch type
-`define BTYPE_ABS 2'b00  //一般的间接跳转
-`define BTYPE_CAL 2'b01  //call
-`define BTYPE_RET 2'b10  //return
-`define BTYPE_NUL 2'b11  //直接跳转
-
-///////////////////////////////////////////////////
+// 外设地址
+`define LED_START       32'hBFAFF000
+`define LED_END         32'hBFAFF00F
+`define SEG7_START      32'hBFAFF010
+`define SEG7_END        32'hBFAFF01F
+`define SWITCH_START    32'hBFAFF020
+`define SWITCH_END      32'hBFAFF02F
