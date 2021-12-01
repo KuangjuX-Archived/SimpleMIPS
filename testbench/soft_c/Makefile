@@ -1,5 +1,7 @@
 .PHONY: mem clean help
 
+# USER_PROGRAM = fib
+
 ifndef CROSS_COMPILE
 CROSS_COMPILE := mips-sde-elf-
 endif
