@@ -185,3 +185,7 @@
 `define SEG7_END        32'hBFAFF01F
 `define SWITCH_START    32'hBFAFF020
 `define SWITCH_END      32'hBFAFF02F
+
+
+`define InterruptAssert     1'b1
+`define InterruptNotAssert  1'b0

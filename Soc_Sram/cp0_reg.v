@@ -22,7 +22,9 @@ module cp0_reg(
 
 	output wire	[`REG_BUS      ] data_o,
 	output wire [`REG_BUS 	   ] status_o,
-	output wire [`REG_BUS 	   ] cause_o
+	output wire [`REG_BUS 	   ] cause_o,
+
+	output reg 			 	     timer_int_o
     );
 
 	reg [`REG_BUS] badvaddr;	// CP0的badvaddr寄存器
@@ -31,6 +33,8 @@ module cp0_reg(
 	reg [`REG_BUS] epc;			// CP0的epc寄存器
 	reg [`REG_BUS] count;		// CP0的count寄存器
 	reg [`REG_BUS] compare;		// CP0的compare寄存器
+
+	reg dclk_count;
 
 	assign status_o = status;
 	assign cause_o = cause;
@@ -87,9 +91,15 @@ module cp0_reg(
             epc 		  <= `ZERO_WORD;
 			count 		  <= `ZERO_WORD;
 			compare 	  <= `ZERO_WORD;
+			timer_int_o	  <= `InterruptNotAssert;
+			dclk_count    <= 1'b0;
 		end 
         else begin
+			dclk_count <= ~dclk_count;
+			if(dclk_count) count <= count + 1;
 			cause[15:10] <= int_i;
+			cause[30] <= timer_int_o;
+			if (compare != `ZERO_WORD && count == compare) timer_int_o <= `InterruptAssert;
 			case (exccode_i)
 				`EXC_NONE:                              // 无异常发生时，判断是否为写寄存器指令，写入数据
 					if (we == `WRITE_ENABLE) begin
@@ -98,8 +108,14 @@ module cp0_reg(
 						 	`CP0_STATUS:   status   <= wdata; 
 						 	`CP0_CAUSE:    cause    <= wdata;
                             `CP0_EPC:      epc      <= wdata;
-							`CP0_COUNT:    count    <= wdata;
-							`CP0_COMPARE:  compare  <= wdata;
+							`CP0_COUNT:    begin
+								dclk_count <= 1'b0;
+								count    <= wdata;
+							end
+							`CP0_COMPARE:  begin
+								compare  <= wdata;
+								timer_int_o <= `InterruptNotAssert;
+							end
 						endcase
 					end
 			    `EXC_ADEL: begin

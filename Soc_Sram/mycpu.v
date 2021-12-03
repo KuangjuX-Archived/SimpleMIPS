@@ -32,6 +32,8 @@ module mycpu(
 
     wire [31:0] inst_sram_addr_v, data_sram_addr_v;
 
+    wire timer_int;
+
     MiniMIPS32 MiniMIPS32_0(
         .cpu_clk_50M(clk),
         .cpu_rst_n(resetn),
@@ -45,7 +47,8 @@ module mycpu(
         .din(data_sram_wdata),
         .dm(data_sram_rdata),
 
-        .int(ext_int),
+        .int({timer_int, ext_int[4:0]}),
+        .timer_int_o(timer_int),
 
         .debug_wb_pc(debug_wb_pc),
         .debug_wb_rf_wen(debug_wb_rf_wen),

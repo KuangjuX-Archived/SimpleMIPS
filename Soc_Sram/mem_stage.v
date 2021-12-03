@@ -96,8 +96,8 @@ module mem_stage (
     assign cp0_in_delay = (cpu_rst_n == `RST_ENABLE) ? 1'b0  : mem_in_delay_i;
     
     assign cp0_exccode  = (cpu_rst_n == `RST_ENABLE) ? `EXC_NONE : 
-                          ((status[15:10] & cause[15:10]) != 8'h00 && status[1] == 1'b0 && status[0] == 1'b1) ? `EXC_INT :
-                          (mem_pc_i[1:0] === 2'b01 | mem_pc_i[1:0] === 2'b10 | mem_pc_i[1:0] === 2'b11) ? `EXC_ADEL : 
+                          (((status[15:8] & cause[15:8]) != 8'h00 | cause[30] == 1'b1) && status[1] == 1'b0 && status[0] == 1'b1) ? `EXC_INT :
+                          (mem_pc_i[1:0] == 2'b01 | mem_pc_i[1:0] == 2'b10 | mem_pc_i[1:0] == 2'b11) ? `EXC_ADEL : 
                           ((mem_aluop_i == `MINIMIPS32_LH | mem_aluop_i == `MINIMIPS32_LHU) & (mem_wd_i[0] != 1'b0)) ? `EXC_ADEL :
                           ((mem_aluop_i == `MINIMIPS32_LW) & (mem_wd_i[1:0] != 2'b00)) ? `EXC_ADEL :
                           ((mem_aluop_i == `MINIMIPS32_SH) & (mem_wd_i[  0] != 1'b0 )) ? `EXC_ADES :
@@ -139,7 +139,7 @@ module mem_stage (
                           ((mem_aluop_i == `MINIMIPS32_LH | mem_aluop_i == `MINIMIPS32_LHU) & (mem_wd_i[1:0] == 2'b10)) ? 4'b0011 :
                           (mem_aluop_i == `MINIMIPS32_LW) ? 4'b1111 : 4'b0;
     
-    assign din_word     = {mem_din_i[7:0], mem_din_i[15:8], mem_din_i[23:16], mem_din_i[31:24]};
+    assign din_word     = (device == 1'b1) ? mem_din_i: {mem_din_i[7:0], mem_din_i[15:8], mem_din_i[23:16], mem_din_i[31:24]};
     assign din_half     = {mem_din_i[7:0], mem_din_i[15:8], mem_din_i[ 7: 0], mem_din_i[15: 8]};
     assign din_byte     = {mem_din_i[7:0], mem_din_i[ 7:0], mem_din_i[ 7: 0], mem_din_i[ 7: 0]};
     assign din          = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD  :
@@ -147,8 +147,6 @@ module mem_stage (
                           (mem_aluop_i == `MINIMIPS32_SH) ? din_half :
                           (mem_aluop_i == `MINIMIPS32_SB) ? din_byte : `ZERO_WORD;
 
-    assign device = (daddr >= `LED_START & daddr <= `LED_END) |
-                (daddr >= `SEG7_START & daddr <= `SEG7_END) |
-                (daddr >= `SWITCH_START & daddr <= `SWITCH_END);
+    assign device = (daddr >= 32'hBFAFF000 & daddr <= 32'hBFAFFFFF);
 
 endmodule

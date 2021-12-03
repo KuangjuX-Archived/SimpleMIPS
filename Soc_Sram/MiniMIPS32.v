@@ -19,7 +19,9 @@ module MiniMIPS32(
     output  wire [31: 0] debug_wb_pc,
     output  wire [3 :0]  debug_wb_rf_wen,
     output  wire [4 :0]  debug_wb_rf_wnum,
-    output  wire [31:0]  debug_wb_rf_wdata
+    output  wire [31:0]  debug_wb_rf_wdata,
+
+    output  reg          timer_int_o
     );
 
     wire [`WORD_BUS      ] pc;
@@ -144,7 +146,7 @@ module MiniMIPS32(
     wire 				   wb_whilo_o;
     wire [`REG_ADDR_BUS  ] wb_wa_o;
     wire [`REG_BUS       ] wb_wd_o;
-    wire [`REG_BUS       ] wb_dhi_o;
+    wire [`REG_BUS       ] wb_ds;
     wire [`REG_BUS       ] wb_dlo_o;
     wire [`INST_ADDR_BUS ] wb_pc_o;
     
@@ -152,8 +154,7 @@ module MiniMIPS32(
     wire                   exe2id_mreg;
     wire                   mem2id_mreg;
     wire                   stallreq_id;
-    wire                   stallreq_exe;
-                            
+    wire                   stallreq_exey;                            
     wire 				    cp0_we;
     wire 				    cp0_re;
     wire [`REG_ADDR_BUS   ] raddr;
@@ -176,6 +177,7 @@ module MiniMIPS32(
 
     wire                    mem_device;
     wire                    wb_device;
+    wire                    timer_int_o;
 
     if_stage if_stage0(.cpu_clk_50M(cpu_clk_50M), .cpu_rst_n(cpu_rst_n),
         .pc(pc), .ice(ice), .iaddr(iaddr),
@@ -354,7 +356,8 @@ module MiniMIPS32(
         .cp0_excaddr(cp0_excaddr), 
         .data_o(data_o), 
         .status_o(status_o), 
-        .cause_o(cause_o)
+        .cause_o(cause_o),
+        .timer_int_o(timer_int_o)
     );
 
 
