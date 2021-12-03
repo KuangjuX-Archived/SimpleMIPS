@@ -1,4 +1,7 @@
 # SimpleMIPS
+
+![](static/run.jpg)
+
 A Simple 5-stage pipeline MIPS CPU for TJU Computer Architecture Course.
 
 ## 工程目录
