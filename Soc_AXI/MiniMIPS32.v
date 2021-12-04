@@ -6,46 +6,47 @@ module MiniMIPS32(
     input  wire [5:0]            int,
     output reg                   timer_int_o,
     
-    output wire[3:0]   arid_o,
-    output wire[31:0]  araddr_o,
-    output wire[3:0]   arlen_o,
-    output wire[2:0]   arsize_o,
-    output wire[1:0]   arburst_o,
-    output wire[1:0]   arlock_o,
-    output wire[3:0]   arcache_o,
-    output wire[2:0]   arprot_o,
-    output wire        arvalid_o,
-    input  wire        arready_i,
 
-    input  wire[3:0]   rid_i,
-    input  wire[31:0]  rdata_i,
-    input  wire[1:0]   rresp_i,
-    input  wire        rlast_i,
-    input  wire        rvalid_i,
-    output wire        rready_o,
+    output wire[3:0]   arid_o, // ∂¡µÿ÷∑ID
+    output wire[31:0]  araddr_o, // ∂¡µÿ÷∑
+    output wire[3:0]   arlen_o, // Burst length
+    output wire[2:0]   arsize_o, // Burst size
+    output wire[1:0]   arburst_o, // Burst type
+    output wire[1:0]   arlock_o, // Lock type
+    output wire[3:0]   arcache_o, // Memory type
+    output wire[2:0]   arprot_o, // Protection type
+    output wire        arvalid_o, // Read address valid
+    input  wire        arready_i, // Read address ready
 
-    output wire[3:0]   awid_o,
-    output wire[31:0]  awaddr_o,
-    output wire[3:0]   awlen_o,
-    output wire[2:0]   awsize_o,
-    output wire[1:0]   awburst_o,
-    output wire[1:0]   awlock_o,
-    output wire[3:0]   awcache_o,
-    output wire[2:0]   awprot_o,
-    output wire        awvalid_o,
-    input  wire        awready_i,
+    input  wire[3:0]   rid_i, // Read ID tag
+    input  wire[31:0]  rdata_i, // Read data
+    input  wire[1:0]   rresp_i, // Read response
+    input  wire        rlast_i, // Read last
+    input  wire        rvalid_i, // Read valid
+    output wire        rready_o, // Read ready
 
-    output wire[3:0]   wid_o,
-    output wire[31:0]  wdata_o,
-    output wire[3:0]   wstrb_o,
-    output wire        wlast_o,
-    output wire        wvalid_o,
-    input  wire        wready_i,
+    output wire[3:0]   awid_o, // Write address ID
+    output wire[31:0]  awaddr_o, // Write address
+    output wire[3:0]   awlen_o, // Burst length
+    output wire[2:0]   awsize_o, // Burst size
+    output wire[1:0]   awburst_o, // Burst type
+    output wire[1:0]   awlock_o, // Lock type
+    output wire[3:0]   awcache_o, // Memory type
+    output wire[2:0]   awprot_o, // Protection type
+    output wire        awvalid_o, // Write address valid
+    input  wire        awready_i, // Write address ready
 
-    input  wire[3:0]   bid_i,
-    input  wire[1:0]   bresp_i,
-    input  wire        bvalid_i,
-    output wire        bready_o,
+    output wire[3:0]   wid_o, // Write ID tag
+    output wire[31:0]  wdata_o, // Write data
+    output wire[3:0]   wstrb_o, // Write strobes. This signal indicates which byte lanes hold valid data. 
+    output wire        wlast_o, // Write last. This signal indicates the last transfer in a write burst. 
+    output wire        wvalid_o, // Write valid
+    input  wire        wready_i, // Write ready
+
+    input  wire[3:0]   bid_i, // Reasponse ID tag
+    input  wire[1:0]   bresp_i, // Write response. This signal indicates the status of the write transaction. 
+    input  wire        bvalid_i, // Write response valid
+    output wire        bready_o, // Response ready
 
     output  wire [31: 0] debug_wb_pc,
     output  wire [3 :0]  debug_wb_rf_wen,
