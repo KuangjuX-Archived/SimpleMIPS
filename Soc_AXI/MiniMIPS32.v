@@ -3,25 +3,55 @@
 module MiniMIPS32(
     input  wire                  cpu_clk_50M,
     input  wire                  cpu_rst_n,
+    input  wire [5:0]            int,
+    output reg                   timer_int_o,
     
-    // inst_rom
-    output wire [`INST_ADDR_BUS] iaddr,
-    output wire                  ice,
-    input  wire [`INST_BUS]      inst,
-    output wire [`DATA_ADDR_BUS] daddr,
-    output wire                  dce,
-    output wire [`DATA_WE_BUS  ] we,
-    output wire [`DATA_BUS     ] din,
-    input  wire [`DATA_BUS     ] dm,
+    output wire[3:0]   arid_o,
+    output wire[31:0]  araddr_o,
+    output wire[3:0]   arlen_o,
+    output wire[2:0]   arsize_o,
+    output wire[1:0]   arburst_o,
+    output wire[1:0]   arlock_o,
+    output wire[3:0]   arcache_o,
+    output wire[2:0]   arprot_o,
+    output wire        arvalid_o,
+    input  wire        arready_i,
 
-    input wire  [5:0] int,
+    input  wire[3:0]   rid_i,
+    input  wire[31:0]  rdata_i,
+    input  wire[1:0]   rresp_i,
+    input  wire        rlast_i,
+    input  wire        rvalid_i,
+    output wire        rready_o,
+
+    output wire[3:0]   awid_o,
+    output wire[31:0]  awaddr_o,
+    output wire[3:0]   awlen_o,
+    output wire[2:0]   awsize_o,
+    output wire[1:0]   awburst_o,
+    output wire[1:0]   awlock_o,
+    output wire[3:0]   awcache_o,
+    output wire[2:0]   awprot_o,
+    output wire        awvalid_o,
+    input  wire        awready_i,
+
+    output wire[3:0]   wid_o,
+    output wire[31:0]  wdata_o,
+    output wire[3:0]   wstrb_o,
+    output wire        wlast_o,
+    output wire        wvalid_o,
+    input  wire        wready_i,
+
+    input  wire[3:0]   bid_i,
+    input  wire[1:0]   bresp_i,
+    input  wire        bvalid_i,
+    output wire        bready_o,
 
     output  wire [31: 0] debug_wb_pc,
     output  wire [3 :0]  debug_wb_rf_wen,
     output  wire [4 :0]  debug_wb_rf_wnum,
-    output  wire [31:0]  debug_wb_rf_wdata,
+    output  wire [31:0]  debug_wb_rf_wdata
 
-    output  reg          timer_int_o
     );
 
     wire [`WORD_BUS      ] pc;
@@ -177,7 +207,6 @@ module MiniMIPS32(
 
     wire                    mem_device;
     wire                    wb_device;
-    wire                    timer_int_o;
 
     if_stage if_stage0(.cpu_clk_50M(cpu_clk_50M), .cpu_rst_n(cpu_rst_n),
         .pc(pc), .ice(ice), .iaddr(iaddr),

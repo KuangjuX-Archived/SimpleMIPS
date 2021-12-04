@@ -75,25 +75,79 @@ module mycpu(
 
     wire timer_int;
 
+    // MiniMIPS32 MiniMIPS32_0(
+    //     .cpu_clk_50M(clk),
+    //     .cpu_rst_n(resetn),
+
+    //     .iaddr(inst_sram_addr_v), 
+    //     .ice(ice),
+    //     .inst(inst_sram_rdata),
+    //     .dce(dce),
+    //     .daddr(data_sram_addr_v),
+    //     .we(data_sram_wen),
+    //     .din(data_sram_wdata),
+    //     .dm(data_sram_rdata),
+
+    //     .int({timer_int, ext_int[4:0]}),
+    //     .timer_int_o(timer_int),
+
+    //     .debug_wb_pc(debug_wb_pc),
+    //     .debug_wb_rf_wen(debug_wb_rf_wen),
+    //     .debug_wb_rf_wnum(debug_wb_rf_wnum),
+    //     .debug_wb_rf_wdata(debug_wb_rf_wdata)
+    // );
+
+    // AXI 接口的核心文件
     MiniMIPS32 MiniMIPS32_0(
         .cpu_clk_50M(clk),
         .cpu_rst_n(resetn),
-
-        .iaddr(inst_sram_addr_v), 
-        .ice(ice),
-        .inst(inst_sram_rdata),
-        .dce(dce),
-        .daddr(data_sram_addr_v),
-        .we(data_sram_wen),
-        .din(data_sram_wdata),
-        .dm(data_sram_rdata),
-
         .int({timer_int, ext_int[4:0]}),
-        .timer_int_o(timer_int),
 
-        .debug_wb_pc(debug_wb_pc),
-        .debug_wb_rf_wen(debug_wb_rf_wen),
-        .debug_wb_rf_wnum(debug_wb_rf_wnum),
+        .arid      (arid      ),
+        .araddr    (araddr    ),
+        .arlen     (arlen     ),
+        .arsize    (arsize    ),
+        .arburst   (arburst   ),
+        .arlock    (arlock    ),
+        .arcache   (arcache   ),
+        .arprot    (arprot    ),
+        .arvalid   (arvalid   ),
+        .arready   (arready   ),
+                    
+        .rid       (rid       ),
+        .rdata     (rdata     ),
+        .rresp     (rresp     ),
+        .rlast     (rlast     ),
+        .rvalid    (rvalid    ),
+        .rready    (rready    ),
+                
+        .awid      (awid      ),
+        .awaddr    (awaddr    ),
+        .awlen     (awlen     ),
+        .awsize    (awsize    ),
+        .awburst   (awburst   ),
+        .awlock    (awlock    ),
+        .awcache   (awcache   ),
+        .awprot    (awprot    ),
+        .awvalid   (awvalid   ),
+        .awready   (awready   ),
+        
+        .wid       (wid       ),
+        .wdata     (wdata     ),
+        .wstrb     (wstrb     ),
+        .wlast     (wlast     ),
+        .wvalid    (wvalid    ),
+        .wready    (wready    ),
+        
+        .bid       (bid       ),
+        .bresp     (bresp     ),
+        .bvalid    (bvalid    ),
+        .bready    (bready    ),
+
+        //debug interface
+        .debug_wb_pc      (debug_wb_pc      ),
+        .debug_wb_rf_wen  (debug_wb_rf_wen  ),
+        .debug_wb_rf_wnum (debug_wb_rf_wnum ),
         .debug_wb_rf_wdata(debug_wb_rf_wdata)
     );
 
