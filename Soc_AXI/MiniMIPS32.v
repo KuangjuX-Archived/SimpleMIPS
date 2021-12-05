@@ -209,6 +209,27 @@ module MiniMIPS32(
     wire                    mem_device;
     wire                    wb_device;
 
+    // 类sram接口定义
+    // inst sram-like
+    wire                    inst_req;
+    wire                    inst_wr;
+    wire [1:0]              inst_size;
+    wire [31:0]             inst_addr;
+    wire [31:0]             inst_wdata;
+    wire [31:0]             inst_rdata;
+    wire                    inst_addr_ok;
+    wire                    inst_data_ok;
+
+    // data sram-like
+    wire                    data_req;
+    wire                    data_wr;
+    wire [1:0]              data_size;
+    wire [31:0]             data_addr;
+    wire [31:0]             data_wdata;
+    wire [31:0]             data_rdata;
+    wire                    data_addr_ok;
+    wire                    data_data_ok;
+
     if_stage if_stage0(.cpu_clk_50M(cpu_clk_50M), .cpu_rst_n(cpu_rst_n),
         .pc(pc), .ice(ice), .iaddr(iaddr),
         .jtsel(jtsel), .addr1(addr1), .addr2(addr2), .addr3(addr3),
@@ -388,6 +409,61 @@ module MiniMIPS32(
         .status_o(status_o), 
         .cause_o(cause_o),
         .timer_int_o(timer_int_o)
+    );
+
+    cpu_axi_interface cpu_axi_interface0(
+        .clk(cpu_clk_50M),
+        .resten(cpu_rst_n),
+        
+        .inst_req(inst_req),
+        .inst_wr(inst_wr),
+        .inst_size(inst_size),
+        .inst_addr(inst_addr),
+        .inst_wdata(inst_wdata),
+        .inst_rdata(inst_rdata),
+        .inst_addr_ok(inst_addr_ok),
+        .inst_data_ok(inst_data_ok),
+
+        .arid(arid_o),
+        .araddr(araddr_o),
+        .arlen(arlen_o),
+        .arsize(arsize_o),
+        .arburst(arburst_o),
+        .arlock(arlock_o),
+        .arcache(arcache_o),
+        .arprot(arprot_o),
+        .arvalid(arvalid_o),
+        .arready(arready_i),
+
+        .rid(rid_i),
+        .rdata(rdata_i),
+        .rresp_i(rresp_i),
+        .rlast(rlast_i),
+        .rvalid(rvalid_i),
+        .rready(rready_o),
+
+        .awid(awid_o),
+        .awaddr(awaddr_o),
+        .awlen(awlen_o),
+        .awsize(awsize_o),
+        .awburst(awburst_o),
+        .awlock(awlock_o),
+        .awcache(awcache_o),
+        .awprot(awprot_o),
+        .awvalid(awvalid_o),
+        .awready(awready_i),
+
+        .wid(wid_o),
+        .wdata(wdata_o),
+        .wstrb(wstrb_o),
+        .wlast(wlast_o),
+        .wvalid(wvalid_o),
+        .wready(wready_i),
+
+        .bid(bid_i),
+        .bresp(bresp_i),
+        .bvalid(bvalid_i),
+        .bready(bready_o)
     );
 
 
