@@ -424,6 +424,15 @@ module MiniMIPS32(
         .inst_addr_ok(inst_addr_ok),
         .inst_data_ok(inst_data_ok),
 
+        .data_req(data_req),
+        .data_wr(data_wr),
+        .data_size(data_size),
+        .data_addr(data_addr),
+        .data_wdata(data_wdata),
+        .data_rdata(data_rdata),
+        .data_addr_ok(data_addr_ok),
+        .data_data_ok(data_data_ok),
+
         .arid(arid_o),
         .araddr(araddr_o),
         .arlen(arlen_o),
