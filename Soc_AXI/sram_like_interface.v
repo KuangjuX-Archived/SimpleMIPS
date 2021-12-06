@@ -7,7 +7,7 @@ module sram_like_interface(
     input  wire [31:0]  inst_sram_addr_v,
     input  wire         inst_sram_en,
     output reg  [31:0]  inst_sram_rdata,
-    output reg          stallreq_if,
+    output reg          stallreq_rinst,
     
 
     input  wire [31:0]  data_sram_addr_v,
@@ -15,6 +15,8 @@ module sram_like_interface(
     input  wire         data_sram_wen,
     input  wire [31:0]  data_sram_wdata,
     output reg  [31:0]  data_sram_rdata,
+    output reg          stallreq_rdata,
+    output reg          stallreq_wdata,
 
     output reg          inst_req, // 请求信号,为 1 时有读写请求，为 0 时无读写请求
     output reg          inst_wr, // 该次请求是写
@@ -31,8 +33,8 @@ module sram_like_interface(
     output reg[31:0]    data_addr,
     output reg[31:0]    data_wdata,
     input  wire[31:0]   data_rdata,
-    input  wire[31:0]   data_addr_ok,
-    input  wire[31:0]   data_data_ok
+    input  wire         data_addr_ok,
+    input  wire         data_data_ok
 );
 
     // 读指令请求状态
@@ -97,7 +99,7 @@ module sram_like_interface(
                 end
 
                 `RVALID: begin
-                    if(data_data_ok == `TRUE_V && inst_rdata != `ZERO_WORD)begin
+                    if(inst_data_ok == `TRUE_V)begin
                         rinst_next_state = `AXI_IDLE;
                     end else begin
                         rinst_next_state = `RVALID;
@@ -192,7 +194,9 @@ module sram_like_interface(
 
             inst_sram_rdata <= `ZERO_WORD;
             data_sram_rdata <= `ZERO_WORD;
-            stallreq_if <= 1'b0;
+            stallreq_rinst <= 1'b0;
+            stallreq_rdata <= 1'b0;
+            stallreq_wdata <= 1'b0;
         end else begin
             case(rinst_current_state)
                 // 读指令的状态机
@@ -204,9 +208,10 @@ module sram_like_interface(
                         inst_addr <= inst_sram_addr;
                         inst_size <= 2'b10;
                         // 此时产生指令暂停
-                        stallreq_if <= 1'b1;
+                        stallreq_rinst <= 1'b1;
                     end else begin
                         inst_req <= `FALSE_V;
+                        inst_wr <= `FALSE_V;
                         inst_addr <= `ZERO_WORD;
                         inst_size <= 2'b00;
                     end
@@ -227,7 +232,7 @@ module sram_like_interface(
                     if(inst_data_ok == `TRUE_V)begin
                         // 数据握手成功
                         inst_sram_rdata <= inst_rdata;
-                        stallreq_if <= 1'b0;
+                        stallreq_rinst <= 1'b0;
                     end else begin
                         // 数据握手失败
                     end
@@ -241,8 +246,9 @@ module sram_like_interface(
                     if(data_sram_en == `TRUE_V)begin
                         data_req <= `TRUE_V;
                         data_wr <= `FALSE_V;
-                        data_addr <= inst_sram_addr;
+                        data_addr <= data_sram_addr;
                         data_size <= 2'b10;
+                        stallreq_rdata <= 1'b1;
                     end else begin
                         data_req <= `FALSE_V;
                         data_addr <= `ZERO_WORD;
@@ -264,7 +270,8 @@ module sram_like_interface(
                 `RVALID: begin
                     if(data_data_ok == `TRUE_V)begin
                         // 数据握手成功
-                        data_sram_rdata <= inst_rdata;
+                        data_sram_rdata <= data_rdata;
+                        stallreq_rdata <= 1'b0;
                     end else begin
                         // 数据握手失败
                     end
@@ -280,6 +287,7 @@ module sram_like_interface(
                         data_size <= 2'b10;
                         data_addr <= data_sram_addr;
                         data_wdata <= data_sram_wdata;
+                        stallreq_wdata <= 1'b1;
                     end else begin
                         data_req <= `FALSE_V;
                         data_wr <= `FALSE_V;
@@ -297,6 +305,7 @@ module sram_like_interface(
                         data_size <= 2'b00;
                         data_addr <= `ZERO_WORD;
                         data_wdata <= `ZERO_WORD;
+                        stallreq_wdata <= 1'b0;
                     end else begin
                         // 地址握手失败
                     end

@@ -185,8 +185,7 @@ module MiniMIPS32(
     wire                   exe2id_mreg;
     wire                   mem2id_mreg;
     wire                   stallreq_id;
-    wire                   stallreq_exec;
-    wire                   stallreq_if;                            
+    wire                   stallreq_exec;                         
     wire 				   cp0_we;
     wire 				   cp0_re;
     wire [`REG_ADDR_BUS   ] raddr;
@@ -242,6 +241,10 @@ module MiniMIPS32(
     wire         data_sram_wen;
     wire [31:0]  data_sram_wdata;
     wire [31:0]  data_sram_rdata;
+
+    wire         stallreq_rinst;
+    wire         stallreq_rdata;
+    wire         stallreq_wdata;
 
     if_stage if_stage0(.cpu_clk_50M(cpu_clk_50M), .cpu_rst_n(cpu_rst_n),
         .pc(pc), .ice(inst_sram_en), .iaddr(inst_sram_addr),
@@ -351,7 +354,9 @@ module MiniMIPS32(
     scu scu0(.cpu_rst_n(cpu_rst_n),
         .stallreq_id(stallreq_id), 
         .stallreq_exe(stallreq_exe), 
-        .stallreq_if(stallreq_if),
+        .stallreq_rinst(stallreq_rinst),
+        .stallreq_rdata(stallreq_rdata),
+        .stallreq_wdata(stallreq_wdata),
         .stall(stall)
     );
 
@@ -435,13 +440,15 @@ module MiniMIPS32(
         .inst_sram_addr_v(inst_sram_addr),
         .inst_sram_en(inst_sram_en),
         .inst_sram_rdata(inst_sram_rdata),
-        .stallreq_if(stallreq_if),
+        .stallreq_rinst(stallreq_rinst),
 
         .data_sram_addr_v(data_sram_addr),
         .data_sram_en(data_sram_en),
         .data_sram_wen(data_sram_wen),
         .data_sram_wdata(data_sram_wdata),
         .data_sram_rdata(data_sram_rdata),
+        .stallreq_rdata(stallreq_rdata),
+        .stallreq_wdata(stallreq_wdata),
 
         .inst_req(inst_req),
         .inst_wr(inst_wr),
