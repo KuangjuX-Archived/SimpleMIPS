@@ -12,8 +12,8 @@ module if_stage (
     input   wire [`STALL_BUS    ]  stall,
     
     output  wire                   ice,
-    output 	reg  [`INST_ADDR_BUS] 	pc,
-    output 	wire [`INST_ADDR_BUS]	iaddr,
+    output 	reg  [`INST_ADDR_BUS]  pc,
+    output 	wire [`INST_ADDR_BUS]  iaddr,
     
     input  wire                    flush,
     input  wire  [`INST_ADDR_BUS]  cp0_excaddr

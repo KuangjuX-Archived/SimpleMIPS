@@ -1,7 +1,7 @@
 module mycpu(
     input wire           [5:0] ext_int,
-    input wire           clk,
-    input wire           resetn,
+    input wire           aclk,
+    input wire           aresetn,
 
     // output  wire         inst_sram_en,
     // output  wire [3:0]   inst_sram_wen,
@@ -19,7 +19,7 @@ module mycpu(
     output wire [31:0]      araddr,
     output wire [3:0]       arlen,
     output wire [2:0]       arsize,
-    output wire [1:0]       arbrust,
+    output wire [1:0]       arburst,
     output wire [1:0]       arlock,
     output wire [3:0]       arcache,
     output wire [2:0]       arprot,
@@ -62,16 +62,16 @@ module mycpu(
     output  wire [31:0]  debug_wb_rf_wdata
 );
 
-    wire           ice;
-    wire           dce;
+    // wire           ice;
+    // wire           dce;
 
-    assign inst_sram_en = (resetn == 1'b0) ? 1'b0 : ice;
-    assign inst_sram_wen = 4'b0000;
-    assign inst_sram_wdata = 32'h00000000;
+    // assign inst_sram_en = (resetn == 1'b0) ? 1'b0 : ice;
+    // assign inst_sram_wen = 4'b0000;
+    // assign inst_sram_wdata = 32'h00000000;
 
-    assign data_sram_en = (resetn == 1'b0) ? 1'b0 : dce;
+    // assign data_sram_en = (resetn == 1'b0) ? 1'b0 : dce;
 
-    wire [31:0] inst_sram_addr_v, data_sram_addr_v;
+    // wire [31:0] inst_sram_addr_v, data_sram_addr_v;
 
     wire timer_int;
 
@@ -99,8 +99,8 @@ module mycpu(
 
     // AXI 接口的核心文件
     MiniMIPS32 MiniMIPS32_0(
-        .cpu_clk_50M(clk),
-        .cpu_rst_n(resetn),
+        .cpu_clk_50M(aclk),
+        .cpu_rst_n(aresetn),
         .int({timer_int, ext_int[4:0]}),
 
         .arid_o      (arid      ),
@@ -151,16 +151,16 @@ module mycpu(
         .debug_wb_rf_wdata(debug_wb_rf_wdata)
     );
 
-    // 指令存储器地址映射
-    mmu u0_mmu(
-        .addr_i(inst_sram_addr_v),
-        .addr_o(inst_sram_addr)
-    );
+    // // 指令存储器地址映射
+    // mmu u0_mmu(
+    //     .addr_i(inst_sram_addr_v),
+    //     .addr_o(inst_sram_addr)
+    // );
 
-    // 数据存储器地址映射
-    mmu u1_mmu(
-        .addr_i(data_sram_addr_v),
-        .addr_o(data_sram_addr)
-    );
+    // // 数据存储器地址映射
+    // mmu u1_mmu(
+    //     .addr_i(data_sram_addr_v),
+    //     .addr_o(data_sram_addr)
+    // );
     
 endmodule

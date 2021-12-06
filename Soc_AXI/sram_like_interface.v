@@ -4,12 +4,13 @@ module sram_like_interface(
     input               resetn,
     input               flush,
 
-    input  wire [31:0]  inst_sram_addr,
+    input  wire [31:0]  inst_sram_addr_v,
     input  wire         inst_sram_en,
     output reg  [31:0]  inst_sram_rdata,
+    output reg          stallreq_if,
     
 
-    input  wire [31:0]  data_sram_addr,
+    input  wire [31:0]  data_sram_addr_v,
     input  wire         data_sram_en,
     input  wire         data_sram_wen,
     input  wire [31:0]  data_sram_wdata,
@@ -44,8 +45,25 @@ module sram_like_interface(
     reg[2:0] wdata_current_state;
     reg[2:0] wdata_next_state;
 
+    wire [31:0]     inst_sram_addr;
+    wire [31:0]     data_sram_addr;
+
+    // 指令存储器地址映射
+    mmu u0_mmu(
+        .addr_i(inst_sram_addr_v),
+        .addr_o(inst_sram_addr)
+    );
+
+    // 数据存储器地址映射
+    mmu u1_mmu(
+        .addr_i(data_sram_addr_v),
+        .addr_o(data_sram_addr)
+    );
+
+    
+
     always@(posedge clk)begin
-        if(resetn == `RST_ENABLE || flush == `STOP)begin
+        if(resetn == `RST_ENABLE || flush == `TRUE_V)begin
             rinst_current_state <= `AXI_IDLE;
             rdata_current_state <= `AXI_IDLE;
             wdata_current_state <= `AXI_IDLE;
@@ -63,7 +81,7 @@ module sram_like_interface(
         end else begin
             case(rinst_current_state)
                 `AXI_IDLE: begin
-                    if(inst_sram_en == `TRUE_V)begin
+                    if(inst_sram_en == `TRUE_V && inst_sram_addr_v != `ZERO_WORD)begin
                         rinst_next_state = `ARREADY;
                     end else begin
                         rinst_next_state = `AXI_IDLE;
@@ -159,7 +177,7 @@ module sram_like_interface(
 
 
     always@(posedge clk)begin
-        if(resetn == `RST_ENABLE || flush == `STOP)begin
+        if(resetn == `RST_ENABLE || flush == `TRUE_V)begin
             inst_req   <= 1'b0;
             inst_wr    <= 1'b0;
             inst_size  <= 2'b0;
@@ -174,16 +192,19 @@ module sram_like_interface(
 
             inst_sram_rdata <= `ZERO_WORD;
             data_sram_rdata <= `ZERO_WORD;
+            stallreq_if <= 1'b0;
         end else begin
             case(rinst_current_state)
                 // 读指令的状态机
                 `AXI_IDLE: begin
                     inst_sram_rdata <= `ZERO_WORD;
-                    if(inst_sram_en == `TRUE_V && inst_sram_addr != inst_addr)begin
+                    if(inst_sram_en == `TRUE_V)begin
                         inst_req <= `TRUE_V;
                         inst_wr <= `FALSE_V;
                         inst_addr <= inst_sram_addr;
                         inst_size <= 2'b10;
+                        // 此时产生指令暂停
+                        stallreq_if <= 1'b1;
                     end else begin
                         inst_req <= `FALSE_V;
                         inst_addr <= `ZERO_WORD;
@@ -206,6 +227,7 @@ module sram_like_interface(
                     if(inst_data_ok == `TRUE_V)begin
                         // 数据握手成功
                         inst_sram_rdata <= inst_rdata;
+                        stallreq_if <= 1'b0;
                     end else begin
                         // 数据握手失败
                     end
