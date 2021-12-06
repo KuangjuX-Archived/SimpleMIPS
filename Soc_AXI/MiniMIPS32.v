@@ -411,6 +411,51 @@ module MiniMIPS32(
         .timer_int_o(timer_int_o)
     );
 
+    wire [31:0]  inst_sram_addr;
+    wire         inst_sram_en;
+    wire [31:0]  inst_sram_rdata;
+    
+
+    wire [31:0]  data_sram_addr;
+    wire         data_sram_en;
+    wire         data_sram_wen;
+    wire [31:0]  data_sram_wdata;
+    wire [31:0]  data_sram_rdata;
+
+    sram_like_interface sram_like_interface_0(
+        .clk(cpu_clk_50M),
+        .resetn(cpu_rst_n),
+        .flush(flush),
+
+        .inst_sram_addr(inst_sram_addr),
+        .inst_sram_en(inst_sram_en),
+        .inst_sram_rdata(inst_sram_rdata),
+
+        .data_sram_addr(data_sram_addr),
+        .data_sram_en(data_sram_en),
+        .data_sram_wen(data_sram_wen),
+        .data_sram_wdata(data_sram_wdata),
+        .data_sram_rdata(data_sram_rdata),
+
+        .inst_req(inst_req),
+        .inst_wr(inst_wr),
+        .inst_size(inst_size),
+        .inst_addr(inst_addr),
+        .inst_wdata(inst_wdata),
+        .inst_rdata(inst_rdata),
+        .inst_addr_ok(inst_addr_o),
+        .inst_data_ok(inst_data_ok),
+
+        .data_req(data_req),
+        .data_wr(data_wr),
+        .data_size(data_size),
+        .data_addr(data_addr),
+        .data_wdata(data_wdata),
+        .data_rdata(data_rdata),
+        .data_addr_ok(data_addr_ok),
+        .data_data_ok(data_data_ok)
+    );
+
     cpu_axi_interface cpu_axi_interface0(
         .clk(cpu_clk_50M),
         .resten(cpu_rst_n),
