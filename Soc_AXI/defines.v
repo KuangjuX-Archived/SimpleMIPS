@@ -189,3 +189,15 @@
 
 `define InterruptAssert     1'b1
 `define InterruptNotAssert  1'b0
+
+
+`define AXI_IDLE 3'b000
+`define ARREADY  3'b001   // wait for arready
+`define RVALID   3'b010   // wait for rvalid
+`define RLAST    3'b011   // wait for rlast
+`define AWREADY  3'b100   // wait for awready
+`define WREADY   3'b101   // wair for wready     
+`define BVALID   3'b110   // wait for bvalid
+
+`define TRUE_V   1'b1
+`define FALSE_V  1'b0
