@@ -242,9 +242,12 @@ module MiniMIPS32(
     wire [31:0]  data_sram_wdata;
     wire [31:0]  data_sram_rdata;
 
-    wire         stallreq_rinst;
-    wire         stallreq_rdata;
-    wire         stallreq_wdata;
+    // wire         stallreq_rinst;
+    // wire         stallreq_rdata;
+    // wire         stallreq_wdata;
+    wire         i_stall;
+    wire         d_stall;
+    wire         longest_stall;
 
     if_stage if_stage0(.cpu_clk_50M(cpu_clk_50M), .cpu_rst_n(cpu_rst_n),
         .pc(pc), .ice(inst_sram_en), .iaddr(inst_sram_addr),
@@ -354,10 +357,11 @@ module MiniMIPS32(
     scu scu0(.cpu_rst_n(cpu_rst_n),
         .stallreq_id(stallreq_id), 
         .stallreq_exe(stallreq_exe), 
-        .stallreq_rinst(stallreq_rinst),
-        .stallreq_rdata(stallreq_rdata),
-        .stallreq_wdata(stallreq_wdata),
-        .stall(stall)
+        .i_stall(i_stall),
+        .d_stall(d_stall),
+        .stall(stall),
+
+        .longest_stall(longest_stall)
     );
 
     mem_stage mem_stage0(.cpu_rst_n(cpu_rst_n), .mem_aluop_i(mem_aluop_i),
@@ -432,41 +436,89 @@ module MiniMIPS32(
         .timer_int_o(timer_int_o)
     );
 
-    sram_like_interface sram_like_interface_0(
+    // sram_like_interface sram_like_interface_0(
+    //     .clk(cpu_clk_50M),
+    //     .resetn(cpu_rst_n),
+    //     .flush(flush),
+
+    //     .inst_sram_addr_v(inst_sram_addr),
+    //     .inst_sram_en(inst_sram_en),
+    //     .inst_sram_rdata(inst_sram_rdata),
+    //     .stallreq_rinst(stallreq_rinst),
+
+    //     .data_sram_addr_v(data_sram_addr),
+    //     .data_sram_en(data_sram_en),
+    //     .data_sram_wen(data_sram_wen),
+    //     .data_sram_wdata(data_sram_wdata),
+    //     .data_sram_rdata(data_sram_rdata),
+    //     .stallreq_rdata(stallreq_rdata),
+    //     .stallreq_wdata(stallreq_wdata),
+
+    //     .inst_req(inst_req),
+    //     .inst_wr(inst_wr),
+    //     .inst_size(inst_size),
+    //     .inst_addr(inst_addr),
+    //     .inst_wdata(inst_wdata),
+    //     .inst_rdata(inst_rdata),
+    //     .inst_addr_ok(inst_addr_ok),
+    //     .inst_data_ok(inst_data_ok),
+
+    //     .data_req(data_req),
+    //     .data_wr(data_wr),
+    //     .data_size(data_size),
+    //     .data_addr(data_addr),
+    //     .data_wdata(data_wdata),
+    //     .data_rdata(data_rdata),
+    //     .data_addr_ok(data_addr_ok),
+    //     .data_data_ok(data_data_ok)
+    // );
+
+    // inst sram to sram-like
+    i_sram_to_sram_like i_sram_to_sram_like(
         .clk(cpu_clk_50M),
-        .resetn(cpu_rst_n),
-        .flush(flush),
+        .rst(cpu_rst_n),
 
-        .inst_sram_addr_v(inst_sram_addr),
         .inst_sram_en(inst_sram_en),
+        .inst_sram_addr_v(inst_sram_addr),
         .inst_sram_rdata(inst_sram_rdata),
-        .stallreq_rinst(stallreq_rinst),
-
-        .data_sram_addr_v(data_sram_addr),
-        .data_sram_en(data_sram_en),
-        .data_sram_wen(data_sram_wen),
-        .data_sram_wdata(data_sram_wdata),
-        .data_sram_rdata(data_sram_rdata),
-        .stallreq_rdata(stallreq_rdata),
-        .stallreq_wdata(stallreq_wdata),
+        .i_stall(i_stall),
 
         .inst_req(inst_req),
         .inst_wr(inst_wr),
         .inst_size(inst_size),
         .inst_addr(inst_addr),
         .inst_wdata(inst_wdata),
-        .inst_rdata(inst_rdata),
         .inst_addr_ok(inst_addr_ok),
         .inst_data_ok(inst_data_ok),
+        .inst_rdata(inst_rdata),
 
+        .longest_stall(longest_stall)
+    );
+
+    // data sram to sram-like
+    d_sram_to_sram_like d_sram_to_sram_like(
+        .clk(cpu_clk_50M),
+        .rst(cpu_rst_n),
+
+        // sram
+        .data_sram_en(data_sram_en),
+        .data_sram_addr_v(data_sram_addr),
+        .data_sram_rdata(data_sram_rdata),
+        .data_sram_wen(data_sram_wen),
+        .data_sram_wdata(data_sram_wdata),
+        .d_stall(d_stall),
+
+        // sram like
         .data_req(data_req),
         .data_wr(data_wr),
         .data_size(data_size),
         .data_addr(data_addr),
         .data_wdata(data_wdata),
-        .data_rdata(data_rdata),
         .data_addr_ok(data_addr_ok),
-        .data_data_ok(data_data_ok)
+        .data_data_ok(data_data_ok),
+        .data_rdata(data_rdata),
+
+        .longest_stall(longest_stall)
     );
 
     cpu_axi_interface cpu_axi_interface0(

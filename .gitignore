@@ -3,3 +3,4 @@ run_vivado/*
 soc_sram_func/*
 soc_axi_func/*
 cpu132_gettrace/*
+CO_ext_lab-CQU/*

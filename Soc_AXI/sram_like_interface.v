@@ -62,7 +62,6 @@ module sram_like_interface(
         .addr_o(data_sram_addr)
     );
 
-    
 
     always@(posedge clk)begin
         if(resetn == `RST_ENABLE || flush == `TRUE_V)begin
@@ -83,7 +82,7 @@ module sram_like_interface(
         end else begin
             case(rinst_current_state)
                 `AXI_IDLE: begin
-                    if(inst_sram_en == `TRUE_V && inst_sram_addr_v != `ZERO_WORD)begin
+                    if(inst_sram_en == `TRUE_V)begin
                         rinst_next_state = `ARREADY;
                     end else begin
                         rinst_next_state = `AXI_IDLE;
@@ -117,7 +116,7 @@ module sram_like_interface(
         end else begin
             case(rdata_current_state)
                 `AXI_IDLE:begin
-                    if(data_sram_en == `TRUE_V && !(data_sram_addr == data_addr && wdata_next_state == `AXI_IDLE))begin
+                    if(data_sram_en == `TRUE_V && !(data_sram_addr == data_addr && wdata_next_state != `AXI_IDLE))begin
                         // ±‹√‚∂¡–¥≥ÂÕª
                         rdata_next_state = `ARREADY;
                     end else begin
@@ -133,13 +132,14 @@ module sram_like_interface(
                     end
                 end
 
-                `BVALID: begin
+                `RVALID: begin
                     if(data_data_ok == `TRUE_V)begin
                         rdata_next_state = `AXI_IDLE;
                     end else begin
-                        rdata_next_state = `BVALID;
+                        rdata_next_state = `RVALID;
                     end
                 end
+                default: rdata_next_state = `AXI_IDLE;
             endcase
         end
     end
@@ -305,7 +305,6 @@ module sram_like_interface(
                         data_size <= 2'b00;
                         data_addr <= `ZERO_WORD;
                         data_wdata <= `ZERO_WORD;
-                        stallreq_wdata <= 1'b0;
                     end else begin
                         // µÿ÷∑Œ’ ÷ ß∞‹
                     end
@@ -313,7 +312,7 @@ module sram_like_interface(
 
                 `BVALID: begin
                     if(data_data_ok == `TRUE_V)begin
-                        
+                        stallreq_wdata <= 1'b0;
                     end
                 end
             endcase
