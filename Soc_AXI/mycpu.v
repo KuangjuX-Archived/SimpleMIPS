@@ -1,19 +1,7 @@
-module mycpu(
+module mycpu_top(
     input wire           [5:0] ext_int,
     input wire           aclk,
     input wire           aresetn,
-
-    // output  wire         inst_sram_en,
-    // output  wire [3:0]   inst_sram_wen,
-    // output  wire [31:0]  inst_sram_addr,
-    // output  wire [31:0]  inst_sram_wdata,
-    // input   wire [31:0]  inst_sram_rdata,
-    
-    // output  wire         data_sram_en,
-    // output  wire [3:0]   data_sram_wen,
-    // output  wire [31:0]  data_sram_addr,
-    // output  wire [31:0]  data_sram_wdata,
-    // input   wire [31:0]  data_sram_rdata,
 
     output wire [3:0]       arid,
     output wire [31:0]      araddr,
@@ -54,95 +42,59 @@ module mycpu(
     input  wire [3:0]       bid, 
     input  wire [1:0]       bresp,
     input  wire             bvalid,
-    output wire             bready,    
-
+    output wire             bready,
+    
     output  wire [31:0]  debug_wb_pc,
     output  wire [3 :0]  debug_wb_rf_wen,
     output  wire [4 :0]  debug_wb_rf_wnum,
     output  wire [31:0]  debug_wb_rf_wdata
 );
 
-    // wire           ice;
-    // wire           dce;
+//inst_sram_like 
+wire        inst_req;
+wire        inst_wr; 
+wire [1 :0] inst_size; 
+wire [31:0] inst_addr;
+wire [31:0] inst_wdata;
+wire [31:0] inst_rdata;
+wire        inst_addr_ok;
+wire        inst_data_ok;
+//data sram-like 
+wire        data_req;
+wire        data_wr; 
+wire [1 :0] data_size; 
+wire [31:0] data_addr;
+wire [31:0] data_wdata;
+wire [31:0] data_rdata;
+wire        data_addr_ok;
+wire        data_data_ok;
 
-    // assign inst_sram_en = (resetn == 1'b0) ? 1'b0 : ice;
-    // assign inst_sram_wen = 4'b0000;
-    // assign inst_sram_wdata = 32'h00000000;
+//never write inst 
+// inst size always 32
+assign inst_wr  = 1'b0;
+assign inst_size = 2'b10;
+assign inst_wdata = 32'h0000_0000;
 
-    // assign data_sram_en = (resetn == 1'b0) ? 1'b0 : dce;
+   MiniMIPS32 MiniMIPS32_0(
+    .cpu_clk_50M       (aclk              ),
+    .cpu_rst_n         (aresetn           ),
+    .int               (ext_int         ),
 
-    // wire [31:0] inst_sram_addr_v, data_sram_addr_v;
+    .inst_req           (inst_req),
+    .inst_data_ok       (inst_data_ok),
+    .inst_addr_ok       (inst_addr_ok),
+    .iaddr             (inst_addr),
+    .inst              (inst_rdata       ),
 
-    wire timer_int;
+    .data_data_ok       (data_data_ok),
+    .data_addr_ok       (data_addr_ok),
+    .data_req           (data_req    ),
+    .data_wr            (data_wr),
+    .data_size          (data_size),
 
-    // MiniMIPS32 MiniMIPS32_0(
-    //     .cpu_clk_50M(clk),
-    //     .cpu_rst_n(resetn),
-
-    //     .iaddr(inst_sram_addr_v), 
-    //     .ice(ice),
-    //     .inst(inst_sram_rdata),
-    //     .dce(dce),
-    //     .daddr(data_sram_addr_v),
-    //     .we(data_sram_wen),
-    //     .din(data_sram_wdata),
-    //     .dm(data_sram_rdata),
-
-    //     .int({timer_int, ext_int[4:0]}),
-    //     .timer_int_o(timer_int),
-
-    //     .debug_wb_pc(debug_wb_pc),
-    //     .debug_wb_rf_wen(debug_wb_rf_wen),
-    //     .debug_wb_rf_wnum(debug_wb_rf_wnum),
-    //     .debug_wb_rf_wdata(debug_wb_rf_wdata)
-    // );
-
-    // AXI 接口的核心文件
-    MiniMIPS32 MiniMIPS32_0(
-        .cpu_clk_50M(aclk),
-        .cpu_rst_n(aresetn),
-        .int({timer_int, ext_int[4:0]}),
-
-        .arid_o      (arid      ),
-        .araddr_o    (araddr    ),
-        .arlen_o     (arlen     ),
-        .arsize_o    (arsize    ),
-        .arburst_o   (arburst   ),
-        .arlock_o    (arlock    ),
-        .arcache_o   (arcache   ),
-        .arprot_o    (arprot    ),
-        .arvalid_o   (arvalid   ),
-        .arready_i   (arready   ),
-                    
-        .rid_i       (rid       ),
-        .rdata_i     (rdata     ),
-        .rresp_i     (rresp     ),
-        .rlast_i     (rlast     ),
-        .rvalid_i    (rvalid    ),
-        .rready_o    (rready    ),
-                
-        .awid_o      (awid      ),
-        .awaddr_o    (awaddr    ),
-        .awlen_o     (awlen     ),
-        .awsize_o    (awsize    ),
-        .awburst_o   (awburst   ),
-        .awlock_o    (awlock    ),
-        .awcache_o   (awcache   ),
-        .awprot_o    (awprot    ),
-        .awvalid_o   (awvalid   ),
-        .awready_i   (awready   ),
-        
-        .wid_o       (wid       ),
-        .wdata_o     (wdata     ),
-        .wstrb_o     (wstrb     ),
-        .wlast_o     (wlast     ),
-        .wvalid_o    (wvalid    ),
-        .wready_i    (wready    ),
-        
-        .bid_i       (bid       ),
-        .bresp_i     (bresp     ),
-        .bvalid_i    (bvalid    ),
-        .bready_o    (bready    ),
+    .dout              (data_rdata        ),
+    .daddr             (data_addr),
+    .din               (data_wdata         ),
 
         //debug interface
         .debug_wb_pc      (debug_wb_pc      ),
@@ -150,17 +102,65 @@ module mycpu(
         .debug_wb_rf_wnum (debug_wb_rf_wnum ),
         .debug_wb_rf_wdata(debug_wb_rf_wdata)
     );
+    
+    cpu_axi_interface cpu_axi_interface0(
+    	.clk          (aclk         ),
+        .resetn       (aresetn      ),
 
-    // // 指令存储器地址映射
-    // mmu u0_mmu(
-    //     .addr_i(inst_sram_addr_v),
-    //     .addr_o(inst_sram_addr)
-    // );
+        .inst_req     (inst_req     ),
+        .inst_wr      (inst_wr      ),
+        .inst_size    (inst_size    ),
+        .inst_addr    (inst_addr    ),
+        .inst_wdata   (inst_wdata   ),
+        .inst_rdata   (inst_rdata   ),
+        .inst_addr_ok (inst_addr_ok ),
+        .inst_data_ok (inst_data_ok ),
 
-    // // 数据存储器地址映射
-    // mmu u1_mmu(
-    //     .addr_i(data_sram_addr_v),
-    //     .addr_o(data_sram_addr)
-    // );
+        .data_req     (data_req     ),
+        .data_wr      (data_wr      ),
+        .data_size    (data_size    ),
+        .data_addr    (data_addr    ),
+        .data_wdata   (data_wdata   ),
+        .data_rdata   (data_rdata   ),
+        .data_addr_ok (data_addr_ok ),
+        .data_data_ok (data_data_ok ),
+
+        .arid         (arid         ),
+        .araddr       (araddr       ),
+        .arlen        (arlen        ),
+        .arsize       (arsize       ),
+        .arburst      (arburst      ),
+        .arlock       (arlock       ),
+        .arcache      (arcache      ),
+        .arprot       (arprot       ),
+        .arvalid      (arvalid      ),
+        .arready      (arready      ),
+        .rid          (rid          ),
+        .rdata        (rdata        ),
+        .rresp        (rresp        ),
+        .rlast        (rlast        ),
+        .rvalid       (rvalid       ),
+        .rready       (rready       ),
+        .awid         (awid         ),
+        .awaddr       (awaddr       ),
+        .awlen        (awlen        ),
+        .awsize       (awsize       ),
+        .awburst      (awburst      ),
+        .awlock       (awlock       ),
+        .awcache      (awcache      ),
+        .awprot       (awprot       ),
+        .awvalid      (awvalid      ),
+        .awready      (awready      ),
+        .wid          (wid          ),
+        .wdata        (wdata        ),
+        .wstrb        (wstrb        ),
+        .wlast        (wlast        ),
+        .wvalid       (wvalid       ),
+        .wready       (wready       ),
+        .bid          (bid          ),
+        .bresp        (bresp        ),
+        .bvalid       (bvalid       ),
+        .bready       (bready       )
+);
     
 endmodule

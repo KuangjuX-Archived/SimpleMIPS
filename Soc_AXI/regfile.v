@@ -26,8 +26,8 @@ module regfile(
 	always @(posedge cpu_clk_50M) begin
 		if (cpu_rst_n == `RST_ENABLE) begin
 			regs[ 0] <= `ZERO_WORD;
-			regs[ 1] <= 32'h10101010;     //注意：寄存器1和2复位后应该均是0x00000000，此处赋了其他初值是因为如果只有R-型指令是无法给寄存器赋值的。因此后续加入I-型指令后可恢复为初值为0的设置
-			regs[ 2] <= 32'h01011111;
+			regs[ 1] <= `ZERO_WORD;     //注意：寄存器1和2复位后应该均是0x00000000，此处赋了其他初值是因为如果只有R-型指令是无法给寄存器赋值的。因此后续加入I-型指令后可恢复为初值为0的设置
+			regs[ 2] <= `ZERO_WORD;
 			regs[ 3] <= `ZERO_WORD;
 			regs[ 4] <= `ZERO_WORD;
 			regs[ 5] <= `ZERO_WORD;
@@ -64,18 +64,16 @@ module regfile(
 		end
 	end
 	
-	//读端口1的读操作 
+	//读端口1的读操作  异步
 	// ra1是读地址、wa是写地址、we是写使能、wd是要写入的数据 
 	always @(*) begin
 		if (cpu_rst_n == `RST_ENABLE)
 			rd1 <= `ZERO_WORD;
 		else if (ra1 == `REG_NOP)
 			rd1 <= `ZERO_WORD;
-		// 判断对于读端口1是否存在译码-写回相关
-		// 如果译码阶段要读取的寄存器和要写回的寄存器是相同寄存器
-		// 则将写回内容定向前推
+	    //判断读端口1是否存在译码-写回相关
 		else if ((re1 == `READ_ENABLE) && (we == `WRITE_ENABLE) && (wa == ra1))
-			rd1 <= wd;
+		    rd1 <= wd;
 		else if (re1 == `READ_ENABLE)
 			rd1 <= regs[ra1];
 		else
@@ -89,9 +87,9 @@ module regfile(
 			rd2 <= `ZERO_WORD;
 		else if (ra2 == `REG_NOP)
 			rd2 <= `ZERO_WORD;
-		// 同上，判断对于读端口2是否存在译码-写回相关
+	   //判断读端口2是否存在译码-写回相关
 		else if ((re2 == `READ_ENABLE) && (we == `WRITE_ENABLE) && (wa == ra2))
-			rd2 <= wd;
+		    rd2 <= wd;
 		else if (re2 == `READ_ENABLE)
 			rd2 <= regs[ra2];
 		else
