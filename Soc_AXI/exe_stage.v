@@ -132,14 +132,10 @@ module exe_stage (
                       (exe_aluop_i == `MINIMIPS32_OR) ? (exe_src1_i | exe_src2_i) : 
                       (exe_aluop_i == `MINIMIPS32_XOR) ? (exe_src1_i ^ exe_src2_i) :
                       (exe_aluop_i == `MINIMIPS32_XORI) ? (exe_src1_i ^ exe_src2_i) : `ZERO_WORD;
-    
-    wire [31 : 0] data_addr_v;
 
-    //访问数据存储器和外设的地址映射
-    mmu data_mmu(
-        .addr_i(exe_src1_i + exe_src2_i),
-        .addr_o(data_addr_v)
-    );
+
+    wire  [31 : 0]  data_addr_v;
+    assign data_addr_v = exe_src1_i + exe_src2_i;
     
     assign arithres = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD : 
                       (exe_aluop_i == `MINIMIPS32_ADD) ? (exe_src1_i + exe_src2_i) :

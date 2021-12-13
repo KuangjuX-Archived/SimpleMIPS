@@ -50,58 +50,72 @@ module mycpu_top(
     output  wire [31:0]  debug_wb_rf_wdata
 );
 
-//inst_sram_like 
-wire        inst_req;
-wire        inst_wr; 
-wire [1 :0] inst_size; 
-wire [31:0] inst_addr;
-wire [31:0] inst_wdata;
-wire [31:0] inst_rdata;
-wire        inst_addr_ok;
-wire        inst_data_ok;
-//data sram-like 
-wire        data_req;
-wire        data_wr; 
-wire [1 :0] data_size; 
-wire [31:0] data_addr;
-wire [31:0] data_wdata;
-wire [31:0] data_rdata;
-wire        data_addr_ok;
-wire        data_data_ok;
+    //inst_sram_like 
+    wire        inst_req;
+    wire        inst_wr; 
+    wire [1 :0] inst_size; 
+    wire [31:0] inst_addr_v;
+    wire [31:0] inst_addr_p;
+    wire [31:0] inst_wdata;
+    wire [31:0] inst_rdata;
+    wire        inst_addr_ok;
+    wire        inst_data_ok;
+    //data sram-like 
+    wire        data_req;
+    wire        data_wr; 
+    wire [1 :0] data_size; 
+    wire [31:0] data_addr_v;
+    wire [31:0] data_addr_p;
+    wire [31:0] data_wdata;
+    wire [31:0] data_rdata;
+    wire        data_addr_ok;
+    wire        data_data_ok;
 
-//never write inst 
-// inst size always 32
-assign inst_wr  = 1'b0;
-assign inst_size = 2'b10;
-assign inst_wdata = 32'h0000_0000;
+    //never write inst 
+    // inst size always 32
+    assign inst_wr  = 1'b0;
+    assign inst_size = 2'b10;
+    assign inst_wdata = 32'h0000_0000;
 
-   MiniMIPS32 MiniMIPS32_0(
-    .cpu_clk_50M       (aclk              ),
-    .cpu_rst_n         (aresetn           ),
-    .int               (ext_int         ),
+    MiniMIPS32 MiniMIPS32_0(
+        .cpu_clk_50M       (aclk    ),
+        .cpu_rst_n         (aresetn ),
+        .int               (ext_int ),
 
-    .inst_req           (inst_req),
-    .inst_data_ok       (inst_data_ok),
-    .inst_addr_ok       (inst_addr_ok),
-    .iaddr             (inst_addr),
-    .inst              (inst_rdata       ),
+        .inst_req          (inst_req),
+        .inst_data_ok      (inst_data_ok),
+        .inst_addr_ok      (inst_addr_ok),
+        .iaddr             (inst_addr_v),
+        .inst              (inst_rdata ),
 
-    .data_data_ok       (data_data_ok),
-    .data_addr_ok       (data_addr_ok),
-    .data_req           (data_req    ),
-    .data_wr            (data_wr),
-    .data_size          (data_size),
+        .data_data_ok       (data_data_ok),
+        .data_addr_ok       (data_addr_ok),
+        .data_req           (data_req    ),
+        .data_wr            (data_wr),
+        .data_size          (data_size),
 
-    .dout              (data_rdata        ),
-    .daddr             (data_addr),
-    .din               (data_wdata         ),
+        .dout              (data_rdata        ),
+        .daddr             (data_addr_v       ),
+        .din               (data_wdata         ),
 
         //debug interface
         .debug_wb_pc      (debug_wb_pc      ),
         .debug_wb_rf_wen  (debug_wb_rf_wen  ),
         .debug_wb_rf_wnum (debug_wb_rf_wnum ),
         .debug_wb_rf_wdata(debug_wb_rf_wdata)
+
     );
+
+    mmu inst_mmu(
+        .addr_i(inst_addr_v),
+        .addr_o(inst_addr_p)
+    );
+
+    mmu data_mmu( 
+        .addr_i(data_addr_v),
+        .addr_o(data_addr_p)
+    );
+
     
     cpu_axi_interface cpu_axi_interface0(
     	.clk          (aclk         ),
@@ -110,7 +124,7 @@ assign inst_wdata = 32'h0000_0000;
         .inst_req     (inst_req     ),
         .inst_wr      (inst_wr      ),
         .inst_size    (inst_size    ),
-        .inst_addr    (inst_addr    ),
+        .inst_addr    (inst_addr_p  ),
         .inst_wdata   (inst_wdata   ),
         .inst_rdata   (inst_rdata   ),
         .inst_addr_ok (inst_addr_ok ),
@@ -119,7 +133,7 @@ assign inst_wdata = 32'h0000_0000;
         .data_req     (data_req     ),
         .data_wr      (data_wr      ),
         .data_size    (data_size    ),
-        .data_addr    (data_addr    ),
+        .data_addr    (data_addr_p  ),
         .data_wdata   (data_wdata   ),
         .data_rdata   (data_rdata   ),
         .data_addr_ok (data_addr_ok ),

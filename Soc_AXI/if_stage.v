@@ -26,7 +26,7 @@ module if_stage (
     assign inst_data_ok_o = inst_data_ok;
     //取指模块
     wire [`INST_ADDR_BUS] pc_next; 
-    wire [`INST_ADDR_BUS] inst_addr_p;
+    // wire [`INST_ADDR_BUS] inst_addr_p;
     reg  [`INST_ADDR_BUS] pc;
     reg  [2:0] if_state;
     wire [2:0] next_state;
@@ -40,15 +40,9 @@ module if_stage (
     wire is_branch;
     assign is_branch = (cpu_rst_n == `RST_ENABLE) ? 1'b0 : (jtsel[0] | jtsel[1]);
     
-    mmu inst_mmu(
-        .addr_i(pc),
-        .addr_o(inst_addr_p)
-    );
-
-
-    assign iaddr = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD : inst_addr_p;
+    assign iaddr = (cpu_rst_n == `RST_ENABLE) ? `ZERO_WORD : pc;
     
-    wire misalign = (inst_addr_p[1 : 0] != 2'b00);    //取指令的地址不是4对齐
+    wire misalign = (pc[1 : 0] != 2'b00);    //取指令的地址不是4对齐
     assign if_exccode_o = (cpu_rst_n == `RST_ENABLE) ? `EXC_NONE : 
                           (misalign == `TRUE_V) ? `EXC_ADEL : `EXC_NONE;
     wire inst_read_en = ~misalign;
