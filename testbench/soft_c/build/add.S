@@ -108,6 +108,10 @@ print_result:
 	ori	$2,$2,0xf000
 	li	$3,15			# 0xf
 	sw	$3,0($2)
+	li	$2,-1079050240			# 0xffffffffbfaf0000
+	ori	$2,$2,0xf010
+	li	$3,65280			# 0xff00
+	sw	$3,0($2)
 	b	.L7
 	nop
 
@@ -115,6 +119,10 @@ print_result:
 	li	$2,-1079050240			# 0xffffffffbfaf0000
 	ori	$2,$2,0xf000
 	li	$3,240			# 0xf0
+	sw	$3,0($2)
+	li	$2,-1079050240			# 0xffffffffbfaf0000
+	ori	$2,$2,0xf010
+	li	$3,255			# 0xff
 	sw	$3,0($2)
 	move	$sp,$fp
 	lw	$31,20($sp)
