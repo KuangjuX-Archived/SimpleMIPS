@@ -36,13 +36,11 @@ export	TESTCASE_BUILD_DIR
 # Rules of Compilation
 # ********************
 
-all: $(TESTCASE_BUILD_DIR)$(USER_PROGRAM).bin $(TESTCASE_BUILD_DIR)$(USER_PROGRAM).data convert
-	./convert $(TESTCASE_BUILD_DIR)$(USER_PROGRAM).bin $(TESTCASE_BUILD_DIR)$(USER_PROGRAM).data
+all: $(TESTCASE_BUILD_DIR)$(USER_PROGRAM).bin convert
+	./convert $(TESTCASE_BUILD_DIR)$(USER_PROGRAM).bin
 	mv $(USER_PROGRAM).S start.o convert $(TESTCASE_BUILD_DIR)
-	mv inst_rom.mif $(TESTCASE_BUILD_DIR)$(USER_PROGRAM)_inst.mif
-	mv inst_rom.coe $(TESTCASE_BUILD_DIR)$(USER_PROGRAM)_inst.coe
-	mv data_ram.mif $(TESTCASE_BUILD_DIR)$(USER_PROGRAM)_data.mif
-	mv data_ram.coe $(TESTCASE_BUILD_DIR)$(USER_PROGRAM)_data.coe
+	mv testcase.mif $(TESTCASE_BUILD_DIR)$(USER_PROGRAM).mif
+	mv testcase.coe $(TESTCASE_BUILD_DIR)$(USER_PROGRAM).coe
 
 $(USER_PROGRAM).S: $(TESTCASE_SRC_DIR)$(USER_PROGRAM).c
 	$(CC) -S $(CFLAGS) $< -o $@
@@ -57,11 +55,14 @@ $(TESTCASE_BUILD_DIR)$(USER_PROGRAM): default.ld $(OBJECTS) start.o
 	$(LD) -T default.ld $(CFLAGS) start.o $(OBJECTS) -o $@
 	$(OBJDUMP) -alD $@ > $@.asm
 
-$(TESTCASE_BUILD_DIR)$(USER_PROGRAM).bin: $(TESTCASE_BUILD_DIR)$(USER_PROGRAM)
-	$(OBJCOPY) -O binary -j .text $<  $@
+# $(TESTCASE_BUILD_DIR)$(USER_PROGRAM).bin: $(TESTCASE_BUILD_DIR)$(USER_PROGRAM)
+# 	$(OBJCOPY) -O binary -j .text $<  $@
 
-$(TESTCASE_BUILD_DIR)$(USER_PROGRAM).data: $(TESTCASE_BUILD_DIR)$(USER_PROGRAM)
-	$(OBJCOPY) -O binary -j .data $<  $@
+# $(TESTCASE_BUILD_DIR)$(USER_PROGRAM).data: $(TESTCASE_BUILD_DIR)$(USER_PROGRAM)
+# 	$(OBJCOPY) -O binary -j .data $<  $@
+
+$(TESTCASE_BUILD_DIR)$(USER_PROGRAM).bin: $(TESTCASE_BUILD_DIR)$(USER_PROGRAM)
+	$(OBJCOPY) -O binary $< $@
 
 convert: convert.c
 	gcc $< -o $@

@@ -9,10 +9,10 @@ bfc00000 <_start>:
 bfc00000:	3c061000 	lui	a2,0x1000
 bfc00004:	40866000 	mtc0	a2,c0_sr
 bfc00008:	40806800 	mtc0	zero,c0_cause
-bfc0000c:	3c1d8000 	lui	sp,0x8000
-bfc00010:	27bd3fe0 	addiu	sp,sp,16352
-bfc00014:	3c1e8001 	lui	s8,0x8001
-bfc00018:	27de8110 	addiu	s8,s8,-32496
+bfc0000c:	3c1dbfc0 	lui	sp,0xbfc0
+bfc00010:	27bd42ec 	addiu	sp,sp,17132
+bfc00014:	3c1ebfc1 	lui	s8,0xbfc1
+bfc00018:	27de8420 	addiu	s8,s8,-31712
 bfc0001c:	34070000 	li	a3,0x0
 bfc00020:	00e00013 	mtlo	a3
 bfc00024:	34180000 	li	t8,0x0
@@ -133,18 +133,18 @@ bfc001a4:	00000000 	nop
 bfc001a8:	afc00014 	sw	zero,20(s8)
 bfc001ac:	10000035 	b	bfc00284 <main+0x10c>
 bfc001b0:	00000000 	nop
-bfc001b4:	3c028000 	lui	v0,0x8000
+bfc001b4:	3c02bfc0 	lui	v0,0xbfc0
 bfc001b8:	8fc30010 	lw	v1,16(s8)
 bfc001bc:	00000000 	nop
 bfc001c0:	00031880 	sll	v1,v1,0x2
-bfc001c4:	24420000 	addiu	v0,v0,0
+bfc001c4:	2442030c 	addiu	v0,v0,780
 bfc001c8:	00621021 	addu	v0,v1,v0
 bfc001cc:	8c430000 	lw	v1,0(v0)
-bfc001d0:	3c028000 	lui	v0,0x8000
+bfc001d0:	3c02bfc0 	lui	v0,0xbfc0
 bfc001d4:	8fc40014 	lw	a0,20(s8)
 bfc001d8:	00000000 	nop
 bfc001dc:	00042080 	sll	a0,a0,0x2
-bfc001e0:	24420000 	addiu	v0,v0,0
+bfc001e0:	2442030c 	addiu	v0,v0,780
 bfc001e4:	00821021 	addu	v0,a0,v0
 bfc001e8:	8c420000 	lw	v0,0(v0)
 bfc001ec:	00602021 	move	a0,v1
@@ -152,11 +152,11 @@ bfc001f0:	00402821 	move	a1,v0
 bfc001f4:	0ff0004e 	jal	bfc00138 <add>
 bfc001f8:	00000000 	nop
 bfc001fc:	00401821 	move	v1,v0
-bfc00200:	3c028000 	lui	v0,0x8000
+bfc00200:	3c02bfc0 	lui	v0,0xbfc0
 bfc00204:	8fc40018 	lw	a0,24(s8)
 bfc00208:	00000000 	nop
 bfc0020c:	00042080 	sll	a0,a0,0x2
-bfc00210:	24420020 	addiu	v0,v0,32
+bfc00210:	2442032c 	addiu	v0,v0,812
 bfc00214:	00821021 	addu	v0,a0,v0
 bfc00218:	8c420000 	lw	v0,0(v0)
 bfc0021c:	00000000 	nop
@@ -222,89 +222,89 @@ bfc00308:	00000000 	nop
 
 Disassembly of section .data:
 
-80000000 <_fdata>:
+bfc0030c <_fdata>:
 _fdata():
-80000000:	00000000 	nop
-80000004:	00000001 	0x1
-80000008:	00000002 	srl	zero,zero,0x0
-8000000c:	7fffffff 	0x7fffffff
-80000010:	80000000 	lb	zero,0(zero)
-80000014:	80000001 	lb	zero,1(zero)
-80000018:	fffffffe 	0xfffffffe
-8000001c:	ffffffff 	0xffffffff
+bfc0030c:	00000000 	nop
+bfc00310:	00000001 	0x1
+bfc00314:	00000002 	srl	zero,zero,0x0
+bfc00318:	7fffffff 	0x7fffffff
+bfc0031c:	80000000 	lb	zero,0(zero)
+bfc00320:	80000001 	lb	zero,1(zero)
+bfc00324:	fffffffe 	0xfffffffe
+bfc00328:	ffffffff 	0xffffffff
 
-80000020 <ans>:
-80000020:	00000000 	nop
-80000024:	00000001 	0x1
-80000028:	00000002 	srl	zero,zero,0x0
-8000002c:	7fffffff 	0x7fffffff
-80000030:	80000000 	lb	zero,0(zero)
-80000034:	80000001 	lb	zero,1(zero)
-80000038:	fffffffe 	0xfffffffe
-8000003c:	ffffffff 	0xffffffff
-80000040:	00000001 	0x1
-80000044:	00000002 	srl	zero,zero,0x0
-80000048:	00000003 	sra	zero,zero,0x0
-8000004c:	80000000 	lb	zero,0(zero)
-80000050:	80000001 	lb	zero,1(zero)
-80000054:	80000002 	lb	zero,2(zero)
-80000058:	ffffffff 	0xffffffff
-8000005c:	00000000 	nop
-80000060:	00000002 	srl	zero,zero,0x0
-80000064:	00000003 	sra	zero,zero,0x0
-80000068:	00000004 	sllv	zero,zero,zero
-8000006c:	80000001 	lb	zero,1(zero)
-80000070:	80000002 	lb	zero,2(zero)
-80000074:	80000003 	lb	zero,3(zero)
-80000078:	00000000 	nop
-8000007c:	00000001 	0x1
-80000080:	7fffffff 	0x7fffffff
-80000084:	80000000 	lb	zero,0(zero)
-80000088:	80000001 	lb	zero,1(zero)
-8000008c:	fffffffe 	0xfffffffe
-80000090:	ffffffff 	0xffffffff
-80000094:	00000000 	nop
-80000098:	7ffffffd 	0x7ffffffd
-8000009c:	7ffffffe 	0x7ffffffe
-800000a0:	80000000 	lb	zero,0(zero)
-800000a4:	80000001 	lb	zero,1(zero)
-800000a8:	80000002 	lb	zero,2(zero)
-800000ac:	ffffffff 	0xffffffff
-800000b0:	00000000 	nop
-800000b4:	00000001 	0x1
-800000b8:	7ffffffe 	0x7ffffffe
-800000bc:	7fffffff 	0x7fffffff
-800000c0:	80000001 	lb	zero,1(zero)
-800000c4:	80000002 	lb	zero,2(zero)
-800000c8:	80000003 	lb	zero,3(zero)
-800000cc:	00000000 	nop
-800000d0:	00000001 	0x1
-800000d4:	00000002 	srl	zero,zero,0x0
-800000d8:	7fffffff 	0x7fffffff
-800000dc:	80000000 	lb	zero,0(zero)
-800000e0:	fffffffe 	0xfffffffe
-800000e4:	ffffffff 	0xffffffff
-800000e8:	00000000 	nop
-800000ec:	7ffffffd 	0x7ffffffd
-800000f0:	7ffffffe 	0x7ffffffe
-800000f4:	7fffffff 	0x7fffffff
-800000f8:	fffffffc 	0xfffffffc
-800000fc:	fffffffd 	0xfffffffd
-80000100:	ffffffff 	0xffffffff
-80000104:	00000000 	nop
-80000108:	00000001 	0x1
-8000010c:	7ffffffe 	0x7ffffffe
-80000110:	7fffffff 	0x7fffffff
-80000114:	80000000 	lb	zero,0(zero)
-80000118:	fffffffd 	0xfffffffd
-8000011c:	fffffffe 	0xfffffffe
+bfc0032c <ans>:
+bfc0032c:	00000000 	nop
+bfc00330:	00000001 	0x1
+bfc00334:	00000002 	srl	zero,zero,0x0
+bfc00338:	7fffffff 	0x7fffffff
+bfc0033c:	80000000 	lb	zero,0(zero)
+bfc00340:	80000001 	lb	zero,1(zero)
+bfc00344:	fffffffe 	0xfffffffe
+bfc00348:	ffffffff 	0xffffffff
+bfc0034c:	00000001 	0x1
+bfc00350:	00000002 	srl	zero,zero,0x0
+bfc00354:	00000003 	sra	zero,zero,0x0
+bfc00358:	80000000 	lb	zero,0(zero)
+bfc0035c:	80000001 	lb	zero,1(zero)
+bfc00360:	80000002 	lb	zero,2(zero)
+bfc00364:	ffffffff 	0xffffffff
+bfc00368:	00000000 	nop
+bfc0036c:	00000002 	srl	zero,zero,0x0
+bfc00370:	00000003 	sra	zero,zero,0x0
+bfc00374:	00000004 	sllv	zero,zero,zero
+bfc00378:	80000001 	lb	zero,1(zero)
+bfc0037c:	80000002 	lb	zero,2(zero)
+bfc00380:	80000003 	lb	zero,3(zero)
+bfc00384:	00000000 	nop
+bfc00388:	00000001 	0x1
+bfc0038c:	7fffffff 	0x7fffffff
+bfc00390:	80000000 	lb	zero,0(zero)
+bfc00394:	80000001 	lb	zero,1(zero)
+bfc00398:	fffffffe 	0xfffffffe
+bfc0039c:	ffffffff 	0xffffffff
+bfc003a0:	00000000 	nop
+bfc003a4:	7ffffffd 	0x7ffffffd
+bfc003a8:	7ffffffe 	0x7ffffffe
+bfc003ac:	80000000 	lb	zero,0(zero)
+bfc003b0:	80000001 	lb	zero,1(zero)
+bfc003b4:	80000002 	lb	zero,2(zero)
+bfc003b8:	ffffffff 	0xffffffff
+bfc003bc:	00000000 	nop
+bfc003c0:	00000001 	0x1
+bfc003c4:	7ffffffe 	0x7ffffffe
+bfc003c8:	7fffffff 	0x7fffffff
+bfc003cc:	80000001 	lb	zero,1(zero)
+bfc003d0:	80000002 	lb	zero,2(zero)
+bfc003d4:	80000003 	lb	zero,3(zero)
+bfc003d8:	00000000 	nop
+bfc003dc:	00000001 	0x1
+bfc003e0:	00000002 	srl	zero,zero,0x0
+bfc003e4:	7fffffff 	0x7fffffff
+bfc003e8:	80000000 	lb	zero,0(zero)
+bfc003ec:	fffffffe 	0xfffffffe
+bfc003f0:	ffffffff 	0xffffffff
+bfc003f4:	00000000 	nop
+bfc003f8:	7ffffffd 	0x7ffffffd
+bfc003fc:	7ffffffe 	0x7ffffffe
+bfc00400:	7fffffff 	0x7fffffff
+bfc00404:	fffffffc 	0xfffffffc
+bfc00408:	fffffffd 	0xfffffffd
+bfc0040c:	ffffffff 	0xffffffff
+bfc00410:	00000000 	nop
+bfc00414:	00000001 	0x1
+bfc00418:	7ffffffe 	0x7ffffffe
+bfc0041c:	7fffffff 	0x7fffffff
+bfc00420:	80000000 	lb	zero,0(zero)
+bfc00424:	fffffffd 	0xfffffffd
+bfc00428:	fffffffe 	0xfffffffe
 
 Disassembly of section .reginfo:
 
 00000000 <.reginfo>:
    0:	710000c0 	0x710000c0
 	...
-  14:	80008110 	lb	zero,-32496(zero)
+  14:	bfc08420 	0xbfc08420
 
 Disassembly of section .pdr:
 
@@ -350,7 +350,7 @@ Disassembly of section .comment:
 00000000 <.comment>:
    0:	4743433a 	c1	0x143433a
    4:	2028536f 	addi	t0,at,21359
-   8:	75726365 	jalx	5c98d94 <_fdata-0x7a36726c>
+   8:	75726365 	jalx	5c98d94 <_start-0xb9f6726c>
    c:	72792043 	0x72792043
   10:	6f646542 	0x6f646542
   14:	656e6368 	0x656e6368
@@ -364,7 +364,7 @@ Disassembly of section .comment:
 Disassembly of section .gnu.attributes:
 
 00000000 <.gnu.attributes>:
-   0:	41000000 	bc0f	4 <_fdata-0x7ffffffc>
-   4:	0f676e75 	jal	d9db9d4 <_fdata-0x7262462c>
+   0:	41000000 	bc0f	4 <_start-0xbfbffffc>
+   4:	0f676e75 	jal	d9db9d4 <_start-0xb222462c>
    8:	00010000 	sll	zero,at,0x0
    c:	00070401 	0x70401
