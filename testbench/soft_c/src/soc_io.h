@@ -23,6 +23,7 @@ void delay() {
 
 void init() {
 	SOC_LED = RED;
+	SOC_SEG_7 = 0x00ff;
 	delay();
 }
 
