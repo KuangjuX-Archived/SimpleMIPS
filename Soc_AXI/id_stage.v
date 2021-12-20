@@ -71,7 +71,8 @@ module id_stage(
     //译码模块
     // 根据小端模式组织指令字
     //如果清空信号flush_im == 1或上一条指令执行到mem阶段访存，则取出的指令为空指令
-    wire [`INST_BUS] id_inst = (flush_im == `FLUSH || mem_mem_flag == 1'b1) ? `ZERO_WORD : {id_inst_i[7:0], id_inst_i[15:8], id_inst_i[23:16], id_inst_i[31:24]};
+    // wire [`INST_BUS] id_inst = (flush_im == `FLUSH || mem_mem_flag == 1'b1) ? `ZERO_WORD : {id_inst_i[7:0], id_inst_i[15:8], id_inst_i[23:16], id_inst_i[31:24]};
+    wire [`INST_BUS] id_inst = (flush_im == `FLUSH || mem_mem_flag == 1'b1) ? `ZERO_WORD : id_inst_i;
     // 提取指令字中各个字段的信息
     wire [5 :0] op   = id_inst[31:26];
     wire [5 :0] func = id_inst[5 : 0];
