@@ -1,14 +1,12 @@
 # SimpleMIPS
 
-![](static/run.jpg)
+![](run.jpg)
 
 A Simple 5-stage pipeline MIPS CPU for TJU Computer Architecture Course.
 
 ## 工程目录
 - report: 实验报告
-- Soc：CPU 核心工程文件，五级流水、分支预测
-- Soc_Sram: soc_sram_lite 的平台代码，适配 GENESYS2
-- Soc_AXI: soc_axi 的平台代码，适配 GENESYS2
+- src: 源代码
 - AXI: AXI 总线接口
 - Cache: Cache的实现
 - TEMU：使用 C 语言开发的 MIPS32 仿真器，可用于做差分测试，使用 git submoudle 进行管理
