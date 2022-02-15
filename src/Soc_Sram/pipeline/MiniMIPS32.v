@@ -26,10 +26,10 @@ module MiniMIPS32(
 
     wire [`WORD_BUS      ] pc;
 
-    // ����IF/IDģ��������׶�IDģ��ı��� 
+    
     wire [`WORD_BUS      ] id_pc_i;
     
-    // ��������׶�IDģ����ͨ�üĴ���Regfileģ��ı��� 
+    
     wire 				   re1;
     wire [`REG_ADDR_BUS  ] ra1;
     wire [`REG_BUS       ] rd1;
@@ -361,7 +361,7 @@ module MiniMIPS32(
     );
 
 
-    // ������ debug ���ź�
+
     assign debug_wb_pc = wb_pc_o;
     assign debug_wb_rf_wen = {{4{wb_wreg_o}}};
     assign debug_wb_rf_wnum = wb_wa_o;

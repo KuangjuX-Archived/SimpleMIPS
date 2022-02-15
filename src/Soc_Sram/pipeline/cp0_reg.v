@@ -9,7 +9,7 @@ module cp0_reg(
 	input  wire [`REG_ADDR_BUS ] raddr,
 	input  wire [`REG_ADDR_BUS ] waddr,
 	input  wire [`REG_BUS      ] wdata,
-	input  wire [`CP0_INT_BUS  ] int_i,
+	input  wire [5:0  ] 	     int_i,
 	
 	input  wire [`INST_ADDR_BUS] pc_i,
 	input  wire                  in_delay_i,
