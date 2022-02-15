@@ -1,4 +1,4 @@
-module mycpu(
+module mycpu_top(
     input wire           [5:0] ext_int,
     input wire           clk,
     input wire           resetn,
@@ -47,7 +47,7 @@ module mycpu(
         .din(data_sram_wdata),
         .dm(data_sram_rdata),
 
-        .int({timer_int, ext_int[4:0]}),
+        // .int_i({timer_int, ext_int[4:0]}),
         .timer_int_o(timer_int),
 
         .debug_wb_pc(debug_wb_pc),

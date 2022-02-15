@@ -14,22 +14,22 @@ module MiniMIPS32(
     output wire [`DATA_BUS     ] din,
     input  wire [`DATA_BUS     ] dm,
 
-    input wire  [5:0] int,
+    // input  wire [5:0]            int_i,
 
-    output  wire [31: 0] debug_wb_pc,
-    output  wire [3 :0]  debug_wb_rf_wen,
-    output  wire [4 :0]  debug_wb_rf_wnum,
-    output  wire [31:0]  debug_wb_rf_wdata,
+    output wire [31: 0]          debug_wb_pc,
+    output wire [3 :0]           debug_wb_rf_wen,
+    output wire [4 :0]           debug_wb_rf_wnum,
+    output wire [31:0]           debug_wb_rf_wdata,
 
     output  reg          timer_int_o
     );
 
     wire [`WORD_BUS      ] pc;
 
-    // Á¬½ÓIF/IDÄ£¿éÓëÒëÂë½×¶ÎIDÄ£¿éµÄ±äÁ¿ 
+    // ï¿½ï¿½ï¿½ï¿½IF/IDÄ£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×¶ï¿½IDÄ£ï¿½ï¿½Ä±ï¿½ï¿½ï¿½ 
     wire [`WORD_BUS      ] id_pc_i;
     
-    // Á¬½ÓÒëÂë½×¶ÎIDÄ£¿éÓëÍ¨ÓÃ¼Ä´æÆ÷RegfileÄ£¿éµÄ±äÁ¿ 
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×¶ï¿½IDÄ£ï¿½ï¿½ï¿½ï¿½Í¨ï¿½Ã¼Ä´ï¿½ï¿½ï¿½RegfileÄ£ï¿½ï¿½Ä±ï¿½ï¿½ï¿½ 
     wire 				   re1;
     wire [`REG_ADDR_BUS  ] ra1;
     wire [`REG_BUS       ] rd1;
@@ -177,7 +177,7 @@ module MiniMIPS32(
 
     wire                    mem_device;
     wire                    wb_device;
-    wire                    timer_int_o;
+    // wire                    timer_int_o;
 
     if_stage if_stage0(.cpu_clk_50M(cpu_clk_50M), .cpu_rst_n(cpu_rst_n),
         .pc(pc), .ice(ice), .iaddr(iaddr),
@@ -346,7 +346,7 @@ module MiniMIPS32(
         .raddr(raddr),
         .waddr(waddr), 
         .wdata(wdata), 
-        .int_i(int), 
+        .int_i(int_i), 
         .pc_i(pc_i),
         .in_delay_i(in_delay_i),
         .exccode_i(exccode_i), 
@@ -361,7 +361,7 @@ module MiniMIPS32(
     );
 
 
-    // ÓÃÀ´×ö debug µÄÐÅºÅ
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ debug ï¿½ï¿½ï¿½Åºï¿½
     assign debug_wb_pc = wb_pc_o;
     assign debug_wb_rf_wen = {{4{wb_wreg_o}}};
     assign debug_wb_rf_wnum = wb_wa_o;
